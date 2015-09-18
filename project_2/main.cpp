@@ -34,15 +34,28 @@ int main()
 
     double tolerance = 0.00000001;
     //finding the index(k,l) of the maximum element in B:
-    double off_diagonal = zeros<vec>(n_step-1);
+    double max_off_diagonal = 0;
+    int k = 0;
+    int l = 0;
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
     {
-        B(i,j) = off_diagonal[i];
+        //Checking all off-diagonal elements:
+        if( ((B(i,j)*B(i,j)) > max_off_diagonal) && (i!=j) )
+        {
+            max_off_diagonal = B(i,j)*B(i,j);
+            k = i;
+            l = j;
+            cout << "here2" << endl;
+        }
+
     }
-    uword k = 0;
-    uword l = 0;
-    off_diagonal.max(k);
-    k.print();
+    cout << k << endl;
+    cout << l << endl;
+    cout << max_off_diagonal << endl;
+
+
+
+
 
     /*
     //finding the values of c ans s (the S matrix):
