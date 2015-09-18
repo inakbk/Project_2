@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <time.h>
 
-
 using namespace std;
 using namespace arma;
 
@@ -20,7 +19,7 @@ int main()
     // initializing B
     double e = -1/(h*h); // all elements of the e vec is the same
     vec d = 2/(h*h) + V;
-    d.print();
+    //d.print();
 
     mat B = zeros<mat>(n_step-1,n_step-1);
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
@@ -30,14 +29,15 @@ int main()
         B(j,i) = e;
     }
     B(n_step-2,n_step-2) = d[n_step-1];
-    B.print();
+    //B.print();
 
     double tolerance = 0.00000001;
-    double max_off_diagonal = 0;
+    double max_off_diagonal = B(0,1)*B(0,1)-1;
     int k = 0;
     int l = 0;
 
-    while(tolerance > max_off_diagonal)
+    //this test is not working properly, or the change to the matrix is not working
+    while(tolerance < max_off_diagonal)
     {
         //finding the value and index(k,l) of the maximum element in B:
         for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
@@ -50,17 +50,14 @@ int main()
                 l = j;
                 cout << "here2" << endl;
             }
-
         }
-        cout << k << endl;
+        cout << k << endl; //this value does not change?
         cout << l << endl;
         cout << max_off_diagonal << endl;
 
-
-
         //finding the values of c ans s (the S matrix):
         double t = 0;
-        double tau = (B[l][l] - B[k][k])/(2*B[k][l]); //=cot(2*theta)
+        double tau = (B(l,l) - B(k,k))/(2*B(k,l)); //=cot(2*theta)
 
         // ensuring that theta<=pi/4:
         if(tau>0)
@@ -74,19 +71,22 @@ int main()
         double c = 1/sqrt(1 + (t*t));
         double s = t*c;
 
-        //make a loop over i=0,1,..., and j=0,1,2,...,
-
-        B[i][i] = B[i][i]; //dont need to write?
-        double temp_B = B[i][k];
-        B[i][k] = B[i][k]*c - B[i][l]*s;
-        B[i][l] = B[i][l]*c - temp_B*s;
-        temp_B = B[k][k];
-        B[k][k] = B[k][k]*c*c - 2*B[k][l]*c*s + B[l][l]*s*s;
-        B[l][l] = B[l][l]*c*c - 2*B[k][l]*c*s + temp_B*s*s;
-        B[k][l] = 0; //or write the formula that should be zero?
-
+        //think this is not working, B is unchanged after the loop...
+        for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+        {
+            B(i,i) = B(i,i); //dont need to write?
+            double temp_B = B(i,k);
+            B(i,k) = B(i,k)*c - B(i,l)*s;
+            B(i,l) = B(i,l)*c - temp_B*s;
+            temp_B = B(k,k);
+            //cout << "This should be zero:" << endl;
+            //cout << (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s) << endl;
+            B(k,k) = B(k,k)*c*c - 2*B(k,l)*c*s + B(l,l)*s*s;
+            B(l,l) = B(l,l)*c*c - 2*B(k,l)*c*s + temp_B*s*s;
+            B(k,l) = 0; //or write the formula that should be zero?
+        }
     }
-
+    //B.print();
 
     return 0;
 }
