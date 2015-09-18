@@ -32,8 +32,19 @@ int main()
     B(n_step-2,n_step-2) = d[n_step-1];
     B.print();
 
-    //finding the index of the maximum element in B:
+    double tolerance = 0.00000001;
+    //finding the index(k,l) of the maximum element in B:
+    double off_diagonal = zeros<vec>(n_step-1);
+    for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+    {
+        B(i,j) = off_diagonal[i];
+    }
+    uword k = 0;
+    uword l = 0;
+    off_diagonal.max(k);
+    k.print();
 
+    /*
     //finding the values of c ans s (the S matrix):
     double t = 0;
     double tau = (B[l][l] - B[k][k])/(2*B[k][l]); //=cot(2*theta)
@@ -61,7 +72,7 @@ int main()
     B[l][l] = B[l][l]*c*c - 2*B[k][l]*c*s + temp_B*s*s;
     B[k][l] = 0; //or write the formula that should be zero?
 
-
+*/
 
     return 0;
 }
