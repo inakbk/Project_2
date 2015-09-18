@@ -15,13 +15,22 @@ int main()
 
     const double h = (p_max - p_min)/n_step;
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
+    vec V = (p + h)*(p + h);
 
-    //initializing B
+    // initializing B
     double e = -1/(h*h); // all elements of the e vec is the same
-    vec d = 2/(h*h) + p*p;//is it doing the operation element wise?
+    vec d = 2/(h*h) + V;//is it doing the operation element wise?
 
+    mat B = zeros<mat>(n_step-1,n_step-1);
+    for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+    {
+        B(i,j) = e;
+        B(i,i) = d[i+1];
+        B(j,i) = e;
+    }
+    B.print();
 
-
+/*
     ////
     double t = 0;
     double tau = (a[l][l] - a[k][k])/(2*a[k][l]); //=cot(2*theta)
@@ -40,7 +49,7 @@ int main()
 
     ///make a loop over i,l,k:
 
-    b[i][i]
+    b[i][i]*/
 
     return 0;
 }
