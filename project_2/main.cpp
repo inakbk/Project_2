@@ -31,7 +31,7 @@ int main()
     }
     B(n_step-2,n_step-2) = d[n_step-1];
     B.print();
-/*
+
 
     ////
     double t = 0;
@@ -49,9 +49,17 @@ int main()
     double c = 1/sqrt(1 + (t*t));
     double s = t*c;
 
-    ///make a loop over i,l,k:
+    ///make a loop over i,l,k, a is the old value
 
-    b[i][i]*/
+    b[i][i] = a[i][i];
+    b[i][k] = a[i][k]*c - a[i][l]*s;
+    b[i][l] = a[i][l]*c - a[i][k]*s;
+    b[k][k] = a[k][k]*c*c - 2*a[k][l]*c*s + a[l][l]*s*s;
+    b[l][l] = a[l][l]*c*c - 2*a[k][l]*c*s + a[k][k]*s*s;
+    b[k][l] = 0;
+
+
+
 
     return 0;
 }
