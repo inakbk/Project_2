@@ -9,31 +9,38 @@ using namespace arma;
 
 int main()
 {
-    int n_step = 11; //?
-    double p_max = 10.0; //writing p instead of rho
-    double p_min = 0;
+    const int n_step = 11; //?
+    const double p_max = 10.0; //writing p instead of rho
+    const double p_min = 0;
 
-    double h = (p_max - p_min)/n_step;
+    const double h = (p_max - p_min)/n_step;
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
+
+    //initializing B
+    double e = -1/(h*h); // all elements of the e vec is the same
+    vec d = 2/(h*h) + p*p;//is it doing the operation element wise?
+
 
 
     ////
     double t = 0;
     double tau = (a[l][l] - a[k][k])/(2*a[k][l]); //=cot(2*theta)
+
+    // ensuring that theta<=pi/4:
     if(tau>0)
     {
         t = -tau + sqrt(1 + (tau*tau)); //set sqrt outside to compute only once?
-
     }
     if(tau<0)
     {
         t = -tau - sqrt(1 + (tau*tau));
     }
+    double c = 1/sqrt(1 + (t*t));
+    double s = t*c;
 
+    ///make a loop over i,l,k:
 
-    theta = //..
-    s = sin(theta);
-    c = cos(theta);
+    b[i][i]
 
     return 0;
 }
