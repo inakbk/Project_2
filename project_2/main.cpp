@@ -32,8 +32,9 @@ int main()
     B(n_step-2,n_step-2) = d[n_step-1];
     B.print();
 
+    //finding the index of the maximum element in B:
 
-    ////
+    //finding the values of c ans s (the S matrix):
     double t = 0;
     double tau = (B[l][l] - B[k][k])/(2*B[k][l]); //=cot(2*theta)
 
@@ -49,13 +50,13 @@ int main()
     double c = 1/sqrt(1 + (t*t));
     double s = t*c;
 
-    ///make a loop over i,l,k, a is the old value
+    //make a loop over i=0,1,..., and j=0,1,2,...,
 
     B[i][i] = B[i][i]; //dont need to write?
     double temp_B = B[i][k];
     B[i][k] = B[i][k]*c - B[i][l]*s;
     B[i][l] = B[i][l]*c - temp_B*s;
-    temp_B = B[k][k]
+    temp_B = B[k][k];
     B[k][k] = B[k][k]*c*c - 2*B[k][l]*c*s + B[l][l]*s*s;
     B[l][l] = B[l][l]*c*c - 2*B[k][l]*c*s + temp_B*s*s;
     B[k][l] = 0; //or write the formula that should be zero?
