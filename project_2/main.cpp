@@ -35,7 +35,7 @@ int main()
 
     ////
     double t = 0;
-    double tau = (a[l][l] - a[k][k])/(2*a[k][l]); //=cot(2*theta)
+    double tau = (B[l][l] - B[k][k])/(2*B[k][l]); //=cot(2*theta)
 
     // ensuring that theta<=pi/4:
     if(tau>0)
@@ -51,13 +51,14 @@ int main()
 
     ///make a loop over i,l,k, a is the old value
 
-    b[i][i] = a[i][i];
-    b[i][k] = a[i][k]*c - a[i][l]*s;
-    b[i][l] = a[i][l]*c - a[i][k]*s;
-    b[k][k] = a[k][k]*c*c - 2*a[k][l]*c*s + a[l][l]*s*s;
-    b[l][l] = a[l][l]*c*c - 2*a[k][l]*c*s + a[k][k]*s*s;
-    b[k][l] = 0;
-
+    B[i][i] = B[i][i]; //dont need to write?
+    double temp_B = B[i][k];
+    B[i][k] = B[i][k]*c - B[i][l]*s;
+    B[i][l] = B[i][l]*c - temp_B*s;
+    temp_B = B[k][k]
+    B[k][k] = B[k][k]*c*c - 2*B[k][l]*c*s + B[l][l]*s*s;
+    B[l][l] = B[l][l]*c*c - 2*B[k][l]*c*s + temp_B*s*s;
+    B[k][l] = 0; //or write the formula that should be zero?
 
 
 
