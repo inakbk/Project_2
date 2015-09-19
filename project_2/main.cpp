@@ -6,7 +6,7 @@
 using namespace std;
 using namespace arma;
 
-void max_elem_indexB(int *k, int *l, mat B, double max_off_diagonal, int n_step)
+void max_elem_indexB(int *k, int *l, mat B, double *max_off_diagonal, int n_step)
 {
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
     {
@@ -18,11 +18,6 @@ void max_elem_indexB(int *k, int *l, mat B, double max_off_diagonal, int n_step)
             l = j;
         }
     }
-    //cout << k << endl; //this value does not change?
-    //cout << l << endl;
-    //cout << max_off_diagonal << endl;
-    //cout << "----------" << counter << endl;
-
 }
 
 int main()
@@ -68,7 +63,13 @@ int main()
         ++counter;
         //finding the value and index(k,l) of the maximum element in B:
         max_off_diagonal = B(0,1)*B(0,1)-1;
-        max_elem_indexB();
+        max_elem_indexB(); //function call, enter variables
+
+
+        //cout << k << endl; //this value does not change?
+        //cout << l << endl;
+        //cout << max_off_diagonal << endl;
+        //cout << "----------" << counter << endl;
 
 
         //finding the values of c ans s (the S transformation matrix):
