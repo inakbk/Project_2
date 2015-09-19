@@ -15,7 +15,7 @@ int main()
 
     for(int i=0; i<=n-1; i++)
     {
-        const int n_step = 10000; //?
+        const int n_step = 1000; //?
         const double p_max = rho_max[i];
         const double p_min = 0;
 
