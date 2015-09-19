@@ -9,7 +9,7 @@ using namespace arma;
 int main()
 {
     const int n_step = 11; //?
-    const double p_max = 10.0; //writing p instead of rho
+    const double p_max = 20; //writing p instead of rho
     const double p_min = 0;
 
     const double h = (p_max - p_min)/n_step;
@@ -61,6 +61,7 @@ int main()
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
         double s = 0;
+        double t = 0;
 
         if(B(k,l) != 0)
         {
@@ -68,11 +69,11 @@ int main()
             // ensuring that theta<=pi/4:
             if(tau>0)
             {
-                double t = -tau + sqrt(1 + (tau*tau));
+                t = -tau + sqrt(1 + (tau*tau));
             }
             else
             {
-                double t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
+                t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
             }
             c = 1/sqrt(1 + (t*t));
             s = t*c;
@@ -92,7 +93,7 @@ int main()
         double B_ik, B_il;
         B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
         B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
-        B(k,l) = 0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
+        B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
         B(l,k) = B(k,l); //symetric matrix
         //changing the remaining elements:
         for(int i=0; i<=n_step-2; ++i)
@@ -113,6 +114,13 @@ int main()
     B.print();
     //cout << "------" << endl;
     //cout << max_off_diagonal << endl;
+
+    //retriving eigenvalues:
+    vec a = B.diag();
+    d.shed_row(0);
+    d.shed_row(n_step-1);
+    (a-d).print();
+    cout << counter << endl;
 
     return 0;
 }
