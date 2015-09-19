@@ -8,8 +8,8 @@ using namespace arma;
 
 int main()
 {
-    const int n_step = 11; //?
-    const double p_max = 20; //writing p instead of rho
+    const int n_step = 10; //?
+    const double p_max = 100; //writing p instead of rho
     const double p_min = 0;
 
     const double h = (p_max - p_min)/n_step;
@@ -119,8 +119,8 @@ int main()
     vec a = B.diag();
     d.shed_row(0);
     d.shed_row(n_step-1);
-    (a-d).print();
-    cout << counter << endl;
+    //(a-d).print();
+    //cout << counter << endl;
 
     return 0;
 }
