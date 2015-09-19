@@ -72,23 +72,31 @@ int main()
         double c = 1/sqrt(1 + (t*t));
         double s = t*c;
 
-        cout << "This should be zero:" << endl;
-        cout << (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s) << endl;
+        //cout << "This should be zero:" << endl;
+        //cout << (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s) << endl;
 
-
-        //think this is not working, B is unchanged after the loop...
-        for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+        //transformation:
+        double B_kk = B(k,k);
+        double B_ll = B(l,l);
+        double B_ik, B_il;
+        B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
+        B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
+        B(k,l) = (B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
+        B(l,k) = B(k,l);
+        //changing the remaining elements
+        for(int i=0; i<=n_step-2; ++i)
         {
-            B(i,i) = B(i,i); //dont need to write?
-            double temp_B = B(i,k);
-            B(i,k) = B(i,k)*c - B(i,l)*s;
-            B(i,l) = B(i,l)*c - temp_B*s;
-            temp_B = B(k,k);
+            if((i!=k) && (i!=l))
+            {
+                B_ik = B(i,k);
+                B_il = B(i,l);
+                B(i,k) = B_ik*c - B_il*s;
+                B(k,i) = B(i,k);
+                B(i,l) = B_il*c - B_ik*s;
+                B(l,i) = B(i,l);
+            }
         }
-        B(k,k) = B(k,k)*c*c - 2*B(k,l)*c*s + B(l,l)*s*s;
-        B(l,l) = B(l,l)*c*c - 2*B(k,l)*c*s + temp_B*s*s;
-        B(k,l) = (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s);
-        B(l,k) = (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s);
+
     //}
     B.print();
 
