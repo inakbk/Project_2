@@ -36,10 +36,12 @@ int main()
     int k = 0;
     int l = 0;
 
-    //this test is not working properly, or the change to the matrix is not working
-    //while(tolerance < max_off_diagonal)
-    //{
+    int counter = 0;
+    while(tolerance < max_off_diagonal)//counter<10)
+    {
+        ++counter;
         //finding the value and index(k,l) of the maximum element in B:
+        max_off_diagonal = B(0,1)*B(0,1)-1;
         for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
         {
             //Checking all off-diagonal elements:
@@ -48,29 +50,38 @@ int main()
                 max_off_diagonal = B(i,j)*B(i,j);
                 k = i;
                 l = j;
-                cout << "here2" << endl;
+                //cout << "here2" << endl;
             }
         }
         //cout << k << endl; //this value does not change?
         //cout << l << endl;
         //cout << max_off_diagonal << endl;
-        cout << "----------" << endl;
+        //cout << "----------" << counter << endl;
 
-        //finding the values of c ans s (the S matrix):
-        double t = 0;
-        double tau = (B(l,l) - B(k,k))/(2*B(k,l)); //=cot(2*theta)
+        //finding the values of c ans s (the S transformation matrix):
+        double c = 0;
+        double s = 0;
 
-        // ensuring that theta<=pi/4:
-        if(tau>0)
+        if(B(k,l) != 0)
         {
-            t = -tau + sqrt(1 + (tau*tau)); //set sqrt outside to compute only once?
+            double tau = (B(l,l) - B(k,k))/(2*B(k,l));
+            // ensuring that theta<=pi/4:
+            if(tau>0)
+            {
+                double t = -tau + sqrt(1 + (tau*tau));
+            }
+            else
+            {
+                double t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
+            }
+            c = 1/sqrt(1 + (t*t));
+            s = t*c;
         }
-        if(tau<0)
+        else
         {
-            t = -tau - sqrt(1 + (tau*tau));
+            c = 1.0;
+            s = 0.0;
         }
-        double c = 1/sqrt(1 + (t*t));
-        double s = t*c;
 
         //cout << "This should be zero:" << endl;
         //cout << (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s) << endl;
@@ -81,9 +92,9 @@ int main()
         double B_ik, B_il;
         B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
         B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
-        B(k,l) = (B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
-        B(l,k) = B(k,l);
-        //changing the remaining elements
+        B(k,l) = 0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
+        B(l,k) = B(k,l); //symetric matrix
+        //changing the remaining elements:
         for(int i=0; i<=n_step-2; ++i)
         {
             if((i!=k) && (i!=l))
@@ -97,8 +108,11 @@ int main()
             }
         }
 
-    //}
+    }
+    cout << "------" << endl;
     B.print();
+    //cout << "------" << endl;
+    //cout << max_off_diagonal << endl;
 
     return 0;
 }
