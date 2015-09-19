@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace arma;
+//test 2
 
 int main()
 {
@@ -12,7 +13,6 @@ int main()
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
-    //test
     const double h = (p_max - p_min)/n_step;
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
     vec V = p%p;
