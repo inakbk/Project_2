@@ -9,7 +9,7 @@ using namespace arma;
 int main()
 {
     const int n_step = 100; //?
-    const double p_max = 10; //writing p instead of rho
+    const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
     const double h = (p_max - p_min)/n_step;
@@ -29,12 +29,12 @@ int main()
         B(j,i) = e;
     }
     B(n_step-2,n_step-2) = d[n_step-1];
-    B.print();
+    //B.print();
 
     vec eigval = eig_sym(B);
     eigval.print();
 
-
+/*
     double tolerance = 0.00000001;
     double max_off_diagonal = B(0,1)*B(0,1)-1;
     int k = 0;
@@ -129,7 +129,7 @@ int main()
     cout << "------" << endl;
     cout << a[0] << endl;
     //cout << counter << endl;
-
+*/
     return 0;
 }
 
