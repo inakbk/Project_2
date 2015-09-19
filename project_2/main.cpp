@@ -5,7 +5,25 @@
 
 using namespace std;
 using namespace arma;
-//test 2
+
+void max_elem_indexB(int *k, int *l, mat B, double max_off_diagonal, int n_step)
+{
+    for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+    {
+        //Checking all off-diagonal elements:
+        if( ((B(i,j)*B(i,j)) > max_off_diagonal) && (i!=j) )
+        {
+            max_off_diagonal = B(i,j)*B(i,j);
+            k = i;
+            l = j;
+        }
+    }
+    //cout << k << endl; //this value does not change?
+    //cout << l << endl;
+    //cout << max_off_diagonal << endl;
+    //cout << "----------" << counter << endl;
+
+}
 
 int main()
 {
@@ -17,10 +35,9 @@ int main()
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
     vec V = p%p;
 
-    // initializing B
+    // Constructing B:
     double e = -1/(h*h); // all elements of the e vec is the same
     vec d = 2/(h*h) + V;
-
     mat B = zeros<mat>(n_step-1,n_step-1);
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
     {
@@ -37,6 +54,9 @@ int main()
 
 //-------------------------------------------------------------
     //algorithm with jacobi rotation:
+
+
+
     double tolerance = 1.0e-08;
     double max_off_diagonal = tolerance + 0.1; //initial val to enter loop
     int k = 0;
@@ -48,21 +68,8 @@ int main()
         ++counter;
         //finding the value and index(k,l) of the maximum element in B:
         max_off_diagonal = B(0,1)*B(0,1)-1;
-        for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
-        {
-            //Checking all off-diagonal elements:
-            if( ((B(i,j)*B(i,j)) > max_off_diagonal) && (i!=j) )
-            {
-                max_off_diagonal = B(i,j)*B(i,j);
-                k = i;
-                l = j;
-                //cout << "here2" << endl;
-            }
-        }
-        //cout << k << endl; //this value does not change?
-        //cout << l << endl;
-        //cout << max_off_diagonal << endl;
-        //cout << "----------" << counter << endl;
+        max_elem_indexB();
+
 
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
