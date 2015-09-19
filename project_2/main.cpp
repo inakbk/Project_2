@@ -8,8 +8,8 @@ using namespace arma;
 
 int main()
 {
-    const int n_step = 10; //?
-    const double p_max = 100; //writing p instead of rho
+    const int n_step = 100; //?
+    const double p_max = 10; //writing p instead of rho
     const double p_min = 0;
 
     const double h = (p_max - p_min)/n_step;
@@ -30,6 +30,10 @@ int main()
     }
     B(n_step-2,n_step-2) = d[n_step-1];
     B.print();
+
+    vec eigval = eig_sym(B);
+    eigval.print();
+
 
     double tolerance = 0.00000001;
     double max_off_diagonal = B(0,1)*B(0,1)-1;
@@ -111,7 +115,7 @@ int main()
 
     }
     cout << "------" << endl;
-    B.print();
+    //B.print();
     //cout << "------" << endl;
     //cout << max_off_diagonal << endl;
 
@@ -119,7 +123,11 @@ int main()
     vec a = B.diag();
     d.shed_row(0);
     d.shed_row(n_step-1);
-    //(a-d).print();
+    cout << "------" << endl;
+    a = sort(a);
+    a.print();
+    cout << "------" << endl;
+    cout << a[0] << endl;
     //cout << counter << endl;
 
     return 0;
