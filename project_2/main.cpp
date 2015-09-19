@@ -8,7 +8,7 @@ using namespace arma;
 
 int main()
 {
-    const int n_step = 100; //?
+    const int n_step = 10; //?
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
@@ -19,7 +19,6 @@ int main()
     // initializing B
     double e = -1/(h*h); // all elements of the e vec is the same
     vec d = 2/(h*h) + V;
-    //d.print();
 
     mat B = zeros<mat>(n_step-1,n_step-1);
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
@@ -30,18 +29,20 @@ int main()
     }
     B(n_step-2,n_step-2) = d[n_step-1];
     //B.print();
-
+//-------------------------------------------------------------
+    //solving with armadillo lib:
     vec eigval = eig_sym(B);
-    eigval.print();
+    //eigval.print();
 
-/*
-    double tolerance = 0.00000001;
-    double max_off_diagonal = B(0,1)*B(0,1)-1;
+//-------------------------------------------------------------
+    //algorithm with jacobi rotation:
+    double tolerance = 1.0e-08;
+    double max_off_diagonal = tolerance + 0.1; //initial val to enter loop
     int k = 0;
     int l = 0;
 
     int counter = 0;
-    while(tolerance < max_off_diagonal)//counter<10)
+    while(tolerance < max_off_diagonal)
     {
         ++counter;
         //finding the value and index(k,l) of the maximum element in B:
@@ -123,13 +124,15 @@ int main()
     vec a = B.diag();
     d.shed_row(0);
     d.shed_row(n_step-1);
+
     cout << "------" << endl;
     a = sort(a);
     a.print();
     cout << "------" << endl;
-    cout << a[0] << endl;
+    //cout << a[3] << endl;
+    //cout << eigval[3] << endl;
     //cout << counter << endl;
-*/
+
     return 0;
 }
 
