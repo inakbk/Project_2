@@ -5,13 +5,13 @@
 
 using namespace std;
 using namespace arma;
-test
 
-void max_elem_indexB(int *k, int *l, mat B, double *max_off_diagonal, int n_step)
+void max_elem_indexB(int& k, int& l, double& max_off_diagonal, mat B, int n_step)
 {
+    //Checking all off-diagonal elements:
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
     {
-        //Checking all off-diagonal elements:
+        //storing value and index of max off-diag-element
         if( ((B(i,j)*B(i,j)) > max_off_diagonal) && (i!=j) )
         {
             max_off_diagonal = B(i,j)*B(i,j);
@@ -31,6 +31,7 @@ int main()
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
     vec V = p%p;
 
+//-------------------------------------------------------------
     // Constructing B:
     double e = -1/(h*h); // all elements of the e vec is the same
     vec d = 2/(h*h) + V;
@@ -51,8 +52,6 @@ int main()
 //-------------------------------------------------------------
     //algorithm with jacobi rotation:
 
-
-
     double tolerance = 1.0e-08;
     double max_off_diagonal = tolerance + 0.1; //initial val to enter loop
     int k = 0;
@@ -63,9 +62,9 @@ int main()
     {
         ++counter;
         //finding the value and index(k,l) of the maximum element in B:
-        max_off_diagonal = B(0,1)*B(0,1)-1;
-        max_elem_indexB(); //function call, enter variables
+        max_off_diagonal = B(0,1)*B(0,1)-1; //why do I need this one? initializing?
 
+        max_elem_indexB(k, l, max_off_diagonal, B, n_step)
 
         //cout << k << endl; //this value does not change?
         //cout << l << endl;
