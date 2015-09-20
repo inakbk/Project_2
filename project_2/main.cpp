@@ -25,18 +25,20 @@ void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat B, 
 
 void transformation_matrix(double& c, double& s, const mat B, const int k, const int l)
 {
-    double t = 0;
     if(B(k,l) != 0)
     {
+        double t = 0;
         double tau = (B(l,l) - B(k,k))/(2*B(k,l));
         // ensuring that theta<=pi/4:
         if(tau>0)
         {
-            t = -tau + sqrt(1 + (tau*tau));
+            //t = -tau + sqrt(1 + (tau*tau));
+            t = 1.0/(tau + sqrt(1 + tau*tau));
         }
         else
         {
-            t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
+            //t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
+            t = -1.0/(-tau + sqrt(1 + tau*tau));
         }
         c = 1/sqrt(1 + (t*t));
         s = t*c;
@@ -45,7 +47,6 @@ void transformation_matrix(double& c, double& s, const mat B, const int k, const
     {
         c = 1.0;
         s = 0.0;
-        cout << "im here" << endl;
     }
 }
 
@@ -130,11 +131,14 @@ int main()
         double c = 0;
         double s = 0;
         transformation_matrix(c, s, B, k, l);
+        //cout << "----" << endl;
         //cout << c << endl;
         //cout << s << endl;
 
         //transformation of B:
         jacobi_rotation(B, c, s, k, l, n_step);
+        //cout << "----" << endl;
+        //B.print();
     }
     //retriving eigenvalues:
     cout << "------" << endl;
@@ -153,8 +157,8 @@ int main()
 //-------------------------------------------------------------
     //comparing with arma lib eigval
     cout << "------" << endl;
-    //cout << a[0] << endl;
-    //cout << eigval[0] << endl;
+    cout << a[0] << endl;
+    cout << eigval[0] << endl;
 
     //eigval.print();
 
