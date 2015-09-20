@@ -54,7 +54,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
     B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
     B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
     B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
-    B(l,k) = B(k,l); //symetric matrix
+    B(l,k) = B(k,l); //symetrix matrix
 
     //changing the remaining elements:
     for(int i=0; i<=n_step-2; ++i)
