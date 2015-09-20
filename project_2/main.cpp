@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include <armadillo>
 #include <cstdlib>
 #include <time.h>
@@ -8,13 +9,14 @@ using namespace arma;
 
 void find_max_elem_index(int& k, int& l, double& max_off_diagonal, mat B, int n_step)
 {
+    max_off_diagonal = 0.0;
     //Checking all off-diagonal elements:
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
     {
         //storing value and index of max off-diag-element
-        if( ((B(i,j)*B(i,j)) > max_off_diagonal) && (i!=j) )
+        if( (fabs(B(i,j)) > max_off_diagonal) && (i!=j) )
         {
-            max_off_diagonal = B(i,j)*B(i,j);
+            max_off_diagonal = fabs(B(i,j));
             k = i;
             l = j;
         }
@@ -73,13 +75,12 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
 
 int main()
 {
-    const int n_step = 10; //?
+    const int n_step = 5;
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
     const double h = (p_max - p_min)/n_step;
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
-    cout << p[1]-p[0] << h << endl;
     vec V = p%p;
 
 //-------------------------------------------------------------
@@ -90,7 +91,6 @@ int main()
         B(i,i) = 0.0;
     }
     //B.print();
-
 
 //-------------------------------------------------------------
 /*
@@ -115,16 +115,16 @@ int main()
 //-------------------------------------------------------------
     //algorithm with jacobi rotation:
     double tolerance = 1.0e-08;
-    double max_off_diagonal = tolerance + 0.1; //initial val to enter loop
+    double max_off_diagonal = 1.0;
     int k = 0;
     int l = 0;
+    find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial val to enter loop
 
     while(tolerance < max_off_diagonal)
     {
         //finding the value and index(k,l) of the maximum element in B:
-        max_off_diagonal = B(0,1)*B(0,1)-1; //why do I need this one? initializing?
-
         find_max_elem_index(k, l, max_off_diagonal, B, n_step);
+        cout << max_off_diagonal << endl;
 
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
