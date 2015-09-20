@@ -6,7 +6,7 @@
 using namespace std;
 using namespace arma;
 
-void max_elem_indexB(int& k, int& l, double& max_off_diagonal, mat B, int n_step)
+void find_max_elem_index(int& k, int& l, double& max_off_diagonal, mat B, int n_step)
 {
     //Checking all off-diagonal elements:
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
@@ -18,6 +18,31 @@ void max_elem_indexB(int& k, int& l, double& max_off_diagonal, mat B, int n_step
             k = i;
             l = j;
         }
+    }
+}
+
+void transformation_matrix(double& c, double& s, const mat B, const int k, const int l)
+{
+    double t = 0;
+    if(B(k,l) != 0)
+    {
+        double tau = (B(l,l) - B(k,k))/(2*B(k,l));
+        // ensuring that theta<=pi/4:
+        if(tau>0)
+        {
+            t = -tau + sqrt(1 + (tau*tau));
+        }
+        else
+        {
+            t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
+        }
+        c = 1/sqrt(1 + (t*t));
+        s = t*c;
+    }
+    else
+    {
+        c = 1.0;
+        s = 0.0;
     }
 }
 
@@ -51,7 +76,6 @@ int main()
 
 //-------------------------------------------------------------
     //algorithm with jacobi rotation:
-
     double tolerance = 1.0e-08;
     double max_off_diagonal = tolerance + 0.1; //initial val to enter loop
     int k = 0;
@@ -64,7 +88,7 @@ int main()
         //finding the value and index(k,l) of the maximum element in B:
         max_off_diagonal = B(0,1)*B(0,1)-1; //why do I need this one? initializing?
 
-        max_elem_indexB(k, l, max_off_diagonal, B, n_step)
+        find_max_elem_index(k, l, max_off_diagonal, B, n_step)
 
         //cout << k << endl; //this value does not change?
         //cout << l << endl;
@@ -75,28 +99,7 @@ int main()
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
         double s = 0;
-        double t = 0;
-
-        if(B(k,l) != 0)
-        {
-            double tau = (B(l,l) - B(k,k))/(2*B(k,l));
-            // ensuring that theta<=pi/4:
-            if(tau>0)
-            {
-                t = -tau + sqrt(1 + (tau*tau));
-            }
-            else
-            {
-                t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
-            }
-            c = 1/sqrt(1 + (t*t));
-            s = t*c;
-        }
-        else
-        {
-            c = 1.0;
-            s = 0.0;
-        }
+        transformation_matrix(c, s, B, k, l)
 
         //cout << "This should be zero:" << endl;
         //cout << (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s) << endl;
