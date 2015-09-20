@@ -73,7 +73,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
 
 int main()
 {
-    const int n_step = 10; //?
+    const int n_step = 1000; //?
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
@@ -125,7 +125,7 @@ int main()
     cout << "------" << endl;
     vec a = B.diag();
     a = sort(a);
-    a.print();
+    //a.print();
 
 //-------------------------------------------------------------
     //comparing with old matrix:
@@ -136,16 +136,15 @@ int main()
 //-------------------------------------------------------------
     //comparing with arma lib eigval
     cout << "------" << endl;
-    cout << a[3] << endl;
-    cout << eigval[3] << endl;
+    cout << a[0] << endl;
+    cout << eigval[0] << endl;
 
 //-------------------------------------------------------------
     //comparing with start out diagonal
     d.shed_row(0);
     d.shed_row(n_step-1);
-
     cout << "------" << endl;
-    (a-d).print();
+    //(a-d).print();
 
 
     return 0;
