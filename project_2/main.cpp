@@ -46,6 +46,31 @@ void transformation_matrix(double& c, double& s, const mat B, const int k, const
     }
 }
 
+void jacobi_rotation(mat& B, const double c, const double s, const int k, const int l, const int n_step)
+{
+    double B_kk = B(k,k);
+    double B_ll = B(l,l);
+    double B_ik, B_il;
+    B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
+    B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
+    B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
+    B(l,k) = B(k,l); //symetric matrix
+
+    //changing the remaining elements:
+    for(int i=0; i<=n_step-2; ++i)
+    {
+        if((i!=k) && (i!=l))
+        {
+            B_ik = B(i,k);
+            B_il = B(i,l);
+            B(i,k) = B_ik*c - B_il*s;
+            B(k,i) = B(i,k);
+            B(i,l) = B_il*c - B_ik*s;
+            B(l,i) = B(i,l);
+        }
+    }
+}
+
 int main()
 {
     const int n_step = 10; //?
@@ -88,7 +113,7 @@ int main()
         //finding the value and index(k,l) of the maximum element in B:
         max_off_diagonal = B(0,1)*B(0,1)-1; //why do I need this one? initializing?
 
-        find_max_elem_index(k, l, max_off_diagonal, B, n_step)
+        find_max_elem_index(k, l, max_off_diagonal, B, n_step);
 
         //cout << k << endl; //this value does not change?
         //cout << l << endl;
@@ -99,32 +124,15 @@ int main()
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
         double s = 0;
-        transformation_matrix(c, s, B, k, l)
+        transformation_matrix(c, s, B, k, l);
 
         //cout << "This should be zero:" << endl;
         //cout << (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s) << endl;
 
-        //transformation:
-        double B_kk = B(k,k);
-        double B_ll = B(l,l);
-        double B_ik, B_il;
-        B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
-        B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
-        B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
-        B(l,k) = B(k,l); //symetric matrix
-        //changing the remaining elements:
-        for(int i=0; i<=n_step-2; ++i)
-        {
-            if((i!=k) && (i!=l))
-            {
-                B_ik = B(i,k);
-                B_il = B(i,l);
-                B(i,k) = B_ik*c - B_il*s;
-                B(k,i) = B(i,k);
-                B(i,l) = B_il*c - B_ik*s;
-                B(l,i) = B(i,l);
-            }
-        }
+        //transformation of B:
+        jacobi_rotation(B, c, s, k, l, n_step);
+
+
 
     }
     cout << "------" << endl;
