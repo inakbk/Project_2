@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace arma;
+test
 
 void max_elem_indexB(int *k, int *l, mat B, double *max_off_diagonal, int n_step)
 {
