@@ -73,7 +73,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
 
 int main()
 {
-    const int n_step = 1000; //?
+    const int n_step = 10; //?
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
@@ -82,6 +82,11 @@ int main()
     vec V = p%p;
 
 //-------------------------------------------------------------
+    //Constructing test matrix
+
+
+//-------------------------------------------------------------
+/*
     // Constructing B:
     double e = -1/(h*h); // all elements of the e vec is the same
     vec d = 2/(h*h) + V;
@@ -94,6 +99,7 @@ int main()
     }
     B(n_step-2,n_step-2) = d[n_step-1];
     //B.print();
+    */
 //-------------------------------------------------------------
     //solving with armadillo lib:
     vec eigval = eig_sym(B);
