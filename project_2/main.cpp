@@ -106,52 +106,47 @@ int main()
     int k = 0;
     int l = 0;
 
-    int counter = 0;
     while(tolerance < max_off_diagonal)
     {
-        ++counter;
         //finding the value and index(k,l) of the maximum element in B:
         max_off_diagonal = B(0,1)*B(0,1)-1; //why do I need this one? initializing?
 
         find_max_elem_index(k, l, max_off_diagonal, B, n_step);
-
-        //cout << k << endl; //this value does not change?
-        //cout << l << endl;
-        //cout << max_off_diagonal << endl;
-        //cout << "----------" << counter << endl;
-
 
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
         double s = 0;
         transformation_matrix(c, s, B, k, l);
 
-        //cout << "This should be zero:" << endl;
-        //cout << (B(k,k) - B(l,l) )*c*s + B(k,l)*(c*c - s*s) << endl;
-
         //transformation of B:
         jacobi_rotation(B, c, s, k, l, n_step);
-
-
-
     }
+    //retriving eigenvalues:
+    cout << "------" << endl;
+    vec a = B.diag();
+    a = sort(a);
+    a.print();
+
+//-------------------------------------------------------------
+    //comparing with old matrix:
     cout << "------" << endl;
     //B.print();
-    //cout << "------" << endl;
-    //cout << max_off_diagonal << endl;
+    cout << "------" << endl;
 
-    //retriving eigenvalues:
-    vec a = B.diag();
+//-------------------------------------------------------------
+    //comparing with arma lib eigval
+    cout << "------" << endl;
+    cout << a[3] << endl;
+    cout << eigval[3] << endl;
+
+//-------------------------------------------------------------
+    //comparing with start out diagonal
     d.shed_row(0);
     d.shed_row(n_step-1);
 
     cout << "------" << endl;
-    a = sort(a);
-    a.print();
-    cout << "------" << endl;
-    //cout << a[3] << endl;
-    //cout << eigval[3] << endl;
-    //cout << counter << endl;
+    (a-d).print();
+
 
     return 0;
 }
