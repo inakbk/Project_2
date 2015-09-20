@@ -45,6 +45,7 @@ void transformation_matrix(double& c, double& s, const mat B, const int k, const
     {
         c = 1.0;
         s = 0.0;
+        cout << "im here" << endl;
     }
 }
 
@@ -75,7 +76,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
 
 int main()
 {
-    const int n_step = 5;
+    const int n_step = 100;
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
@@ -129,6 +130,8 @@ int main()
         double c = 0;
         double s = 0;
         transformation_matrix(c, s, B, k, l);
+        //cout << c << endl;
+        //cout << s << endl;
 
         //transformation of B:
         jacobi_rotation(B, c, s, k, l, n_step);
@@ -138,7 +141,8 @@ int main()
     vec a = B.diag();
     a = sort(a);
     //eigval = sort(eigval);
-    a.print();
+
+    //a.print();
 
 //-------------------------------------------------------------
     //comparing with old matrix:
@@ -151,7 +155,8 @@ int main()
     cout << "------" << endl;
     //cout << a[0] << endl;
     //cout << eigval[0] << endl;
-    eigval.print();
+
+    //eigval.print();
 
 //-------------------------------------------------------------
     //comparing with start out diagonal
