@@ -73,12 +73,13 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
 
 int main()
 {
-    const int n_step = 5; //?
+    const int n_step = 10; //?
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
     const double h = (p_max - p_min)/n_step;
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
+    cout << p[1]-p[0] << h << endl;
     vec V = p%p;
 
 //-------------------------------------------------------------
