@@ -77,7 +77,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
 
 int main()
 {
-    const int n_step = 100;
+    const int n_step = 5;
     const double p_max = 5; //writing p instead of rho
     const double p_min = 0;
 
@@ -156,9 +156,14 @@ int main()
 
 //-------------------------------------------------------------
     //comparing with arma lib eigval
-    cout << "------" << endl;
     cout << a[0] << endl;
+    cout << a[1] << endl;
+    cout << a[2] << endl;
+    cout << "------" << endl;
     cout << eigval[0] << endl;
+    cout << eigval[1] << endl;
+    cout << eigval[2] << endl;
+
 
     //eigval.print();
 
