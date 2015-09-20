@@ -7,7 +7,7 @@
 using namespace std;
 using namespace arma;
 
-void find_max_elem_index(int& k, int& l, double& max_off_diagonal, mat B, int n_step)
+void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat B, const int n_step)
 {
     max_off_diagonal = 0.0;
     //Checking all off-diagonal elements:
@@ -124,7 +124,6 @@ int main()
     {
         //finding the value and index(k,l) of the maximum element in B:
         find_max_elem_index(k, l, max_off_diagonal, B, n_step);
-        cout << max_off_diagonal << endl;
 
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
