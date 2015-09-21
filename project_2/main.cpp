@@ -112,7 +112,6 @@ int main()
 //-------------------------------------------------------------
     //solving with armadillo lib:
     vec eigval = eig_sym(B);
-    //eigval.print();
 
 //-------------------------------------------------------------
     //algorithm with jacobi rotation:
@@ -131,9 +130,6 @@ int main()
         double c = 0;
         double s = 0;
         transformation_matrix(c, s, B, k, l);
-        //cout << "----" << endl;
-        //cout << c << endl;
-        //cout << s << endl;
 
         //transformation of B:
         jacobi_rotation(B, c, s, k, l, n_step);
