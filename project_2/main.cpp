@@ -7,40 +7,45 @@
 using namespace std;
 using namespace arma;
 
-void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat B, const int n_step)
+void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
 {
-    max_off_diagonal = 0.0;
+    max_off_diagonal = -1.0;
     //Checking all off-diagonal elements:
-    for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
-    {
-        //storing value and index of max off-diag-element
-        if( (fabs(B(i,j)) > max_off_diagonal) && (i!=j) )
-        {
-            max_off_diagonal = fabs(B(i,j));
-            k = i;
-            l = j;
+    for(int i=0; i<n_step-1; i++)  {
+        for(int j=i+1; j<n_step-1; j++) {
+            //storing value and index of max off-diag-element
+            if(fabs(B(i,j)) > max_off_diagonal)
+            {
+                max_off_diagonal = fabs(B(i,j));
+                k = i;
+                l = j;
+            }
         }
+    }
+    if(max_off_diagonal < 0) {
+        cout << "Warning, find_max_elem_index did not find any offdiagonal element with absolute value larger than zero. Aborting!" << endl;
+        exit(1);
     }
 }
 
-void transformation_matrix(double& c, double& s, const mat B, const int k, const int l)
+void transformation_matrix(double& c, double& s, const mat &B, const int k, const int l)
 {
     if(B(k,l) != 0)
     {
         double t = 0;
-        double tau = (B(l,l) - B(k,k))/(2*B(k,l));
+        double tau = (B(l,l) - B(k,k))/(2.0*B(k,l));
         // ensuring that theta<=pi/4:
         if(tau>0)
         {
-            //t = -tau + sqrt(1 + (tau*tau));
-            t = 1.0/(tau + sqrt(1 + tau*tau));
+            t = -tau + sqrt(1 + (tau*tau));
+            // t = 1.0/(tau + sqrt(1 + tau*tau));
         }
         else
         {
-            //t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
-            t = -1.0/(-tau + sqrt(1 + tau*tau));
+            t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
+            // t = -1.0/(-tau + sqrt(1 + tau*tau));
         }
-        c = 1/sqrt(1 + (t*t));
+        c = 1.0/sqrt(1.0 + (t*t));
         s = t*c;
     }
     else
@@ -54,22 +59,21 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
 {
     double B_kk = B(k,k);
     double B_ll = B(l,l);
-    double B_ik, B_il;
     B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
     B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
     B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
     B(l,k) = B(k,l); //symetrix matrix
 
     //changing the remaining elements:
-    for(int i=0; i<=n_step-2; ++i)
+    for(int i=0; i<n_step-1; ++i)
     {
-        if((i!=k) && (i!=l))
+        if( (i!=k) && (i!=l) )
         {
-            B_ik = B(i,k);
-            B_il = B(i,l);
+            double B_ik = B(i,k);
+            double B_il = B(i,l);
             B(i,k) = B_ik*c - B_il*s;
             B(k,i) = B(i,k);
-            B(i,l) = B_il*c - B_ik*s;
+            B(i,l) = B_il*c + B_ik*s;
             B(l,i) = B(i,l);
         }
     }
@@ -88,11 +92,11 @@ int main()
 //-------------------------------------------------------------
     //Constructing test matrix
     mat B = ones<mat>(n_step-1, n_step-1);
-    for(int i=0; (i<=n_step-2); ++i)
+    for(int i=0; (i<n_step-1); ++i)
     {
         B(i,i) = 0.0;
     }
-    //B.print();
+    B.print();
 
 //-------------------------------------------------------------
 /*
@@ -120,21 +124,39 @@ int main()
     int k = 0;
     int l = 0;
     find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial val to enter loop
+    int maxNumberOfIterations = 10000;
 
+    int numberOfIterations = 0;
     while(tolerance < max_off_diagonal)
     {
+        // cout << endl << endl << "Iteration " << numberOfIterations << " with matrix:" << endl;
+        // B.print();
+
+        if(++numberOfIterations > maxNumberOfIterations) {
+            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations. Aborting!" << endl;
+            exit(1);
+        }
+
         //finding the value and index(k,l) of the maximum element in B:
+        // cout << "Finding maximum offdiagonal element..." << endl;
         find_max_elem_index(k, l, max_off_diagonal, B, n_step);
+        // if( (numberOfIterations % 1000) == 0 ) {
+        // cout << "Found element " << k << ", " << l << " with value " << max_off_diagonal << endl;
+        // }
 
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
         double s = 0;
+        // cout << "Finding c and s" << endl;
         transformation_matrix(c, s, B, k, l);
+        // cout << "c=" << c << "  s  = " << s << endl;
 
         //transformation of B:
+        // cout << "Now rotating..." << endl;
         jacobi_rotation(B, c, s, k, l, n_step);
+        // cout << "After rotating, matrix looks like: " << endl;
+        // B.print();
         //cout << "----" << endl;
-        //B.print();
     }
     //retriving eigenvalues:
     cout << "------" << endl;
@@ -142,7 +164,7 @@ int main()
     a = sort(a);
     //eigval = sort(eigval);
 
-    //a.print();
+    a.print();
 
 //-------------------------------------------------------------
     //comparing with old matrix:
@@ -159,7 +181,7 @@ int main()
     cout << eigval[0] << endl;
     cout << eigval[1] << endl;
     cout << eigval[2] << endl;
-
+    B.print();
 
     //eigval.print();
 
