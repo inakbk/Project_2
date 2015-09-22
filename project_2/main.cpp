@@ -188,6 +188,13 @@ int main()
     cout << "------" << endl;
     eigval_jacobi_rot.print();
 
+
+    ///fix write to file. write all data? or just the first ones?
+    /// how big n_step need to get three lowest eigvals to 4 leading digits?
+    /// dependency og p_max? save/write to file?
+    /// how many transformations (before 0) as function of n_step
+    /// also write time to file as function of n_step for both solvers
+
 //    cout << a[0] << endl;
 //    cout << a[1] << endl;
 //    cout << a[2] << endl;
