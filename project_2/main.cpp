@@ -7,6 +7,23 @@
 using namespace std;
 using namespace arma;
 
+//Function to write data/output to file
+void WriteToFile(const vec x, const vec solution, const int n, const double time_diag, string FileName)
+{
+    ofstream myfile;
+        string filename = "linear_eq_solution_" + FileName + "_n" + to_string(n) + ".txt";
+        myfile.open (filename);
+        myfile << "Data:" << "  "<< "x" << "     " << "Solution" << endl;
+        myfile << "Time calculating with " << FileName << ": "  << time_diag << " " << " seconds" << endl;
+        myfile << "---------------------" << endl;
+        for (int i=1; i<n+1; i++)
+        {
+            myfile << x[i] << "    " << solution[i] << endl;
+        }
+        myfile.close();
+        cout << "Datafile done for n=" << n << endl;
+}
+
 void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
 {
     max_off_diagonal = -1.0;
