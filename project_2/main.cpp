@@ -78,7 +78,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
     }
 }
 
-void solve_eq_jacobi_rotation(mat& B, const int n_step, int maxNumberOfIterations)
+int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIterations)
 {
     double tolerance = 1.0e-08;
     double max_off_diagonal = 0;
@@ -106,7 +106,7 @@ void solve_eq_jacobi_rotation(mat& B, const int n_step, int maxNumberOfIteration
         jacobi_rotation(B, c, s, k, l, n_step);
 
     }
-    cout << "Total number of iterations: " << numberOfIterations << endl;
+    return numberOfIterations;
 }
 
 int main()
@@ -134,14 +134,33 @@ int main()
     }
     B(n_step-2,n_step-2) = d[n_step-1];
 
-    //should time following code:
 //-------------------------------------------------------------
+    //clocking the operations (only solve, not making file):
+    clock_t start_arma, finish_arma; //declaring start and finish time
+    start_arma = clock();
+
     //solving equations with armadillo lib:
     vec eigval_arma = eig_sym(B);
 
+    //stopping timer:
+    finish_arma = clock();
+    double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
+    cout << "Armadillo lib. eigenvalue solver: Time for n_step="
+         << n_step << ":  " << time_arma << " seconds" << endl;
 //-------------------------------------------------------------
+    //clocking the operations (only solve, not making file):
+    clock_t start_jacobi, finish_jacobi; //declaring start and finish time
+    start_jacobi = clock();
+
     //solving equations with jacobi rotation:
-    solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations);
+    int numberOfIterations = solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations);
+
+    //stopping timer:
+    finish_jacobi = clock();
+    double time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
+    cout << "Jacobi rotation eigenvalue solver: Time for n_step="
+         << n_step << ":  " << time_jacobi << " seconds" << endl;
+    cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
 //-------------------------------------------------------------
     //retriving eigenvalues, interested in the three first:
