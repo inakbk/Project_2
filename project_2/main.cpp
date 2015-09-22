@@ -78,15 +78,13 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
     }
 }
 
-void solve_eq_jacobi_rotation(mat& B, const int n_step)
+void solve_eq_jacobi_rotation(mat& B, const int n_step, int maxNumberOfIterations)
 {
     double tolerance = 1.0e-08;
     double max_off_diagonal = 0;
     int k = 0;
     int l = 0;
     find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial value for max_off_diagonal to enter loop
-
-    int maxNumberOfIterations = 10000;
 
     int numberOfIterations = 0;
     while(tolerance < max_off_diagonal)
@@ -109,15 +107,14 @@ void solve_eq_jacobi_rotation(mat& B, const int n_step)
 
     }
     cout << "Total number of iterations: " << numberOfIterations << endl;
-
-
 }
-
 
 int main()
 {
+    //variables that can change for each run:
     const int n_step = 50;
     const double p_max = 5; //writing p instead of rho
+    int maxNumberOfIterations = 10000;
 
 //-------------------------------------------------------------
     const double p_min = 0;
@@ -125,7 +122,7 @@ int main()
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
     vec V = p%p;
 
-    // Constructing B:
+    // Constructing matrix B:
     double e = -1/(h*h); // all elements of the e vec is the same
     vec d = 2/(h*h) + V;
     mat B = zeros<mat>(n_step-1,n_step-1);
@@ -137,22 +134,22 @@ int main()
     }
     B(n_step-2,n_step-2) = d[n_step-1];
     //B.print();
-
 //-------------------------------------------------------------
     //solving equations with armadillo lib:
-    vec eigval = eig_sym(B);
+    vec eigval_arma = eig_sym(B);
 
 //-------------------------------------------------------------
     //solving equations with jacobi rotation:
-    solve_eq_jacobi_rotation(B, n_step);
+    solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations);
 
+//-------------------------------------------------------------
     //retriving eigenvalues:
     cout << "------" << endl;
-    vec a = B.diag();
-    a = sort(a);
-    //eigval = sort(eigval);
+    vec eigval_jacobi_rot = B.diag();
+    eigval_jacobi_rot = sort(eigval_jacobi_rot);
+    //eigval_arma = sort(eigval_arma);
 
-    a.print();
+    eigval_jacobi_rot.print();
 
 //-------------------------------------------------------------
     //comparing with old matrix:
@@ -166,12 +163,12 @@ int main()
 //    cout << a[1] << endl;
 //    cout << a[2] << endl;
 //    cout << "------" << endl;
-//    cout << eigval[0] << endl;
-//    cout << eigval[1] << endl;
-//    cout << eigval[2] << endl;
+//    cout << eigval_arma[0] << endl;
+//    cout << eigval_arma[1] << endl;
+//    cout << eigval_arma[2] << endl;
     //B.print();
 
-    eigval.print();
+    eigval_arma.print();
 
 //-------------------------------------------------------------
     //comparing with start out diagonal
