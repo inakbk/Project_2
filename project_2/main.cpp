@@ -111,6 +111,7 @@ void solve_eq_jacobi_rotation(mat& B, const int n_step, int maxNumberOfIteration
 
 int main()
 {
+    test
     //variables that can change for each run:
     const int n_step = 5;
     int maxNumberOfIterations = 10000;
