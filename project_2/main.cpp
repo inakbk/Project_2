@@ -50,7 +50,7 @@ void transformation_matrix(double& c, double& s, const mat &B, const int k, cons
     {
         c = 1.0;
         s = 0.0;
-        cout << "Element chosen is zero: B(" << k << "," << l << ") = 0 ==> c = 1 and s = 0"
+        cout << "Element chosen is zero: B(" << k << "," << l << ") = 0 ==> c = 1 and s = 0" << endl;
     }
 }
 
@@ -78,30 +78,55 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
     }
 }
 
+void solve_eq_jacobi_rotation(mat& B, const int n_step)
+{
+    double tolerance = 1.0e-08;
+    double max_off_diagonal = 0;
+    int k = 0;
+    int l = 0;
+    find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial value for max_off_diagonal to enter loop
+
+    int maxNumberOfIterations = 10000;
+
+    int numberOfIterations = 0;
+    while(tolerance < max_off_diagonal)
+    {
+        if(++numberOfIterations > maxNumberOfIterations) {
+            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations. Aborting!" << endl;
+            exit(1);
+        }
+
+        //finding the value and index(k,l) of the maximum element in B:
+        find_max_elem_index(k, l, max_off_diagonal, B, n_step);
+
+        //finding the values of c ans s (the S transformation matrix):
+        double c = 0;
+        double s = 0;
+        transformation_matrix(c, s, B, k, l);
+
+        //transformation of B:
+        jacobi_rotation(B, c, s, k, l, n_step);
+
+    }
+    cout << "Total number of iterations: " << numberOfIterations << endl;
+
+
+}
+
+
 int main()
 {
-    const int n_step = 100;
+    const int n_step = 50;
     const double p_max = 5; //writing p instead of rho
-    const double p_min = 0;
 
+//-------------------------------------------------------------
+    const double p_min = 0;
     const double h = (p_max - p_min)/n_step;
     vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
     vec V = p%p;
 
-//-------------------------------------------------------------
-    //Constructing test matrix
-    mat B = ones<mat>(n_step-1, n_step-1);
-    for(int i=0; (i<n_step-1); ++i)
-    {
-        B(i,i) = 0.0;
-    }
-    //B.print();
-
-
-//-------------------------------------------------------------
-
     // Constructing B:
-  /*  double e = -1/(h*h); // all elements of the e vec is the same
+    double e = -1/(h*h); // all elements of the e vec is the same
     vec d = 2/(h*h) + V;
     mat B = zeros<mat>(n_step-1,n_step-1);
     for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
@@ -112,59 +137,22 @@ int main()
     }
     B(n_step-2,n_step-2) = d[n_step-1];
     //B.print();
-*/
+
 //-------------------------------------------------------------
     //solving equations with armadillo lib:
     vec eigval = eig_sym(B);
 
 //-------------------------------------------------------------
     //solving equations with jacobi rotation:
-    double tolerance = 1.0e-08;
-    double max_off_diagonal = 1.0;
-    int k = 0;
-    int l = 0;
-    find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial val to enter loop
-    int maxNumberOfIterations = 10000;
+    solve_eq_jacobi_rotation(B, n_step);
 
-    int numberOfIterations = 0;
-    while(tolerance < max_off_diagonal)
-    {
-        // cout << endl << endl << "Iteration " << numberOfIterations << " with matrix:" << endl;
-        // B.print();
-
-        if(++numberOfIterations > maxNumberOfIterations) {
-            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations. Aborting!" << endl;
-            exit(1);
-        }
-
-        //finding the value and index(k,l) of the maximum element in B:
-        // cout << "Finding maximum offdiagonal element..." << endl;
-        find_max_elem_index(k, l, max_off_diagonal, B, n_step);
-        // if( (numberOfIterations % 1000) == 0 ) {
-        // cout << "Found element " << k << ", " << l << " with value " << max_off_diagonal << endl;
-        // }
-
-        //finding the values of c ans s (the S transformation matrix):
-        double c = 0;
-        double s = 0;
-        // cout << "Finding c and s" << endl;
-        transformation_matrix(c, s, B, k, l);
-        // cout << "c=" << c << "  s  = " << s << endl;
-
-        //transformation of B:
-        // cout << "Now rotating..." << endl;
-        jacobi_rotation(B, c, s, k, l, n_step);
-        // cout << "After rotating, matrix looks like: " << endl;
-        // B.print();
-        //cout << "----" << endl;
-    }
     //retriving eigenvalues:
     cout << "------" << endl;
     vec a = B.diag();
     a = sort(a);
     //eigval = sort(eigval);
 
-    //a.print();
+    a.print();
 
 //-------------------------------------------------------------
     //comparing with old matrix:
@@ -174,16 +162,16 @@ int main()
 
 //-------------------------------------------------------------
     //comparing with arma lib eigval
-    cout << a[0] << endl;
-    cout << a[1] << endl;
-    cout << a[2] << endl;
-    cout << "------" << endl;
-    cout << eigval[0] << endl;
-    cout << eigval[1] << endl;
-    cout << eigval[2] << endl;
+//    cout << a[0] << endl;
+//    cout << a[1] << endl;
+//    cout << a[2] << endl;
+//    cout << "------" << endl;
+//    cout << eigval[0] << endl;
+//    cout << eigval[1] << endl;
+//    cout << eigval[2] << endl;
     //B.print();
 
-    //eigval.print();
+    eigval.print();
 
 //-------------------------------------------------------------
     //comparing with start out diagonal

@@ -1,4 +1,13 @@
 //Program to find the magnitude of p_max
+//-------------------------------------------------------------
+//    //Code for constructing test matrix
+//    mat B = ones<mat>(n_step-1, n_step-1);
+//    for(int i=0; (i<n_step-1); ++i)
+//    {
+//        B(i,i) = 0.0;
+//    }
+//    //B.print();
+
 
 #include <iostream>
 #include <armadillo>
