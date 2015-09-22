@@ -112,9 +112,9 @@ void solve_eq_jacobi_rotation(mat& B, const int n_step, int maxNumberOfIteration
 int main()
 {
     //variables that can change for each run:
-    const int n_step = 50;
-    const double p_max = 5; //writing p instead of rho
+    const int n_step = 5;
     int maxNumberOfIterations = 10000;
+    const double p_max = 5; //writing p instead of rho
 
 //-------------------------------------------------------------
     const double p_min = 0;
@@ -133,7 +133,8 @@ int main()
         B(j,i) = e;
     }
     B(n_step-2,n_step-2) = d[n_step-1];
-    //B.print();
+
+    //should time following code:
 //-------------------------------------------------------------
     //solving equations with armadillo lib:
     vec eigval_arma = eig_sym(B);
@@ -143,22 +144,14 @@ int main()
     solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations);
 
 //-------------------------------------------------------------
-    //retriving eigenvalues:
-    cout << "------" << endl;
+    //retriving eigenvalues, interested in the three first:
     vec eigval_jacobi_rot = B.diag();
     eigval_jacobi_rot = sort(eigval_jacobi_rot);
-    //eigval_arma = sort(eigval_arma);
 
+    eigval_arma.print();
+    cout << "------" << endl;
     eigval_jacobi_rot.print();
 
-//-------------------------------------------------------------
-    //comparing with old matrix:
-    cout << "------" << endl;
-    //B.print();
-    cout << "------" << endl;
-
-//-------------------------------------------------------------
-    //comparing with arma lib eigval
 //    cout << a[0] << endl;
 //    cout << a[1] << endl;
 //    cout << a[2] << endl;
@@ -166,17 +159,6 @@ int main()
 //    cout << eigval_arma[0] << endl;
 //    cout << eigval_arma[1] << endl;
 //    cout << eigval_arma[2] << endl;
-    //B.print();
-
-    eigval_arma.print();
-
-//-------------------------------------------------------------
-    //comparing with start out diagonal
-    //d.shed_row(0);
-    //d.shed_row(n_step-1);
-    //cout << "------" << endl;
-    //(a-d).print();
-
 
     return 0;
 }
