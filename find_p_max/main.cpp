@@ -1,3 +1,5 @@
+//Program to find the magnitude of p_max
+
 #include <iostream>
 #include <armadillo>
 #include <cstdlib>

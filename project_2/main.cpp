@@ -38,12 +38,10 @@ void transformation_matrix(double& c, double& s, const mat &B, const int k, cons
         if(tau>0)
         {
             t = -tau + sqrt(1 + (tau*tau));
-            // t = 1.0/(tau + sqrt(1 + tau*tau));
         }
         else
         {
-            t = -tau - sqrt(1 + (tau*tau)); //corect choice of +- tau?
-            // t = -1.0/(-tau + sqrt(1 + tau*tau));
+            t = -tau - sqrt(1 + (tau*tau));
         }
         c = 1.0/sqrt(1.0 + (t*t));
         s = t*c;
@@ -52,6 +50,7 @@ void transformation_matrix(double& c, double& s, const mat &B, const int k, cons
     {
         c = 1.0;
         s = 0.0;
+        cout << "Element chosen is zero: B(" << k << "," << l << ") = 0 ==> c = 1 and s = 0"
     }
 }
 
@@ -115,11 +114,11 @@ int main()
     //B.print();
 */
 //-------------------------------------------------------------
-    //solving with armadillo lib:
+    //solving equations with armadillo lib:
     vec eigval = eig_sym(B);
 
 //-------------------------------------------------------------
-    //algorithm with jacobi rotation:
+    //solving equations with jacobi rotation:
     double tolerance = 1.0e-08;
     double max_off_diagonal = 1.0;
     int k = 0;
