@@ -14,7 +14,7 @@ void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const i
         string filename = "eigval_solver_" + FileName + "_n_step" + to_string(n_step) + ".txt";
         myfile.open (filename);
         myfile << "Solution of the eigenvalueproblem for the " << FileName << " algorithm." << endl;
-        myfile << "Dimention of matrix, n_step: " << n_step << endl;
+        myfile << "Dimention of matrix, one less than n_step: " << n_step << endl;
         myfile << "Value of p_max: " << p_max << endl;
         myfile << "Execution time: " << time << endl;
         if(number_of_iterations != -1){
@@ -23,11 +23,16 @@ void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const i
         myfile << "Eigenvalues (sorted)" << "  "<< "" << "     " << "Eigenvectors (soon)" << endl;
         myfile << "---------------------" << endl;
         int number_of_eigenvalues_printed = 10;
-        for (int i=0; i<number_of_eigenvalues_printed; i++)
+        for (int i=0; i < number_of_eigenvalues_printed; i++)
         {
+            if(i == size(eigenvalues,0))
+            {
+                cout << "Length of eigenval vec is shorter than number_of_eigenvalues_printed for " << FileName << " solver, exiting loop." << endl;
+                break;
+            }
             myfile << eigenvalues[i] << "    " << "--" << endl;
         }
-        myfile << "(only writing " << number_of_eigenvalues_printed << "eigenvalues to file.)" << endl;
+        myfile << "(Maximum writing " << number_of_eigenvalues_printed << " eigenvalues to file.)" << endl;
         myfile.close();
         cout << "Datafile done for n_step=" << n_step << endl;
 }
@@ -172,6 +177,8 @@ int main()
     double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
     cout << "Armadillo lib. eigenvalue solver: Time for n_step="
          << n_step << ":  " << time_arma << " seconds" << endl;
+
+    WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma");
 //-------------------------------------------------------------
     //clocking the operations (only solve, not making file):
     clock_t start_jacobi, finish_jacobi; //declaring start and finish time
@@ -187,10 +194,13 @@ int main()
          << n_step << ":  " << time_jacobi << " seconds" << endl;
     cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
-//-------------------------------------------------------------
     //retriving eigenvalues, interested in the three first:
     vec eigval_jacobi_rot = B.diag();
     eigval_jacobi_rot = sort(eigval_jacobi_rot);
+
+    WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi_rot");
+//-------------------------------------------------------------
+
 
     eigval_arma.print();
     cout << "------" << endl;
