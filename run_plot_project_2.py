@@ -35,6 +35,8 @@ def u(x):
 
 N = [10, 100, 1000, 10**4]#, 10**5, 10**6, 10**7, 10**8] #the highest n only works for the subst. method
 
+Running code:
+
 os.system('g++ -o project_2/main project_2/main.cpp -larmadillo -llapack -lblas')
 os.system('./project_2/main')
 

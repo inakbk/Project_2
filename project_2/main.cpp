@@ -8,20 +8,28 @@ using namespace std;
 using namespace arma;
 
 //Function to write data/output to file
-void WriteToFile(const vec x, const vec solution, const int n, const double time_diag, string FileName)
+void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const int number_of_iterations, const double time, string FileName)
 {
     ofstream myfile;
-        string filename = "linear_eq_solution_" + FileName + "_n" + to_string(n) + ".txt";
+        string filename = "eigval_solver_" + FileName + "_n_step" + to_string(n_step) + ".txt";
         myfile.open (filename);
-        myfile << "Data:" << "  "<< "x" << "     " << "Solution" << endl;
-        myfile << "Time calculating with " << FileName << ": "  << time_diag << " " << " seconds" << endl;
-        myfile << "---------------------" << endl;
-        for (int i=1; i<n+1; i++)
-        {
-            myfile << x[i] << "    " << solution[i] << endl;
+        myfile << "Solution of the eigenvalueproblem for the " << FileName << " algorithm." << endl;
+        myfile << "Dimention of matrix, n_step: " << n_step << endl;
+        myfile << "Value of p_max: " << p_max << endl;
+        myfile << "Execution time: " << time << endl;
+        if(number_of_iterations != -1){
+            myfile << "Number of iterations for jacobi algoritm:" << number_of_iterations << endl;
         }
+        myfile << "Eigenvalues (sorted)" << "  "<< "" << "     " << "Eigenvectors (soon)" << endl;
+        myfile << "---------------------" << endl;
+        int number_of_eigenvalues_printed = 10;
+        for (int i=0; i<number_of_eigenvalues_printed; i++)
+        {
+            myfile << eigenvalues[i] << "    " << "--" << endl;
+        }
+        myfile << "(only writing " << number_of_eigenvalues_printed << "eigenvalues to file.)" << endl;
         myfile.close();
-        cout << "Datafile done for n=" << n << endl;
+        cout << "Datafile done for n_step=" << n_step << endl;
 }
 
 void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
@@ -189,7 +197,7 @@ int main()
     eigval_jacobi_rot.print();
 
 
-    ///fix write to file. write all data? or just the first ones?
+    /// fix write to file. write all data? or just the first ones?
     /// how big n_step need to get three lowest eigvals to 4 leading digits?
     /// dependency og p_max? save/write to file?
     /// how many transformations (before 0) as function of n_step
