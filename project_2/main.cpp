@@ -18,8 +18,9 @@ void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const i
         myfile << "Value of p_max: " << p_max << endl;
         myfile << "Execution time: " << time << endl;
         if(number_of_iterations != -1){
-            myfile << "Number of iterations for jacobi algoritm:" << number_of_iterations << endl;
+            myfile << "Number of iterations for jacobi algoritm: " << number_of_iterations << endl;
         }
+        myfile << "---------------------" << endl;
         myfile << "Eigenvalues (sorted)" << "  "<< "" << "     " << "Eigenvectors (soon)" << endl;
         myfile << "---------------------" << endl;
         int number_of_eigenvalues_printed = 10;
@@ -35,6 +36,7 @@ void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const i
         myfile << "(Maximum writing " << number_of_eigenvalues_printed << " eigenvalues to file.)" << endl;
         myfile.close();
         cout << "Datafile done for n_step=" << n_step << endl;
+        cout << endl;
 }
 
 void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
@@ -142,7 +144,7 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
 int main()
 {
     //variables that can change for each run:
-    const int n_step = 5;
+    const int n_step = 100;
     int maxNumberOfIterations = 10000;
     const double p_max = 5; //writing p instead of rho
 
@@ -175,8 +177,8 @@ int main()
     //stopping timer:
     finish_arma = clock();
     double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
-    cout << "Armadillo lib. eigenvalue solver: Time for n_step="
-         << n_step << ":  " << time_arma << " seconds" << endl;
+    //cout << "Armadillo lib. eigenvalue solver: Time for n_step="
+    //     << n_step << ":  " << time_arma << " seconds" << endl;
 
     WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma");
 //-------------------------------------------------------------
@@ -190,8 +192,8 @@ int main()
     //stopping timer:
     finish_jacobi = clock();
     double time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
-    cout << "Jacobi rotation eigenvalue solver: Time for n_step="
-         << n_step << ":  " << time_jacobi << " seconds" << endl;
+//    cout << "Jacobi rotation eigenvalue solver: Time for n_step="
+//         << n_step << ":  " << time_jacobi << " seconds" << endl;
     cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
     //retriving eigenvalues, interested in the three first:
@@ -202,9 +204,9 @@ int main()
 //-------------------------------------------------------------
 
 
-    eigval_arma.print();
-    cout << "------" << endl;
-    eigval_jacobi_rot.print();
+    //eigval_arma.print();
+    //cout << "------" << endl;
+    //eigval_jacobi_rot.print();
 
 
     /// fix write to file. write all data? or just the first ones?
@@ -212,6 +214,7 @@ int main()
     /// dependency og p_max? save/write to file?
     /// how many transformations (before 0) as function of n_step
     /// also write time to file as function of n_step for both solvers
+    /// if did not converge write that to file!!
 
 //    cout << a[0] << endl;
 //    cout << a[1] << endl;
