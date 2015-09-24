@@ -37,7 +37,9 @@ N = [10, 100, 1000, 10**4]#, 10**5, 10**6, 10**7, 10**8] #the highest n only wor
 
 #Running code:
 
+n = N[0]
+
 os.system('g++ -o project_2/main project_2/main.cpp -larmadillo -llapack -lblas')
-os.system('./project_2/main')
+os.system('./project_2/main %s' %n)
 
 

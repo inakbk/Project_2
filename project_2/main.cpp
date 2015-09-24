@@ -141,88 +141,98 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
     return numberOfIterations;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    //variables that can change for each run:
-    const int n_step = 100;
-    int maxNumberOfIterations = 10000;
-    const double p_max = 5; //writing p instead of rho
-
-//-------------------------------------------------------------
-    const double p_min = 0;
-    const double h = (p_max - p_min)/n_step;
-    vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
-    vec V = p%p;
-
-    // Constructing matrix B:
-    double e = -1/(h*h); // all elements of the e vec is the same
-    vec d = 2/(h*h) + V;
-    mat B = zeros<mat>(n_step-1,n_step-1);
-    for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+    if(argc == 1)
     {
-        B(i,j) = e;
-        B(i,i) = d[i+1];
-        B(j,i) = e;
+        cout << "No arguments. Give 'n' on command line. Eks n=10: 10" << endl;
+        exit(1);
     }
-    B(n_step-2,n_step-2) = d[n_step-1];
+    else{
+        //variables from command line:
+        const int n_step = atof(argv[1]);
 
-//-------------------------------------------------------------
-    //clocking the operations (only solve, not making file):
-    clock_t start_arma, finish_arma; //declaring start and finish time
-    start_arma = clock();
+        //make these command line too
+        int maxNumberOfIterations = 10000;
+        const double p_max = 5; //writing p instead of rho
 
-    //solving equations with armadillo lib:
-    vec eigval_arma = eig_sym(B);
+    //-------------------------------------------------------------
+        const double p_min = 0;
+        const double h = (p_max - p_min)/n_step;
+        vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
+        vec V = p%p;
 
-    //stopping timer:
-    finish_arma = clock();
-    double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
-    //cout << "Armadillo lib. eigenvalue solver: Time for n_step="
-    //     << n_step << ":  " << time_arma << " seconds" << endl;
+        // Constructing matrix B:
+        double e = -1/(h*h); // all elements of the e vec is the same
+        vec d = 2/(h*h) + V;
+        mat B = zeros<mat>(n_step-1,n_step-1);
+        for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+        {
+            B(i,j) = e;
+            B(i,i) = d[i+1];
+            B(j,i) = e;
+        }
+        B(n_step-2,n_step-2) = d[n_step-1];
 
-    WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma");
-//-------------------------------------------------------------
-    //clocking the operations (only solve, not making file):
-    clock_t start_jacobi, finish_jacobi; //declaring start and finish time
-    start_jacobi = clock();
+    //-------------------------------------------------------------
+        //clocking the operations (only solve, not making file):
+        clock_t start_arma, finish_arma; //declaring start and finish time
+        start_arma = clock();
 
-    //solving equations with jacobi rotation:
-    int numberOfIterations = solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations);
+        //solving equations with armadillo lib:
+        vec eigval_arma = eig_sym(B);
 
-    //stopping timer:
-    finish_jacobi = clock();
-    double time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
-//    cout << "Jacobi rotation eigenvalue solver: Time for n_step="
-//         << n_step << ":  " << time_jacobi << " seconds" << endl;
-    cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
+        //stopping timer:
+        finish_arma = clock();
+        double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
+        //cout << "Armadillo lib. eigenvalue solver: Time for n_step="
+        //     << n_step << ":  " << time_arma << " seconds" << endl;
 
-    //retriving eigenvalues, interested in the three first:
-    vec eigval_jacobi_rot = B.diag();
-    eigval_jacobi_rot = sort(eigval_jacobi_rot);
+        WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma");
+    //-------------------------------------------------------------
+        //clocking the operations (only solve, not making file):
+        clock_t start_jacobi, finish_jacobi; //declaring start and finish time
+        start_jacobi = clock();
 
-    WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi_rot");
-//-------------------------------------------------------------
+        //solving equations with jacobi rotation:
+        int numberOfIterations = solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations);
+
+        //stopping timer:
+        finish_jacobi = clock();
+        double time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
+    //    cout << "Jacobi rotation eigenvalue solver: Time for n_step="
+    //         << n_step << ":  " << time_jacobi << " seconds" << endl;
+        cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
+
+        //retriving eigenvalues, interested in the three first:
+        vec eigval_jacobi_rot = B.diag();
+        eigval_jacobi_rot = sort(eigval_jacobi_rot);
+
+        WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi_rot");
+    //-------------------------------------------------------------
 
 
-    //eigval_arma.print();
-    //cout << "------" << endl;
-    //eigval_jacobi_rot.print();
+        //eigval_arma.print();
+        //cout << "------" << endl;
+        //eigval_jacobi_rot.print();
 
 
-    /// fix write to file. write all data? or just the first ones?
-    /// how big n_step need to get three lowest eigvals to 4 leading digits?
-    /// dependency og p_max? save/write to file?
-    /// how many transformations (before 0) as function of n_step
-    /// also write time to file as function of n_step for both solvers
-    /// if did not converge write that to file!!
+        /// fix write to file. write all data? or just the first ones?
+        /// how big n_step need to get three lowest eigvals to 4 leading digits?
+        /// dependency og p_max? save/write to file?
+        /// how many transformations (before 0) as function of n_step
+        /// also write time to file as function of n_step for both solvers
+        /// if did not converge write that to file!!
 
-//    cout << a[0] << endl;
-//    cout << a[1] << endl;
-//    cout << a[2] << endl;
-//    cout << "------" << endl;
-//    cout << eigval_arma[0] << endl;
-//    cout << eigval_arma[1] << endl;
-//    cout << eigval_arma[2] << endl;
+    //    cout << a[0] << endl;
+    //    cout << a[1] << endl;
+    //    cout << a[2] << endl;
+    //    cout << "------" << endl;
+    //    cout << eigval_arma[0] << endl;
+    //    cout << eigval_arma[1] << endl;
+    //    cout << eigval_arma[2] << endl;
+
+    }
 
     return 0;
 }
