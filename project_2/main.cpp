@@ -8,7 +8,7 @@ using namespace std;
 using namespace arma;
 
 //Function to write data/output to file
-void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const int number_of_iterations, const double time, string FileName)
+void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const int number_of_iterations, const double time, string FileName, const int converge_test)
 {
     ofstream myfile;
         string filename = "eigval_solver_" + FileName + "_n_step" + to_string(n_step) + ".txt";
@@ -20,23 +20,40 @@ void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const i
         if(number_of_iterations != -1){
             myfile << "Number of iterations for jacobi algoritm: " << number_of_iterations << endl;
         }
-        myfile << "---------------------" << endl;
-        myfile << "Eigenvalues (sorted)" << "  "<< "" << "     " << "Eigenvectors (soon)" << endl;
-        myfile << "---------------------" << endl;
-        int number_of_eigenvalues_printed = 10;
-        for (int i=0; i < number_of_eigenvalues_printed; i++)
+        //Writing eigenvalues to file if the jacobi method did converge.
+        if(converge_test == True)
         {
-            if(i == size(eigenvalues,0))
+            myfile << "---------------------" << endl;
+            myfile << "Eigenvalues (sorted)" << "  "<< "" << "     " << "Eigenvectors (soon)" << endl;
+            myfile << "---------------------" << endl;
+            int number_of_eigenvalues_printed = 10;
+            for (int i=0; i < number_of_eigenvalues_printed; i++)
             {
-                cout << "Length of eigenval vec is shorter than number_of_eigenvalues_printed for " << FileName << " solver, exiting loop." << endl;
-                break;
+                if(i == size(eigenvalues,0))
+                {
+                    cout << "Length of eigenval vec is shorter than number_of_eigenvalues_printed for " << FileName << " solver, exiting loop." << endl;
+                    break;
+                }
+                myfile << eigenvalues[i] << "    " << "--" << endl;
             }
-            myfile << eigenvalues[i] << "    " << "--" << endl;
+            myfile << "(Maximum writing " << number_of_eigenvalues_printed << " eigenvalues to file.)" << endl;
+            myfile.close();
+
+            cout << "Datafile done for n_step=" << n_step << " with the " << FileName <<" solver." << endl;
+            cout << endl;
         }
-        myfile << "(Maximum writing " << number_of_eigenvalues_printed << " eigenvalues to file.)" << endl;
-        myfile.close();
-        cout << "Datafile done for n_step=" << n_step << endl;
-        cout << endl;
+        //Writing error message til file if jacobi method did not converge.
+        if(converge_test == False)
+        {
+            myfile << endl; myfile << endl;
+            myfile << "Jacobi method did not converge after " << number_of_iterations << " iterations!" << endl;
+            myfile << endl; myfile << endl;
+
+            cout << "Datafile done for n_step=" << n_step << " with the " << FileName <<" solver which did not converge." << endl;
+            cout << endl;
+        }
+
+
 }
 
 void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
@@ -110,7 +127,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
     }
 }
 
-int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIterations)
+int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIterations, int converge_test)
 {
     double tolerance = 1.0e-08;
     double max_off_diagonal = 0;
@@ -122,7 +139,8 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
     while(tolerance < max_off_diagonal)
     {
         if(++numberOfIterations > maxNumberOfIterations) {
-            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations. Aborting!" << endl;
+            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations for n_step= " << n_step << ". Aborting!" << endl;
+            converge_test = 0;
             exit(1);
         }
 
@@ -133,7 +151,6 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
         double c = 0;
         double s = 0;
         transformation_matrix(c, s, B, k, l);
-
         //transformation of B:
         jacobi_rotation(B, c, s, k, l, n_step);
 
@@ -195,7 +212,8 @@ int main(int argc, char *argv[])
         start_jacobi = clock();
 
         //solving equations with jacobi rotation:
-        int numberOfIterations = solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations);
+        converge_test = 1; //initializing to true (false if it does not converge)
+        int numberOfIterations = solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations, converge_test);
 
         //stopping timer:
         finish_jacobi = clock();
