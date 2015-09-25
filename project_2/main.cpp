@@ -20,6 +20,10 @@ void WriteToFile(const vec& eigenvalues, int p_max, const int n_step, const int 
         if(number_of_iterations != -1){
             myfile << "Number of iterations for jacobi algoritm: " << number_of_iterations << endl;
         }
+        else
+        {
+            myfile << endl;
+        }
         //Writing eigenvalues to file if the jacobi method did converge.
         if(converge_test == true)
         {
@@ -227,12 +231,6 @@ int main(int argc, char *argv[])
 
         WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
     //-------------------------------------------------------------
-
-
-        //eigval_arma.print();
-        //cout << "------" << endl;
-        //eigval_jacobi_rot.print();
-
 
         /// fix write to file. write all data? or just the first ones?
         ///
