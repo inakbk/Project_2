@@ -21,7 +21,7 @@ void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const i
             myfile << "Number of iterations for jacobi algoritm: " << number_of_iterations << endl;
         }
         //Writing eigenvalues to file if the jacobi method did converge.
-        if(converge_test == True)
+        if(converge_test == true)
         {
             myfile << "---------------------" << endl;
             myfile << "Eigenvalues (sorted)" << "  "<< "" << "     " << "Eigenvectors (soon)" << endl;
@@ -43,7 +43,7 @@ void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const i
             cout << endl;
         }
         //Writing error message til file if jacobi method did not converge.
-        if(converge_test == False)
+        if(converge_test == false)
         {
             myfile << endl; myfile << endl;
             myfile << "Jacobi method did not converge after " << number_of_iterations << " iterations!" << endl;
@@ -127,7 +127,7 @@ void jacobi_rotation(mat& B, const double c, const double s, const int k, const 
     }
 }
 
-int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIterations, int converge_test)
+int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIterations, int& converge_test)
 {
     double tolerance = 1.0e-08;
     double max_off_diagonal = 0;
@@ -139,11 +139,11 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
     while(tolerance < max_off_diagonal)
     {
         if(++numberOfIterations > maxNumberOfIterations) {
-            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations for n_step= " << n_step << ". Aborting!" << endl;
+            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations for n_step= " << n_step << ". Exiting jacobi rotation solver!" << endl;
             converge_test = 0;
-            exit(1);
+            B = zeros<mat>(n_step-1,n_step-1);
+            break;
         }
-
         //finding the value and index(k,l) of the maximum element in B:
         find_max_elem_index(k, l, max_off_diagonal, B, n_step);
 
@@ -205,14 +205,14 @@ int main(int argc, char *argv[])
         //cout << "Armadillo lib. eigenvalue solver: Time for n_step="
         //     << n_step << ":  " << time_arma << " seconds" << endl;
 
-        WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma");
+        int converge_test = 1; //initializing to true (false if it does not converge) for jacobi method
+        WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma", converge_test);
     //-------------------------------------------------------------
         //clocking the operations (only solve, not making file):
         clock_t start_jacobi, finish_jacobi; //declaring start and finish time
         start_jacobi = clock();
 
         //solving equations with jacobi rotation:
-        converge_test = 1; //initializing to true (false if it does not converge)
         int numberOfIterations = solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations, converge_test);
 
         //stopping timer:
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
         vec eigval_jacobi_rot = B.diag();
         eigval_jacobi_rot = sort(eigval_jacobi_rot);
 
-        WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi_rot");
+        WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi_rot", converge_test);
     //-------------------------------------------------------------
 
 
