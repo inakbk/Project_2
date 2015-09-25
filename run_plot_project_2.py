@@ -33,13 +33,16 @@ def u(x):
 ------------------------------------------------------------------------------------------
 """
 
-N = [10, 100, 1000, 10**4]#, 10**5, 10**6, 10**7, 10**8] #the highest n only works for the subst. method
+N = [5, 10, 100]
+max_number_of_iterations = 10000
+p_max = 5
 
 #Running code:
 
-n = N[0]
+n = N[2]
+
 
 os.system('g++ -o project_2/main project_2/main.cpp -larmadillo -llapack -lblas')
-os.system('./project_2/main %s' %n)
+os.system('./project_2/main %s %s %s' %(n, max_number_of_iterations, p_max))
 
 

@@ -8,10 +8,10 @@ using namespace std;
 using namespace arma;
 
 //Function to write data/output to file
-void WriteToFile(const vec& eigenvalues, double p_max, const int n_step, const int number_of_iterations, const double time, string FileName, const int converge_test)
+void WriteToFile(const vec& eigenvalues, int p_max, const int n_step, const int number_of_iterations, const double time, string FileName, const int converge_test)
 {
     ofstream myfile;
-        string filename = "eigval_solver_" + FileName + "_n_step" + to_string(n_step) + ".txt";
+        string filename = "EigvalSolver_" + FileName + "_pMax" + to_string(p_max) + "_nStep" + to_string(n_step) + ".txt";
         myfile.open (filename);
         myfile << "Solution of the eigenvalueproblem for the " << FileName << " algorithm." << endl;
         myfile << "Dimention of matrix, one less than n_step: " << n_step << endl;
@@ -162,16 +162,15 @@ int main(int argc, char *argv[])
 {
     if(argc == 1)
     {
-        cout << "No arguments. Give 'n' on command line. Eks n=10: 10" << endl;
+        cout << "No arguments. Give n_step, maximum number of iterations and p_max on command line "
+                "Eks: ./main n_step no_of_iterations p_max or: ./main 10 10000 5" << endl;
         exit(1);
     }
     else{
         //variables from command line:
         const int n_step = atof(argv[1]);
-
-        //make these command line too
-        int maxNumberOfIterations = 10000;
-        const double p_max = 5; //writing p instead of rho
+        int maxNumberOfIterations = atof(argv[2]);
+        const double p_max = atof(argv[3]); //writing p instead of rho
 
     //-------------------------------------------------------------
         const double p_min = 0;
@@ -226,7 +225,7 @@ int main(int argc, char *argv[])
         vec eigval_jacobi_rot = B.diag();
         eigval_jacobi_rot = sort(eigval_jacobi_rot);
 
-        WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi_rot", converge_test);
+        WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
     //-------------------------------------------------------------
 
 
@@ -236,19 +235,13 @@ int main(int argc, char *argv[])
 
 
         /// fix write to file. write all data? or just the first ones?
+        ///
         /// how big n_step need to get three lowest eigvals to 4 leading digits?
         /// dependency og p_max? save/write to file?
         /// how many transformations (before 0) as function of n_step
         /// also write time to file as function of n_step for both solvers
         /// if did not converge write that to file!!
 
-    //    cout << a[0] << endl;
-    //    cout << a[1] << endl;
-    //    cout << a[2] << endl;
-    //    cout << "------" << endl;
-    //    cout << eigval_arma[0] << endl;
-    //    cout << eigval_arma[1] << endl;
-    //    cout << eigval_arma[2] << endl;
 
     }
 
