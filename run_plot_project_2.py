@@ -27,37 +27,49 @@ def read_file(filename):
 ------------------------------------------------------------------------------------------
 """
 
-N = [5, 10, 50, 100]
+N = [5]#, 10, 50, 100]
 max_number_of_iterations = 10000
 p_max = 5.
 
 #Running code:
+#n_step = N[2]
 
-n = N[2]
+for n_step in N:
 
-#os.system('g++ -o project_2/main project_2/main.cpp -larmadillo -llapack -lblas')
-#os.system('./project_2/main %s %s %s' %(n, max_number_of_iterations, p_max))
+	#Running code
+	#os.system('g++ -o project_2/main project_2/main.cpp -larmadillo -llapack -lblas')
+	#os.system('./project_2/main %s %s %s' %(n_step, max_number_of_iterations, p_max))
 
-FileName = 'EigvalSolver_jacobi_pMax%s_nStep%s.txt' %(int(p_max), n)
+	FileName = 'EigvalSolver_jacobi_pMax%s_nStep%s.txt' %(int(p_max), n_step)
 
-eigval, t = read_file(FileName)
-#print t
-#print "---"
-#print eigval[0:-1]
+	eigval, t = read_file(FileName)
 
-FirstEigenvalues = eigval[0:3]
-print FirstEigenvalues
+	#FirstEigenvalues = eigval[0:3]
+	FirstEigenvalues = [2.999999, 6.499999999, 11.44444445]
+	print FirstEigenvalues
 
-AnalyticEigval = [3, 7, 11]
+	AnalyticEigval = [3, 7, 11]
 
-#print abs(AnalyticEigval - FirstEigenvalues)
 
-#rounding off
-
-print round(FirstEigenvalues[0],3)
-print round(FirstEigenvalues[1],3)
-print round(FirstEigenvalues[2],3)
-
+	for i in range(3):
+		print FirstEigenvalues[i]
+		if FirstEigenvalues[i] > AnalyticEigval[i]:
+			if (round(FirstEigenvalues[i],4) - AnalyticEigval[i]) < 0.5:
+				print "yay"
+				#print "---"
+			else:
+				print "not good enough precition"
+				#print FirstEigenvalues[i] - AnalyticEigval[i]
+				#print "---"
+		if FirstEigenvalues[i] < AnalyticEigval[i]:
+			if (AnalyticEigval[i] - round(FirstEigenvalues[i],4)) <= 0.5:
+				#print AnalyticEigval[i] - FirstEigenvalues[i]
+				print "yay"
+				#print "---"
+			else:
+				print "not good enough precition"
+				#print AnalyticEigval[i] - FirstEigenvalues[i]
+				#print "---"
 
 
 
