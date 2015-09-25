@@ -35,8 +35,8 @@ p_max = 5.
 
 n = N[2]
 
-os.system('g++ -o project_2/main project_2/main.cpp -larmadillo -llapack -lblas')
-os.system('./project_2/main %s %s %s' %(n, max_number_of_iterations, p_max))
+#os.system('g++ -o project_2/main project_2/main.cpp -larmadillo -llapack -lblas')
+#os.system('./project_2/main %s %s %s' %(n, max_number_of_iterations, p_max))
 
 FileName = 'EigvalSolver_jacobi_pMax%s_nStep%s.txt' %(int(p_max), n)
 
@@ -50,5 +50,14 @@ print FirstEigenvalues
 
 AnalyticEigval = [3, 7, 11]
 
-print abs(AnalyticEigval - FirstEigenvalues)
+#print abs(AnalyticEigval - FirstEigenvalues)
+
+#rounding off
+
+print round(FirstEigenvalues[0],3)
+print round(FirstEigenvalues[1],3)
+print round(FirstEigenvalues[2],3)
+
+
+
 
