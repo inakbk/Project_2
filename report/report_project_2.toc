@@ -1,5 +1,6 @@
 \contentsline {section}{\numberline {1}Motivation and purpose}{2}{section.1}
-\contentsline {section}{\numberline {2}Numerical method: Jacobis method}{2}{section.2}
-\contentsline {section}{\numberline {3}Physics 1: One electron in a three-dimentional harmonic oscillator potential.}{2}{section.3}
-\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimentionaless form}{2}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Discretizing the Schr\"odingers equation to solve numerically.}{3}{subsection.3.2}
+\contentsline {section}{\numberline {2}Solving eigenvalueproblems using similarity transformations}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Numerical method: Jacobi's rotation algorithm}{3}{subsection.2.1}
+\contentsline {section}{\numberline {3}Physics 1: One electron in a three-dimentional harmonic oscillator potential.}{5}{section.3}
+\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimentionaless form}{5}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Discretizing the Schr\"odingers equation to solve numerically.}{6}{subsection.3.2}
