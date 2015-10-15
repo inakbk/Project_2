@@ -47,64 +47,47 @@ bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 
 
 \section{Motivation and purpose}
+The aim of this project is to solve Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator well with and without a repulsive Coulomb interaction.  Your task is to solve this equation by reformulating it in a discretized form as an eigenvalue equation to be solved with Jacobi's method. -->code which implements Jacobi's method.
 
- 
-\noindent\rule{\textwidth}{1pt}
-\section*{Project 2, Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator well, deadline  October 5 (noon)}
+Electrons confined in small areas in semiconductors, so-called quantum dots, form a hot research area in modern solid-state physics, with applications spanning from such diverse fields as quantum nano-medicine to the contruction of quantum gates. You can read about quantum dots at \url{http://en.wikipedia.org/wiki/Quantum_dot}, which also contains links to several scientific articles. A recent article of interest is the review by Semonin {\em et al} in Materials Today, volume 15, page 508 (2012).
 
-The aim of this project is to solve Schr\"odinger's equation for two
-electrons in a three-dimensional harmonic oscillator well with and
-without a repulsive Coulomb interaction.  Your task is to solve this
-equation by reformulating it in a discretized form as an eigenvalue
-equation to be solved with Jacobi's method. To achieve this you will
-have to write your own code which implements Jacobi's method.
+In this article we will let two electrons move in a three-dimensional harmonic oscillator potential that repel each other via the Coulomb interaction.  Throughout this paper we will assume spherically symmetry and let the angular momentum be $l=0$. Before solving the problem for two electrons we will look at one electron in a harmonic oscillator potential. 
 
-Electrons confined in small areas in semiconductors, so-called quantum
-dots, form a hot research area in modern solid-state physics, with
-applications spanning from such diverse fields as quantum
-nano-medicine to the contruction of quantum gates. You can read about
-quantum dots at \url{http://en.wikipedia.org/wiki/Quantum_dot}, which
-also contains links to several scientific articles. A recent article
-of interest is the review by Semonin {\em et al} in Materials Today,
-volume 15, page 508 (2012).
+\section{Numerical method: Jacobis method}
 
-Here we will assume that these electrons move in a three-dimensional harmonic
-oscillator potential (they are confined by for example quadrupole fields)
-and repel  each other via the static Colulomb interaction.  
-We assume spherical symmetry.  
 
-We are first interested in the solution of the radial part of Schr\"odinger's equation for one electron. This equation reads
+
+
+
+\section{Physics 1: One electron in a three-dimentional harmonic oscillator potential.}
+\subsection{Rewriting the Schr\"odinger's equation to a dimentionaless form}
+We look at the Sch\"odinger's equation for one electron at a radius $r\in [0,\infty)$ in a harmonic oscillator potential given by: 
 \[
-  -\frac{\hbar^2}{2 m} \left ( \frac{1}{r^2} \frac{d}{dr} r^2
-  \frac{d}{dr} - \frac{l (l + 1)}{r^2} \right )R(r) 
-     + V(r) R(r) = E R(r).
+V(r)= (1/2)kr^2
 \]
-In our case $V(r)$ is the harmonic oscillator potential $(1/2)kr^2$ with
-$k=m\omega^2$ and $E$ is
-the energy of the harmonic oscillator in three dimensions.
-The oscillator frequency is $\omega$ and the energies are
+where $k=m\omega^2$ and $\omega$ is the oscillator frequence. The energy $E$ of the harmonic oscillator in three dimensions is given by:
 \[
 E_{nl}=  \hbar \omega \left(2n+l+\frac{3}{2}\right),
 \]
-with $n=0,1,2,\dots$ and $l=0,1,2,\dots$.
- 
-Since we have made a transformation to spherical coordinates it means that 
-$r\in [0,\infty)$.  
-The quantum number
-$l$ is the orbital momentum of the electron.  
-%
-Then we substitute $R(r) = (1/r) u(r)$ and obtain
-%
+with $n=0,1,2,\dots$ and $l=0,1,2,\dots$ is the orbital momentum of the electron.  
+
+We are only interested in the solution of the radial part of the Schr\"odinger equation given by
+\begin{equation}
+  -\frac{\hbar^2}{2 m} \left ( \frac{1}{r^2} \frac{d}{dr} r^2
+  \frac{d}{dr} - \frac{l (l + 1)}{r^2} \right )R(r) 
+     + V(r) R(r) = E R(r).
+     \label{eq:schr_1}
+\end{equation}
+
+Then we use the substitution $R(r) = (1/r) u(r)$ and obtain
 \[
   -\frac{\hbar^2}{2 m} \frac{d^2}{dr^2} u(r) 
        + \left ( V(r) + \frac{l (l + 1)}{r^2}\frac{\hbar^2}{2 m}
                                     \right ) u(r)  = E u(r) .
 \]
-%
 The boundary conditions are $u(0)=0$ and $u(\infty)=0$.
 
-We introduce a dimensionless variable $\rho = (1/\alpha) r$
-where $\alpha$ is a constant with dimension length and get
+We will modify equation \ref{eq:schr_1} further by introducing a dimensionless variable $\rho = (1/\alpha) r$ where $\alpha$ is a constant with dimension length and get
 % 
 \[
   -\frac{\hbar^2}{2 m \alpha^2} \frac{d^2}{d\rho^2} u(\rho) 
@@ -112,85 +95,73 @@ where $\alpha$ is a constant with dimension length and get
          \frac{\hbar^2}{2 m\alpha^2} \right ) u(\rho)  = E u(\rho) .
 \]
 %
-We will set in this project $l=0$.
-Inserting $V(\rho) = (1/2) k \alpha^2\rho^2$ we end up with
+Now inserting $l=0$ and the rewritten potential $V(\rho) = (1/2) k \alpha^2\rho^2$ we obtain:
 \[
   -\frac{\hbar^2}{2 m \alpha^2} \frac{d^2}{d\rho^2} u(\rho) 
        + \frac{k}{2} \alpha^2\rho^2u(\rho)  = E u(\rho) .
 \]
-We multiply thereafter with $2m\alpha^2/\hbar^2$ on both sides and obtain
+and then multiply by $2m\alpha^2/\hbar^2$ on both sides
 \[
   -\frac{d^2}{d\rho^2} u(\rho) 
        + \frac{mk}{\hbar^2} \alpha^4\rho^2u(\rho)  = \frac{2m\alpha^2}{\hbar^2}E u(\rho) .
 \]
-The constant $\alpha$ can now be fixed
-so that
+We fix the constant $\alpha$ so that
 \[
-\frac{mk}{\hbar^2} \alpha^4 = 1,
+\frac{mk}{\hbar^2} \alpha^4 = 1 \Rightarrow \alpha = \left(\frac{\hbar^2}{mk}\right)^{1/4}.
 \]
-or 
-\[
-\alpha = \left(\frac{\hbar^2}{mk}\right)^{1/4}.
-\]
-Defining 
+and then define 
 \[
 \lambda = \frac{2m\alpha^2}{\hbar^2}E,
 \]
-we can rewrite Schr\"odinger's equation as
-\[
+Finally equation \ref{eq:schr_1} can be written as
+\begin{equation}
   -\frac{d^2}{d\rho^2} u(\rho) + \rho^2u(\rho)  = \lambda u(\rho) .
-\]
-This is the first equation to solve numerically. In three dimensions 
-the eigenvalues for $l=0$ are 
-$\lambda_0=3,\lambda_1=7,\lambda_2=11,\dots .$
+  \label{eq: sch_1D_final}
+\end{equation}
+which is the equation we want to solve numerically. We know\footnote{This is given in the assignment text for Project 2, FYS3150..} that this equation has the eigenvalues $\lambda_0=3,\lambda_1=7,\lambda_2=11,\dots .$ for $l=0$. These analytical values will be used to test the precition of the numerical method.
 
-We use the by now standard
-expression for the second derivative of a function $u$
+\subsection{Discretizing the Schr\"odingers equation to solve numerically.}
+We will now rewrite the Schr\"odingers equation on a discretized form to be able to solve it as an matrix eigenvalue problem.
+
+We use the expression for the second derivative of the function $u(\rho)$
 \begin{equation}
     u''=\frac{u(\rho+h) -2u(\rho) +u(\rho-h)}{h^2} +O(h^2),
     \label{eq:diffoperation}
 \end{equation} 
-where $h$ is our step.
-Next we define minimum and maximum values for the variable $\rho$,
-$\rho_{\mathrm{min}}=0$  and $\rho_{\mathrm{max}}$, respectively.
-You need to check your results for the energies against different values
-$\rho_{\mathrm{max}}$, since we cannot set
-$\rho_{\mathrm{max}}=\infty$. 
-
-With a given number of steps, $n_{\mathrm{step}}$, we then 
-define the step $h$ as
+where $h$ is our step. We define the minimum and maximum values for the variable $\rho$,
+$\rho_{\mathrm{min}}=0$  and $\rho_{\mathrm{max}}$ so that:
 \[
   h=\frac{\rho_{\mathrm{max}}-\rho_{\mathrm{min}} }{n_{\mathrm{step}}}.
 \]
-Define an arbitrary value of $\rho$ as 
+where $n_{\mathrm{step}}$ is a given number of steps. Since $\rho \propto r$ and $r\in [0,\infty)$ the maximum value of $\rho$ should be $\rho_{\mathrm{max}}=\infty$. But we cannot set a infinite value when computing the solution numerically. We will therefore have to choose a significally large enough $\rho$ that give stable results for different $n_{\mathrm{step}}$ (test noe noe ??)
+
+We can then define an arbitrary value of $\rho$ as 
 \[
     \rho_i= \rho_{\mathrm{min}} + ih \hspace{1cm} i=0,1,2,\dots , n_{\mathrm{step}}
 \]
-we can rewrite the Schr\"odinger equation for $\rho_i$ as
+so that the Schr\"odinger equation for $\rho_i$ reads
 \[
 -\frac{u(\rho_i+h) -2u(\rho_i) +u(\rho_i-h)}{h^2}+\rho_i^2u(\rho_i)  = \lambda u(\rho_i),
 \]
-or in  a more compact way
+or in a more compact way with the harmonic oscillator potential $V_i=\rho_i^2$:
 \[
--\frac{u_{i+1} -2u_i +u_{i-1}}{h^2}+\rho_i^2u_i=-\frac{u_{i+1} -2u_i +u_{i-1} }{h^2}+V_iu_i  = \lambda u_i,
+-\frac{u_{i+1} -2u_i +u_{i-1} }{h^2}+V_iu_i  = \lambda u_i,
 \]
-where $V_i=\rho_i^2$ is the harmonic oscillator potential.
-Define first the diagonal matrix element
+Then we can define first the diagonal matrix element
 \[
    d_i=\frac{2}{h^2}+V_i,
 \]
-and the non-diagonal matrix element 
+and the non-diagonal matrix element:
 \[
    e_i=-\frac{1}{h^2}.
 \]
-In this case the non-diagonal matrix elements are given by a mere constant.
-{\em All non-diagonal matrix elements are equal}.
-With these definitions the Schr\"odinger equation takes the following form
+We observe that in this case all the non-diagonal matrix element is given by a constant, so we can denote them all as $e=-\frac{1}{h^2}$ instead. (insert e og ikke ei hele veien??)
+
+With these definitions the Schr\"odinger equation (\ref{eq: sch_1D_final}) takes the following form
 \[
 d_iu_i+e_{i-1}u_{i-1}+e_{i+1}u_{i+1}  = \lambda u_i,
 \]
-where $u_i$ is unknown. We can write the 
-latter equation as a matrix eigenvalue problem 
+where $u_i$ is unknown. This can be written as a matrix eigenvalue problem
 \begin{equation}
     \left( \begin{array}{ccccccc} d_1 & e_1 & 0   & 0    & \dots  &0     & 0 \\
                                 e_1 & d_2 & e_2 & 0    & \dots  &0     &0 \\
@@ -210,6 +181,11 @@ latter equation as a matrix eigenvalue problem
              \end{array} \right) 
       \label{eq:sematrix}
 \end{equation} 
+
+\noindent\rule{\textwidth}{1pt}
+\section*{Project 2, Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator well}
+
+
 or if we wish to be more detailed, we can write the tridiagonal matrix as
 \begin{equation}
     \left( \begin{array}{ccccccc} \frac{2}{h^2}+V_1 & -\frac{1}{h^2} & 0   & 0    & \dots  &0     & 0 \\
