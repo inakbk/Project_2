@@ -59,19 +59,19 @@ Together with linear equations and least squares, the third major problem in mat
 
 
 \section{Solving eigenvalueproblems using similarity transformations}
-en av de over??
-(noe noe innledning)?? by using similarity transformations
+%en av de over??
+%(noe noe innledning)?? by using similarity transformations
 
 Let us assume that we have the eigenvalue problem 
 \[
 \bf A \bf x^{(v)} = \lambda \bf x^{(v)}
 \]
-where $\lambda^{(v)}$ are the eigenvalues and $\bf x^{(v)}$ the corresponding eigenvectors.\footnote{The introduction to this section is based on the lecturenotes"lectures2015.pdf"} 
+where $\lambda^{(v)}$ are the eigenvalues and $\bf x^{(v)}$ the corresponding eigenvectors.\footnote{The introduction to this section is based on the lecturenotes"lectures2015.pdf"} Assuming that the matrix $\bf A$ is real and symetric we can use the Jacobi rotation algoritm to solve the eigenvalue problem. First we will describe the use of similarity tansformations in general and then the Jacobi rotation algorithm in detail.
 
-When the matrix is $\bf A$ is real and symetric the Jacobi rotation algoritm can be used to solve the eigenvalue problem. Let $\bf D$ be the diagonal matrix with the eigenvalues of $\bf A$ on the diagonal:
+Let $\bf D$ be the diagonal matrix with the eigenvalues of $\bf A$ on the diagonal:
 
 \begin{equation}
-    \left( \begin{array}{ccccccc} \lambda_1 & 0 & 0   & 0    & \dots  &0     & 0 \\
+    \bf D = \left( \begin{array}{ccccccc} \lambda_1 & 0 & 0   & 0    & \dots  &0     & 0 \\
                                 0  & \lambda_2 & 0 & 0    & \dots  &0     &0 \\
                                 0   & 0 & \lambda_3 & 0  &0       &\dots & 0\\
                                 \dots  & \dots & \dots & \dots  &\dots      &\dots & \dots\\
@@ -86,7 +86,7 @@ We say that a matrix $\bf B$ is a similarity transform of $\bf A$ if
 \[
 \bf B = \bf {S^T AS}
 \]
-Where $\bf S$ is a unitary matrix so $\bf{S^TS} = \bf{S^{-1}S} = \bf I$. The point of this is that the matrix $\bf B$ has the same eigenvalues as $\bf A$. Since $\bf A$ is real and symetric there exists a real orthonogal matrix $\bf S'$ such that:
+Where $\bf S$ is a unitary matrix so $\bf{S^TS} = \bf{S^{-1}S} = \bf I$. The point of this is that the matrix $\bf B$ has the same eigenvalues as $\bf A$. Since $\bf A$ is real and symetric there exists a real orthonogal matrix $\bf S'$ such that: %skjekk unitary i mat1120 boka?
 \[
 \bf {S'^T AS'} = \bf D
 \]
@@ -94,16 +94,16 @@ So the strategy is then to perform a series of similarity transformations on the
 \[
 \bf{S_N^T\dots S_1^TAS_1^T\dots S_N} = \bf D
 \]
-where $\bf{S_N\dots S_1} = \bf S'$ must be true. This must be done on both side of the equation. Only one transformation is given by:
+where $\bf{S_N\dots S_1} = \bf S'$. This must be done on both sides of the equation. Only one transformation is given by:
 \begin{align*}
 (\bf{S^TAS})(\bf{S^Tx}) = \lambda \bf{S^Tx} \\
 \bf{B(S^Tx)} = \lambda\bf{(S^Tx)}
 \end{align*}
 using that $\bf S$ is unitary. We see that the eigenvalue of $\bf B$ is the same as for $\bf A$, but the eigenvector is changed to $\bf{S^Tx}$.
 
-
-
 \subsection{Numerical method: Jacobi's rotation algorithm}
+We will now see how we can find the eigenvalues of a real and symetric matrix $\bf A$ by using the Jacobi's rotation algoritm, or Jacobi's method.
+
 The Jacobi's method introduces the ($n\times n$) unitary orthogonal transformation matrix 
 \begin{equation}
     \bf S = \left( \begin{array}{ccccccc} 1 & 0 & 0   & 0    & \dots  &0     & 0 \\
@@ -125,7 +125,7 @@ where $i\neq k$, $i\neq l$ and $i,j$ are the indexes of the matrix. Then the sim
 \[
 \bf B = \bf {S^T AS}
 \]
-becomes 
+can be written on component form as:
 \begin{align*}
 b_{ii} &= a_{ii}\\
 b_{ik} &= ca_{ik} - sa_{il} \\
@@ -134,58 +134,32 @@ b_{kk} &= c^2a_{kk} - s csa_{kl} + s^2 a_{ll} \\
 b_{ll} &= c^2a_{ll} + 2csa_{kl} + s^2a_{kk} \\
 b_{kl} &= cs(a_{kk} - a_{ll}) + (c^2 - s^2)a_{kl}
 \end{align*}
-where we want to choose the angle $\theta$ so that all the non-diagonal matric elements becomes zero, $b_{kl} = 0$. Introducing a new variable $\tau$:
+We want to choose the angle $\theta$ so that all the non-diagonal matric elements becomes zero, that is $b_{kl} = 0$. Introducing a new variable $\tau$ dependent on $k,l$:
 \begin{align*}
 b_{kl} &= cs(a_{kk} - a_{ll}) + (c^2 - s^2)a_{kl} = 0\\
-\frac{a_{ll}-a_{kk}}{a_{kl}} &= \frac{c^2 - s^2}{cs} = \frac{2\cos{2\theta}}{\sin{2\theta}} = 2 \cot{2\theta}\\
-\tau &= \cot{2\theta} = \frac{a_{ll}-a_{kk}}{2a_{kl}}
+&\Rightarrow \frac{a_{ll}-a_{kk}}{a_{kl}} = \frac{c^2 - s^2}{cs} = \frac{2\cos{2\theta}}{\sin{2\theta}} = 2 \cot{2\theta}\\
+&\Rightarrow \tau = \cot{2\theta} = \frac{a_{ll}-a_{kk}}{2a_{kl}}
 \end{align*}
-Then $b_{kl} = 0$ can be written as:
+Then $b_{kl} = 0$ can be written as a second order equation
 \begin{align*}
 2\tau &= \frac{c^2 - s^2}{cs} = \frac{c^2}{cs} - \frac{s^2}{cs} = \frac{1}{t} - t\\
-2\tau t &= 1 - t^2 \Rightarrow t^2 +2\tau t - 1 = 0\\
+&\Rightarrow 2\tau t = 1 - t^2 \\
+&\Rightarrow t^2 +2\tau t - 1 = 0\\
 \end{align*}
 with the solution
-
 \[
-t = -\tau \pm\sqrt{1 + \tau^2}
+t = -\tau \pm\sqrt{1 + \tau^2}.
 \]
-c and s can be obtained by
+We obtain $c$ ans $s$ from
+\begin{align*}
+c^2 + s^2 = 1\\
+\Rightarrow c = \frac{1}{\sqrt{1+t^2}},
+\end{align*}
+and using that $s=tc$.  
 
+But which of the roots of $t$ should we choose? To make shure that the the similarity transformation does not make bigger changes to the other elements of $\bf A$ while making another element zero we minimize the difference between the matrices ${\bf B}$ and ${\bf A}$ by letting  $|\theta| \leq \pi /4$. This also makes shure that the iterations goes faster toward the solution, else the iterations might not converge at all after a reasonable number of iterations. 
 
-
-
-
-
-\noindent\rule{\textwidth}{1pt}
-\[
-\cot 2\theta=\tau = \frac{a_{ll}-a_{kk}}{2a_{kl}}.
-\]
-We then define the angle $\theta$ so that the non-diagonal matrix elements of the transformed matrix 
-$a_{kl}$ become non-zero and
-we obtain the quadratic equation (using $\cot 2\theta=1/2(\cot \theta-\tan\theta)$
-\[
-t^2+2\tau t-1= 0,
-\]
-resulting in 
-\[
-  t = -\tau \pm \sqrt{1+\tau^2},
-\]
-and $c$ and $s$ are easily obtained via
-\[
-   c = \frac{1}{\sqrt{1+t^2}},
-\]
-and $s=tc$.  
-
-\noindent\rule{\textwidth}{1pt}
-Explain why we should choose 
-$t$ to be the smaller of the roots. Convince yourself that this choice  ensures that $|\theta| \le \pi/4$)
- (and has the 
-effect of minimizing the difference between the matrices ${\bf B}$ and ${\bf A}$ $\Rightarrow$ so that the iterations goes 'faster' )
-
-\noindent\rule{\textwidth}{1pt}
-We need: $|\theta| \leq \pi /4 \Rightarrow \theta \leq \pi/4$ and $\theta \geq -\pi/4$. Start with the first:
-
+Separating the inequality gives $\theta \leq \pi/4$ and $\theta \geq -\pi/4$. Starting with the first inequality:
 \begin{align*}
 \theta = \arctan t &\leq \pi/4 \\
 t &\leq \tan (\pi/4) = 1
@@ -195,28 +169,32 @@ and
 \theta = \arctan t &\geq -\pi/4 \\
 t &\geq \tan(-\pi/4) = -1
 \end{align*}
-so $|t| \leq 1\Rightarrow -\tau \pm \sqrt{1 + \tau^2} \leq 1$. I then look at the case where $\tau > 0$ and try the positive root of $t$:
-
+so we see that $|t| \leq 1\Rightarrow -\tau \pm \sqrt{1 + \tau^2} \leq 1$. If we look at the case where $\tau > 0$ and try the positive root of $t$ we see that:
 \begin{align*}
 -\tau + \sqrt{1 + \tau^2} &\leq -|\tau| + 1 + |\tau| = 1 \\
 &\Rightarrow t \leq 1 \Rightarrow \theta \leq \pi/4
 \end{align*}
+must be satisfied.
 
-Then try the case when $\tau < 0$ and try the negative root of $t$:
+If we then try the case when $\tau < 0$ and the negative root of $t$ we see that:
 \begin{align*}
 -\tau - \sqrt{1 + \tau^2} &= |\tau| - \sqrt{1 + \tau^2} \geq |\tau| - (1 + |\tau|) = -1 \\
 &\Rightarrow t \geq -1 \Rightarrow \theta \geq -\pi/4
 \end{align*}
+must be satisfied. So the choice of the root of $t$ is dependent on $\tau$. When $\tau > 0$ we choose the positive root, and when $\tau< 0$ we choose the negative root to make shure that $|\theta| \leq \pi /4 $ is satisfied. \\~\\
 
-So we see then that when $\tau > 0$ we choose the positive root, and when $\tau< 0$ we choose the negative root to make shure that $|\theta| \leq \pi /4 $. This is to make shure that the operations does not make bigger changes to the other elements while making another element zero --> also making shure that we get to the solution faster (or at all?).
+The Jacobi algorithm can then be described as follows: 
+\begin{enumerate}
+\item Find the indexes $k, l$ of the maximum element of the matrix $\bf A$.
+\item Obtain $c$ and $s$, the matrix elements of $\bf S$, given by $k, l$.
+\item Calculate the similarity transformation $\bf{B = S^TAS}$.
+\item Start on [1.] again, setting $\bf {A = B}$, untill all off-diagonal elements are esentially zero (less than a given threshold). When the iterations stop the eigenvalues are given by the matrix $\bf {D = B}$.
+\end{enumerate}
 
-\noindent\rule{\textwidth}{1pt}
+We see that all information needed to perform a Jacobi rotation is given by the indexes $k, l$ of the maximum elements of $\bf A$.
 
-
-
-
-\section{Physics 1: One electron in a three-dimentional harmonic oscillator potential.}
-\subsection{Rewriting the Schr\"odinger's equation to a dimentionaless form}
+\section{Physics 1: One electron in a three-dimensional harmonic oscillator potential.}
+\subsection{Rewriting the Schr\"odinger's equation to a dimensionless form}
 We look at the Sch\"odinger's equation for one electron at a radius $r\in [0,\infty)$ in a harmonic oscillator potential given by: 
 \[
 V(r)= (1/2)kr^2
@@ -225,7 +203,7 @@ where $k=m\omega^2$ and $\omega$ is the oscillator frequence. The energy $E$ of 
 \[
 E_{nl}=  \hbar \omega \left(2n+l+\frac{3}{2}\right),
 \]
-with $n=0,1,2,\dots$ and $l=0,1,2,\dots$ is the orbital momentum of the electron.  
+with $n=0,1,2,\dots$ and $l=0,1,2,\dots$ is the orbital momentum of the electron. 
 
 We are only interested in the solution of the radial part of the Schr\"odinger equation given by
 \begin{equation}
@@ -235,7 +213,7 @@ We are only interested in the solution of the radial part of the Schr\"odinger e
      \label{eq:schr_1}
 \end{equation}
 
-Then we use the substitution $R(r) = (1/r) u(r)$ and obtain
+We then use the substitution $R(r) = (1/r) u(r)$ and obtain
 \[
   -\frac{\hbar^2}{2 m} \frac{d^2}{dr^2} u(r) 
        + \left ( V(r) + \frac{l (l + 1)}{r^2}\frac{\hbar^2}{2 m}
@@ -342,15 +320,6 @@ where $u_i$ is unknown. This can be written as a matrix eigenvalue problem
 The solutions are known via the boundary conditions at $i=n_{\mathrm{step}}$ and at the other end point, for  $\rho_0$, which is zero in both cases. The goal is to use Jacobi's algoritm to solve equation \ref{eq: sch_1d_descrete}.
 
 \noindent\rule{\textwidth}{1pt}
-\section*{Project 2, Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator well}
-
-\begin{enumerate}
-\item[a)] Your task here is to write a function which implements
-
-
-
-
-\item[b)]
 How many points $n_{\mathrm{step}}$
 do you need in order to get the lowest three eigenvalues 
 with four leading digits?  
@@ -369,7 +338,15 @@ eigenvalue problems.
 Comment your results (here you could for example compute the time needed for 
 both algorithms for a given dimensionality of the matrix).  
 
- 
+\noindent\rule{\textwidth}{1pt}
+
+\section{Physics 2: Two electrons in a three-dimensional harmonic oscillator potential.}
+\subsection{W. coulomb}
+
+\subsection{W.o. coulomb}
+
+\noindent\rule{\textwidth}{1pt}
+\begin{enumerate}
 \item[c)] We will now study two electrons in a harmonic oscillator well which
 also interact via a repulsive Coulomb interaction.
 Let us start with the single-electron equation written as
