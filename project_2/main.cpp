@@ -7,7 +7,7 @@
 using namespace std;
 using namespace arma;
 
-//Function to write data/output to file
+
 void WriteToFile(const vec& eigenvalues, int p_max, const int n_step, const int number_of_iterations, const double time, string FileName, const int converge_test)
 {
     ofstream myfile;
