@@ -8,7 +8,6 @@
 using namespace std;
 using namespace arma;
 
-
 void WriteToFile(const vec& eigenvalues, int p_max, const int n_step, const int number_of_iterations, const double time, string FileName, const int converge_test)
 {
     ofstream myfile;
@@ -73,11 +72,14 @@ int solve_eq_jacobi_rotation(mat &B, const int n_step, const int maxNumberOfIter
     int k = 0;
     int l = 0;
 
-
     //instantiating an object of class jacobi:
     jacobi partsOfJacobiMethod;
 
     partsOfJacobiMethod.find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial value for max_off_diagonal to enter loop
+
+    cout << "here! k is " << k << endl;
+    cout << "here! l is " << l << endl;
+    cout << "max off is " << max_off_diagonal << endl;
 
     int numberOfIterations = 0;
     while(tolerance < max_off_diagonal)
@@ -102,9 +104,6 @@ int solve_eq_jacobi_rotation(mat &B, const int n_step, const int maxNumberOfIter
     return numberOfIterations;
 }
 
-
-
-
 int main(int argc, char *argv[])
 {
     if(argc == 1)
@@ -120,22 +119,16 @@ int main(int argc, char *argv[])
         const double p_max = atof(argv[3]); //writing p instead of rho
 
     //-------------------------------------------------------------
-        const double p_min = 0;
-        const double h = (p_max - p_min)/n_step;
-        vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
-        vec V = p%p;
+        // Constructing test matrix B:
 
-        // Constructing matrix B:
-        double e = -1/(h*h); // all elements of the e vec is the same
-        vec d = 2/(h*h) + V;
-        mat B = zeros<mat>(n_step-1,n_step-1);
+        mat B = ones<mat>(n_step-1,n_step-1);
         for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
         {
-            B(i,j) = e;
-            B(i,i) = d[i+1];
-            B(j,i) = e;
+            B(i,i) = 0;
         }
-        B(n_step-2,n_step-2) = d[n_step-1];
+        B(n_step-2,n_step-2) = 0;
+        //B(1,2) = 3;
+        B.print();
 
     //-------------------------------------------------------------
         //clocking the operations (only solve, not making file):
@@ -152,7 +145,7 @@ int main(int argc, char *argv[])
         //     << n_step << ":  " << time_arma << " seconds" << endl;
 
         int converge_test = 1; //initializing to true (false if it does not converge) for jacobi method
-        WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma", converge_test);
+        //WriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma", converge_test);
     //-------------------------------------------------------------
         //clocking the operations (only solve, not making file):
         clock_t start_jacobi, finish_jacobi; //declaring start and finish time
@@ -160,11 +153,6 @@ int main(int argc, char *argv[])
 
         //solving equations with jacobi rotation:
         int numberOfIterations = solve_eq_jacobi_rotation(B, n_step, maxNumberOfIterations, converge_test);
-
-        //jacobi myJacobiSolver;
-
-        //myJacobiSolver.
-
 
         //stopping timer:
         finish_jacobi = clock();
@@ -177,18 +165,11 @@ int main(int argc, char *argv[])
         vec eigval_jacobi_rot = B.diag();
         eigval_jacobi_rot = sort(eigval_jacobi_rot);
 
-        WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
-    //-------------------------------------------------------------
+        //WriteToFile(eigval_jacobi_rot, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
 
-        /// fix write to file. write all data? or just the first ones?
-        ///
-        /// how big n_step need to get three lowest eigvals to 4 leading digits?
-        /// dependency og p_max? save/write to file?
-        /// how many transformations (before 0) as function of n_step
-        /// also write time to file as function of n_step for both solvers
-        /// if did not converge write that to file!!
-
-
+        eigval_arma.print();
+        cout << "----" << endl;
+        eigval_jacobi_rot.print();
     }
 
     return 0;

@@ -30,13 +30,13 @@ public:
     //jacobi()
 
     //methods:
-    void find_max_elem_index(int& index_k, int& index_l, double& value_maximum_off_diagonal, const mat &first_matrix, const int number_of_steps)
+    void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
     {
-        k = index_k;
-        l = index_l;
-        max_off_diagonal = value_maximum_off_diagonal;
-        B = first_matrix;
-        n_step = number_of_steps;
+        //k = index_k;
+        //l = index_l;
+        //max_off_diagonal = value_maximum_off_diagonal;
+        //B = first_matrix;
+        //n_step = number_of_steps;
 
         max_off_diagonal = -1.0;
         //Checking all off-diagonal elements:
@@ -57,13 +57,13 @@ public:
         }
     }
 
-    void transformation_matrix(double& cos, double& sin, const mat &first_matrix, const int index_k, const int index_l)
+    void transformation_matrix(double& c, double& s, const mat &B, const int k, const int l)
     {
-        c = cos;
+        /*c = cos;
         s = sin;
         B = first_matrix;
         k = index_k;
-        l = index_l;
+        l = index_l;*/
 
         if(B(k,l) != 0)
         {
@@ -89,14 +89,14 @@ public:
         }
     }
 
-    void jacobi_rotation(mat& first_matrix, const double cos, const double sin, const int index_k, const int index_l, const int number_of_steps)
+    void jacobi_rotation(mat& B, const double c, const double s, const int k, const int l, const int n_step)
     {
-        c = cos;
+        /*c = cos;
         s = sin;
         k = index_k;
         l = index_l;
         B = first_matrix;
-        n_step = number_of_steps;
+        n_step = number_of_steps;*/
 
         double B_kk = B(k,k);
         double B_ll = B(l,l);
