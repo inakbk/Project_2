@@ -9,3 +9,6 @@ INCLUDEPATH += /usr/local/include
 LIBS += -L/usr/local/lib
 
 LIBS += -larmadillo -llapack -lblas
+
+HEADERS += \
+    jacobi_method.h
