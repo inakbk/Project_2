@@ -72,11 +72,11 @@ public:
             // ensuring that theta<=pi/4:
             if(tau>0)
             {
-                t = -tau + sqrt(1 + (tau*tau));
+                t = 1.0/(tau + sqrt(1.0 + tau*tau));
             }
             else
             {
-                t = -tau - sqrt(1 + (tau*tau));
+                t = -1.0/(-tau + sqrt(1.0 + tau*tau));
             }
             c = 1.0/sqrt(1.0 + (t*t));
             s = t*c;
