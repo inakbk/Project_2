@@ -3,6 +3,7 @@
 #include <armadillo>
 #include <cstdlib>
 #include <time.h>
+#include <jacobi_method.h>
 
 using namespace std;
 using namespace arma;
@@ -56,30 +57,8 @@ void WriteToFile(const vec& eigenvalues, int p_max, const int n_step, const int 
             cout << "Datafile done for n_step=" << n_step << " with the " << FileName <<" solver which did not converge." << endl;
             cout << endl;
         }
-
-
 }
 
-void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
-{
-    max_off_diagonal = -1.0;
-    //Checking all off-diagonal elements:
-    for(int i=0; i<n_step-1; i++)  {
-        for(int j=i+1; j<n_step-1; j++) {
-            //storing value and index of max off-diag-element
-            if(fabs(B(i,j)) > max_off_diagonal)
-            {
-                max_off_diagonal = fabs(B(i,j));
-                k = i;
-                l = j;
-            }
-        }
-    }
-    if(max_off_diagonal < 0) {
-        cout << "Warning, find_max_elem_index did not find any offdiagonal element with absolute value larger than zero. Aborting!" << endl;
-        exit(1);
-    }
-}
 
 void transformation_matrix(double& c, double& s, const mat &B, const int k, const int l)
 {
@@ -137,7 +116,12 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
     double max_off_diagonal = 0;
     int k = 0;
     int l = 0;
-    find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial value for max_off_diagonal to enter loop
+
+    //instantiating an object of class jacobi method
+
+    JACOBI_METHOD Max_elem_test_class;
+
+    Max_elem_test_class.find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial value for max_off_diagonal to enter loop
 
     int numberOfIterations = 0;
     while(tolerance < max_off_diagonal)
@@ -149,7 +133,7 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
             break;
         }
         //finding the value and index(k,l) of the maximum element in B:
-        find_max_elem_index(k, l, max_off_diagonal, B, n_step);
+        Max_elem_test_class.find_max_elem_index(k, l, max_off_diagonal, B, n_step);
 
         //finding the values of c ans s (the S transformation matrix):
         double c = 0;
@@ -161,6 +145,7 @@ int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIter
     }
     return numberOfIterations;
 }
+
 
 int main(int argc, char *argv[])
 {
