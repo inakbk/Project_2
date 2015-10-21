@@ -10,4 +10,5 @@ LIBS += -L/usr/local/lib
 
 LIBS += -larmadillo -llapack -lblas
 
-HEADERS +=
+HEADERS += \
+    jacobi.h

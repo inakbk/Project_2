@@ -3,7 +3,7 @@
 #include <armadillo>
 #include <cstdlib>
 #include <time.h>
-#include <jacobi_method.h>
+#include <jacobi.h>
 
 using namespace std;
 using namespace arma;
@@ -60,91 +60,11 @@ void WriteToFile(const vec& eigenvalues, int p_max, const int n_step, const int 
 }
 
 
-void transformation_matrix(double& c, double& s, const mat &B, const int k, const int l)
-{
-    if(B(k,l) != 0)
-    {
-        double t = 0;
-        double tau = (B(l,l) - B(k,k))/(2.0*B(k,l));
-        // ensuring that theta<=pi/4:
-        if(tau>0)
-        {
-            t = -tau + sqrt(1 + (tau*tau));
-        }
-        else
-        {
-            t = -tau - sqrt(1 + (tau*tau));
-        }
-        c = 1.0/sqrt(1.0 + (t*t));
-        s = t*c;
-    }
-    else
-    {
-        c = 1.0;
-        s = 0.0;
-        cout << "Element chosen is zero: B(" << k << "," << l << ") = 0 ==> c = 1 and s = 0" << endl;
-    }
-}
 
-void jacobi_rotation(mat& B, const double c, const double s, const int k, const int l, const int n_step)
-{
-    double B_kk = B(k,k);
-    double B_ll = B(l,l);
-    B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
-    B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
-    B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
-    B(l,k) = B(k,l); //symetrix matrix
 
-    //changing the remaining elements:
-    for(int i=0; i<n_step-1; ++i)
-    {
-        if( (i!=k) && (i!=l) )
-        {
-            double B_ik = B(i,k);
-            double B_il = B(i,l);
-            B(i,k) = B_ik*c - B_il*s;
-            B(k,i) = B(i,k);
-            B(i,l) = B_il*c + B_ik*s;
-            B(l,i) = B(i,l);
-        }
-    }
-}
+//jacobi myJacobiSolver;
 
-int solve_eq_jacobi_rotation(mat& B, const int n_step, const int maxNumberOfIterations, int& converge_test)
-{
-    double tolerance = 1.0e-08;
-    double max_off_diagonal = 0;
-    int k = 0;
-    int l = 0;
-
-    //instantiating an object of class jacobi method
-
-    JACOBI_METHOD Max_elem_test_class;
-
-    Max_elem_test_class.find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial value for max_off_diagonal to enter loop
-
-    int numberOfIterations = 0;
-    while(tolerance < max_off_diagonal)
-    {
-        if(++numberOfIterations > maxNumberOfIterations) {
-            cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations for n_step= " << n_step << ". Exiting jacobi rotation solver!" << endl;
-            converge_test = 0;
-            B = zeros<mat>(n_step-1,n_step-1);
-            break;
-        }
-        //finding the value and index(k,l) of the maximum element in B:
-        Max_elem_test_class.find_max_elem_index(k, l, max_off_diagonal, B, n_step);
-
-        //finding the values of c ans s (the S transformation matrix):
-        double c = 0;
-        double s = 0;
-        transformation_matrix(c, s, B, k, l);
-        //transformation of B:
-        jacobi_rotation(B, c, s, k, l, n_step);
-
-    }
-    return numberOfIterations;
-}
+//myJacobiSolver.
 
 
 int main(int argc, char *argv[])
