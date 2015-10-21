@@ -1,9 +1,11 @@
 \contentsline {section}{\numberline {1}Motivation and purpose}{2}{section.1}
-\contentsline {section}{\numberline {2}Solving eigenvalueproblems using similarity transformations}{2}{section.2}
-\contentsline {subsection}{\numberline {2.1}Numerical method: Jacobi's rotation algorithm}{3}{subsection.2.1}
-\contentsline {section}{\numberline {3}Physics 1: One electron in a three-dimensional harmonic oscillator potential.}{5}{section.3}
-\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimensionless form}{5}{subsection.3.1}
+\contentsline {section}{\numberline {2}Numerical method}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Solving eigenvalueproblems using similarity transformations}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Jacobi's rotation algorithm}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Retriving the eigenvectors}{5}{subsection.2.3}
+\contentsline {section}{\numberline {3}Physics 1: One electron in a three-dimensional harmonic oscillator potential.}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimensionless form}{6}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Discretizing the Schr\"odingers equation to solve numerically.}{7}{subsection.3.2}
 \contentsline {section}{\numberline {4}Physics 2: Two electrons in a three-dimensional harmonic oscillator potential.}{8}{section.4}
-\contentsline {subsection}{\numberline {4.1}W. coulomb}{8}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}W.o. coulomb}{8}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.1}Without Coulomb interaction}{9}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}With Coulomb interaction}{9}{subsection.4.2}

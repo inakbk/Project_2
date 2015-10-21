@@ -47,7 +47,7 @@ bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 
 
 \section{Motivation and purpose}
-The aim of this project is to solve Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator well with and without a repulsive Coulomb interaction.  Your task is to solve this equation by reformulating it in a discretized form as an eigenvalue equation to be solved with Jacobi's method. -->code which implements Jacobi's method.
+The aim of this project is to solve Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator well with and without a repulsive Coulomb interaction.  Your task is to solve this equation by reformulating it in a discretized form as an eigenvalue equation to be solved with Jacobi's method. -->code which implements Jacobi's method. --> plot the wave function for two electrons. first look at one electron, then two without coul and then with coul.
 
 Electrons confined in small areas in semiconductors, so-called quantum dots, form a hot research area in modern solid-state physics, with applications spanning from such diverse fields as quantum nano-medicine to the contruction of quantum gates. You can read about quantum dots at \url{http://en.wikipedia.org/wiki/Quantum_dot}, which also contains links to several scientific articles. A recent article of interest is the review by Semonin {\em et al} in Materials Today, volume 15, page 508 (2012).
 
@@ -57,8 +57,8 @@ To solve the Schr\"odinger's equation for one electron(and two??) we will have t
 
 Together with linear equations and least squares, the third major problem in matrix com- putations deals with the algebraic eigenvalue problem. Here we limit our attention to the symmetric case. We focus in particular similarity transformations, --> Jacobi \footnote{sitert fra lectures2015 p. 225}
 
-
-\section{Solving eigenvalueproblems using similarity transformations}
+\section{Numerical method}
+\subsection{Solving eigenvalueproblems using similarity transformations}
 %en av de over??
 %(noe noe innledning)?? by using similarity transformations
 
@@ -92,16 +92,16 @@ Where $\bf S$ is a unitary matrix so $\bf{S^TS} = \bf{S^{-1}S} = \bf I$. The poi
 \]
 So the strategy is then to perform a series of similarity transformations on the original matrix $\bf A$ so that the matrix reduces to the diagonal matrix $\bf D$ with the eigenvalues on the diagonal:
 \[
-\bf{S_N^T\dots S_1^TAS_1^T\dots S_N} = \bf D
+\bf{S_N^T\dots S_1^TAS_1\dots S_N} = \bf D
 \]
-where $\bf{S_N\dots S_1} = \bf S'$. This must be done on both sides of the equation. Only one transformation is given by:
+where $\bf{S_1\dots S_N} = \bf S'$. This must be done on both sides of the equation. Only one transformation is given by:
 \begin{align*}
 (\bf{S^TAS})(\bf{S^Tx}) = \lambda \bf{S^Tx} \\
 \bf{B(S^Tx)} = \lambda\bf{(S^Tx)}
 \end{align*}
 using that $\bf S$ is unitary. We see that the eigenvalue of $\bf B$ is the same as for $\bf A$, but the eigenvector is changed to $\bf{S^Tx}$.
 
-\subsection{Numerical method: Jacobi's rotation algorithm}
+\subsection{Jacobi's rotation algorithm} \label{sec:jacobi}
 We will now see how we can find the eigenvalues of a real and symetric matrix $\bf A$ by using the Jacobi's rotation algoritm, or Jacobi's method.
 
 The Jacobi's method introduces the ($n\times n$) unitary orthogonal transformation matrix 
@@ -193,8 +193,20 @@ The Jacobi algorithm can then be described as follows:
 
 We see that all information needed to perform a Jacobi rotation is given by the indexes $k, l$ of the maximum elements of $\bf A$.
 
+\subsection{Retriving the eigenvectors}
+In this particular problem we also want to find the eigenvectors $\bf x^{(v)}$ of the matrix $\bf A$. The Jacobi's rotation method described in section \ref{sec:jacobi} does not return the eigenvectors. For every similarity transformation in the Jacobi's method the eigenvector is changed from $\bf x$ to $\bf{S^Tx}$. So it is possible to add a routine to the Jacobi's algorithm which ceeps track of the changes to the eigenvectors so that the eigenvectors can be returned when the iterations stop. This is a bit tricy and the eigenvectors also need to be normalized.
+
+We will use the existing {\em tqli} function found at(??). Here the eigenvectors are obtained from the matrix $z[i][j]$, where the index $j$ refers to eigenvalue $j$. The index $i$ points to the value of the wave function in position $\rho_j$. That is,  $u^{(\lambda_j)}(\rho_i)=z[i][j]$.   
+
+The eigenvectors are normalized. 
+
+Wil also compare with (?)
+Finally, the armadillo function {\em eig\_sys} can be used to find eigenvalues and eigenvectors.
+
+
 \section{Physics 1: One electron in a three-dimensional harmonic oscillator potential.}
-\subsection{Rewriting the Schr\"odinger's equation to a dimensionless form}
+here we will look eqiation (?)
+\subsection{Rewriting the Schr\"odinger's equation to a dimensionless form} \label{sec:rewrite_sch}
 We look at the Sch\"odinger's equation for one electron at a radius $r\in [0,\infty)$ in a harmonic oscillator potential given by: 
 \[
 V(r)= (1/2)kr^2
@@ -254,7 +266,7 @@ Finally equation \ref{eq:schr_1} can be written as
 \end{equation}
 which is the equation we want to solve numerically. We know\footnote{This is given in the assignment text for Project 2, FYS3150..} that this equation has the eigenvalues $\lambda_0=3,\lambda_1=7,\lambda_2=11,\dots .$ for $l=0$. These analytical values will be used to test the precition of the numerical method.
 
-\subsection{Discretizing the Schr\"odingers equation to solve numerically.}
+\subsection{Discretizing the Schr\"odingers equation to solve numerically.} \label{sec: descrete}
 We will now rewrite the Schr\"odingers equation on a discretized form to be able to solve it as an matrix eigenvalue problem.
 
 We use the expression for the second derivative of the function $u(\rho)$
@@ -278,9 +290,10 @@ so that the Schr\"odinger equation for $\rho_i$ reads
 -\frac{u(\rho_i+h) -2u(\rho_i) +u(\rho_i-h)}{h^2}+\rho_i^2u(\rho_i)  = \lambda u(\rho_i),
 \]
 or in a more compact way with the harmonic oscillator potential $V_i=\rho_i^2$:
-\[
+\begin{equation}
 -\frac{u_{i+1} -2u_i +u_{i-1} }{h^2}+V_iu_i  = \lambda u_i,
-\]
+\label{eq: sch_discrete_first}
+\end{equation}
 Then we can define first the diagonal matrix element
 \[
    d_i=\frac{2}{h^2}+V_i,
@@ -290,7 +303,7 @@ and the non-diagonal matrix element:
    e_i=-\frac{1}{h^2}.
 \]
 We observe that in this case all the non-diagonal matrix element is given by a constant, so we can denote them all as $e=-\frac{1}{h^2}$ instead. (insert e og ikke ei hele veien??)
-
+ 
 With these definitions the Schr\"odinger equation (\ref{eq: sch_1D_final}) takes the following form
 \begin{equation}
 d_iu_i+e_{i-1}u_{i-1}+e_{i+1}u_{i+1}  = \lambda u_i,
@@ -319,6 +332,8 @@ where $u_i$ is unknown. This can be written as a matrix eigenvalue problem
 
 The solutions are known via the boundary conditions at $i=n_{\mathrm{step}}$ and at the other end point, for  $\rho_0$, which is zero in both cases. The goal is to use Jacobi's algoritm to solve equation \ref{eq: sch_1d_descrete}.
 
+This we want to plot (?)
+
 \noindent\rule{\textwidth}{1pt}
 How many points $n_{\mathrm{step}}$
 do you need in order to get the lowest three eigenvalues 
@@ -341,69 +356,65 @@ both algorithms for a given dimensionality of the matrix).
 \noindent\rule{\textwidth}{1pt}
 
 \section{Physics 2: Two electrons in a three-dimensional harmonic oscillator potential.}
-\subsection{W. coulomb}
+We will now study two electrons in a harmonic oscillator well which also interact via a repulsive Coulomb interaction.
 
-\subsection{W.o. coulomb}
 
-\noindent\rule{\textwidth}{1pt}
-\begin{enumerate}
-\item[c)] We will now study two electrons in a harmonic oscillator well which
-also interact via a repulsive Coulomb interaction.
-Let us start with the single-electron equation written as
+We will now rewrite the single-electron equation as
 \[
   -\frac{\hbar^2}{2 m} \frac{d^2}{dr^2} u(r) 
        + \frac{1}{2}k r^2u(r)  = E^{(1)} u(r),
 \]
 where $E^{(1)}$ stands for the energy with one electron only.
-For two electrons with no repulsive Coulomb interaction, we have the following 
-Schr\"odinger equation
-\[
-\left(  -\frac{\hbar^2}{2 m} \frac{d^2}{dr_1^2} -\frac{\hbar^2}{2 m} \frac{d^2}{dr_2^2}+ \frac{1}{2}k r_1^2+ \frac{1}{2}k r_2^2\right)u(r_1,r_2)  = E^{(2)} u(r_1,r_2) .
-\]
+
+look at with and without Coulom
+again we only interested in the ground state with $l=0$. 
 
 
-Note that we deal with a two-electron wave function $u(r_1,r_2)$ and 
-two-electron energy $E^{(2)}$.
+\subsection{Without Coulomb interaction}
+The Schr\"odingers equation for two electrons in a harmonic oscillator potential with no Coulomb interaction can be written as
+\begin{equation}
+\left(  -\frac{\hbar^2}{2 m} \frac{d^2}{dr_1^2} -\frac{\hbar^2}{2 m} \frac{d^2}{dr_2^2}+ \frac{1}{2}k r_1^2+ \frac{1}{2}k r_2^2\right)u(r_1,r_2)  = E^{(2)} u(r_1,r_2) 
+\label{eq: sch_2d_uC}
+\end{equation}
+with a two-electron wave function $u(r_1,r_2)$ and the two-electron energy $E^{(2)}$.
 
-With no interaction this can be written out as the product of two
-single-electron wave functions, that is we have a solution on closed form.
-
-We introduce the relative coordinate ${\bf r} = {\bf r}_1-{\bf r}_2$
-and the center-of-mass coordinate ${\bf R} = 1/2({\bf r}_1+{\bf r}_2)$.
-With these new coordinates, the radial Schr\"odinger equation reads
+When there is no electron interaction the equation \ref{eq: sch_2d_uC} can be written as the product of two single-electron wave functions, the equation is separabel. We introduce the relative coordinate ${\bf r} = {\bf r}_1-{\bf r}_2$ and the center-of-mass coordinate ${\bf R} = 1/2({\bf r}_1+{\bf r}_2)$. With these new coordinates, the equation \ref{eq: sch_2d_uC} reads
 \[
 \left(  -\frac{\hbar^2}{m} \frac{d^2}{dr^2} -\frac{\hbar^2}{4 m} \frac{d^2}{dR^2}+ \frac{1}{4} k r^2+  kR^2\right)u(r,R)  = E^{(2)} u(r,R).
 \]
 
-The equations for $r$ and $R$ can be separated via the ansatz for the 
-wave function $u(r,R) = \psi(r)\phi(R)$ and the energy is given by the sum
-of the relative energy $E_r$ and the center-of-mass energy $E_R$, that
-is
+The equations for $r$ and $R$ can be separated as the wave function $u(r,R) = \psi(r)\phi(R)$ and the energy is given by the sum of the relative energy $E_r$ and the center-of-mass energy $E_R$, that is
 \[
 E^{(2)}=E_r+E_R.
 \]
 
-We add then the repulsive Coulomb interaction between two electrons,
-namely a term 
+For this article we will omit the center-of-mass energy in the calculations.
+
+\noindent\rule{\textwidth}{1pt}
+With no repulsive Coulomb interaction 
+you should get a result which corresponds to 
+the relative energy of a non-interacting system.   
+Make sure your results are 
+stable as functions of $\rho_{\mathrm{max}}$ and the number of steps.
+\noindent\rule{\textwidth}{1pt}
+
+\subsection{With Coulomb interaction}
+We will now include the repulsive Coulomb interaction between two electrons. Introducing the term
 \[
 V(r_1,r_2) = \frac{\beta e^2}{|{\bf r}_1-{\bf r}_2|}=\frac{\beta e^2}{r},
 \]
-with $\beta e^2=1.44$ eVnm.
-
-Adding this term, the $r$-dependent Schr\"odinger equation becomes
+with $\beta e^2=1.44$ eVnm. With this extra term representing the interaction the $r$-dependent Schr\"odinger equation becomes
 \[
 \left(  -\frac{\hbar^2}{m} \frac{d^2}{dr^2}+ \frac{1}{4}k r^2+\frac{\beta e^2}{r}\right)\psi(r)  = E_r \psi(r).
 \]
-This equation is similar to the one we had previously in (a) and we introduce
-again a dimensionless variable $\rho = r/\alpha$. Repeating the same
-steps as in (a), we arrive at 
+
+We want to manipulate this equation further to make it as similar as possible to the one electron equation (\ref{eq:schr_1}) we obtained earlier. Again we introduce the dimensionless variable $\rho = r/\alpha$ and repeating the same steps as in section \ref{sec:rewrite_sch}, we arrive at 
 \[
   -\frac{d^2}{d\rho^2} \psi(\rho) 
        + \frac{1}{4}\frac{mk}{\hbar^2} \alpha^4\rho^2\psi(\rho)+\frac{m\alpha \beta e^2}{\rho\hbar^2}\psi(\rho)  = 
 \frac{m\alpha^2}{\hbar^2}E_r \psi(\rho) .
 \]
-We want to manipulate this equation further to make it as similar to that in (a)
-as possible. We define a 'frequency' 
+We manipulate this equation further by defining a 'frequency' which reflects the strength of the oscillator potential
 \[
 \omega_r^2=\frac{1}{4}\frac{mk}{\hbar^2} \alpha^4,
 \]
@@ -415,82 +426,48 @@ or
 \[
 \alpha = \frac{\hbar^2}{m\beta e^2}.
 \]
-Defining 
+Then defining 
 \[
 \lambda = \frac{m\alpha^2}{\hbar^2}E,
 \]
-we can rewrite Schr\"odinger's equation as
-\[
+so we finally can write the Schr\"odinger's equation as
+\begin{equation}
   -\frac{d^2}{d\rho^2} \psi(\rho) + \omega_r^2\rho^2\psi(\rho) +\frac{1}{\rho} = \lambda \psi(\rho).
-\]
-We treat $\omega_r$ as a parameter which reflects the strength of the oscillator potential.
+  \label{eq: sch_2e_wCol}
+\end{equation}
 
-Here we will study the cases $\omega_r = 0.01$, $\omega_r = 0.5$, $\omega_r =1$,
-and $\omega_r = 5$   
-for the ground state only, that is the lowest-lying state.
+For specific oscillator frequencies, the above equation has answers in an analytical form found by M.~Taut\footnote{M.~Taut, Phys. Rev. A 48, 3561 - 3566 (1993).The article can be retrieved from the following web address \url{http://prola.aps.org/abstract/PRA/v48/i5/p3561_1}}. We will study the cases $\omega_r = 0.01$, $\omega_r = 0.5$, $\omega_r =1$, and $\omega_r = 5$ for the ground state only ($l=0$).
+
+By following the same approach as in section \ref{sec: descrete} equation \ref{eq: sch_2e_wCol} can written on a discrete form which can be used to solve the problem numerically. (write explixitly?)
+
+We can use equation \ref{eq: sch_discrete_first} if we change the potential from $\rho^2$ to $V_i = \omega_r^2\rho^2+1/\rho$. 
+
+This we want to plot (?)
 
 
-With no repulsive Coulomb interaction 
-you should get a result which corresponds to 
-the relative energy of a non-interacting system.   
-Make sure your results are 
-stable as functions of $\rho_{\mathrm{max}}$ and the number of steps.
 
-We are only interested in the ground state with $l=0$. We omit the 
-center-of-mass energy.
-
-You can reuse the code you wrote for (a), 
-but you need to change the potential
-from $\rho^2$ to $\omega_r^2\rho^2+1/\rho$. 
-
+\noindent\rule{\textwidth}{1pt}
 Comment the results for the lowest state (ground state) as function of
 varying strengths of $\omega_r$. 
+\noindent\rule{\textwidth}{1pt}
 
 
-For specific oscillator frequencies, the above equation has answers in an analytical form,
-see the article by M.~Taut, Phys. Rev. A 48, 3561 - 3566 (1993).
-The article can be retrieved from the following web address
-\url{http://prola.aps.org/abstract/PRA/v48/i5/p3561_1}.
-
-
+\noindent\rule{\textwidth}{1pt}
+\begin{enumerate}
 
 \item[d)] 
-In this exercise we want to plot the wave function 
-for two electrons as functions of the relative coordinate $r$ and different
-values of $\omega_r$.  With no Coulomb interaction you should have a result which corresponds to the non-interacting case. 
+In this exercise we want to plot the wave function for two electrons as functions of the relative coordinate $r$ and different values of $\omega_r$.  With no Coulomb interaction you should have a result which corresponds to the non-interacting case. 
 Plot either the function itself or the probability distribution (the function squared) with and without the repulsion between the two electrons.
 Varying $\omega_r$, the shape of the wave function
 will change.  
 
 We are only interested in the wave function for the ground state with $l=0$ and the two first excited states with the same symmetry and
-omit again the  center-of-mass motion.
-
-You can choose between three approaches; the first is to use the existing
-{\em tqli} function. Here the eigenvectors are obtained from the matrix
-$z[i][j]$, where the index $j$ refers to eigenvalue $j$. The index $i$
-points to the value of the wave function in position $\rho_j$.  
-That is,  $u^{(\lambda_j)}(\rho_i)=z[i][j]$.   
-
-The eigenvectors are normalized. 
-Plot then the normalized wave functions for different 
-values of $\omega_r$ and comment the results.
-
-Another alternative is to add a piece to your Jacobi routine which also
-returns the eigenvectors. This is the more difficult part.
-You will also need to normalize the eigenvectors.
-
-Finally, the armadillo function {\em eig\_sys} can be used to find eigenvalues and eigenvectors.
-
-
+omit again the center-of-mass motion.
 
 \item[e)]  
-Here you are asked to implement unit tests in either your C++ program or your Fortran program. For C++ users, please follow the guidelines on how to install
-unit tests with c++ on the webpage. For Fortran user, the software package Fortran Unit Test Framework (FRUIT), \url{sourceforge.net/projects/fortranxunit}. These issues will be discussed in more detail at the lab and lectures during week 38. 
+Here you are asked to implement unit tests in your C++ program. For C++ users, please follow the guidelines on how to install unit tests with c++ on the webpage. These issues will be discussed in more detail at the lab and lectures during week 38. 
 
-\item[f)]  This exercise is optional and is meant more as a challenge. 
-Implement the iterative Lanczos' algorithm discussed in the lecture notes and compute the lowest eigenvalues 
-as done in exercise c) above. Compare your results and discuss faults and merits of the iterative method versus
-direct methods like Jacobi's method. 
+
 \end{enumerate}
 
 
