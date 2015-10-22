@@ -30,13 +30,13 @@ public:
     }
 
     //timing the whole jacobi algorithm:
-    void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& R, int& numberOfIterations, int& converge_test, double time_jacobi)
+    void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& eigvec_jacobi, mat& R, int& numberOfIterations, int& converge_test, double time_jacobi)
     {
         clock_t start_jacobi, finish_jacobi;
         start_jacobi = clock();
 
         iterations(eigval_jacobi, R, numberOfIterations, converge_test);
-        retriveSortEigenValVec(eigval_jacobi, B, R);
+        retriveSortEigenValVec(eigval_jacobi, eigvec_jacobi, B, R);
 
         finish_jacobi = clock();
         time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
@@ -44,7 +44,7 @@ public:
 
     void iterations(vec& eigval_jacobi, mat& R, int& numberOfIterations, int& converge_test)
     {
-        double tolerance = 1.0e-08;
+        double tolerance = 1.0e-14;
         double max_off_diagonal = 0;
         int k = 0;
         int l = 0;
@@ -77,19 +77,18 @@ public:
     }
 
     //this is only for a more tidy code..
-    void retriveSortEigenValVec(vec& eigval_jacobi, mat B, mat& R)
+    void retriveSortEigenValVec(vec& eigval_jacobi, mat& eigvec_jacobi, mat B, mat& R)
     {
         eigval_jacobi = B.diag();
         eigval_jacobi = sort(eigval_jacobi);
         uvec indexes_sorted_eigenval = sort_index(B.diag());
         //indexes_sorted_eigenval.print();
-        mat eigvec_jacobi = zeros<mat>(n_step-1,n_step-1);
         for(int i=0; i<=n_step-2; ++i)
         {
             eigvec_jacobi.col(i) = R.col(indexes_sorted_eigenval(i));
         }
         cout << "eigvec jacobi" << endl;
-        eigvec_jacobi.print();
+        //eigvec_jacobi.print();
     }
 
 

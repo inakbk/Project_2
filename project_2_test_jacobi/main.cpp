@@ -28,12 +28,15 @@ int main(int argc, char *argv[])
 //-------------------------------------------------------------
         // Constructing test matrix B:
 
-        mat B = ones<mat>(n_step-1,n_step-1);
-        for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+        mat B = randu<mat>(n_step-1,n_step-1);
+        B = B.t()*B;
+        /*for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
         {
             B(i,i) = 0;
         }
         B(n_step-2,n_step-2) = 0;
+        */
+
         //B(1,2) = 9;
         //B(2,1) = 11;
         //B.print();
@@ -60,11 +63,12 @@ int main(int argc, char *argv[])
 
 //-------------------------------------------------------------
         vec eigval_jacobi = zeros<vec>(n_step-1);
+        mat eigvec_jacobi = zeros<mat>(n_step-1,n_step-1);
         int numberOfIterations = 0;
         double time_jacobi = 0;
         //solving equations with jacobi rotation:
         jacobisolver solveTestMatrix(B, n_step, maxNumberOfIterations);
-        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, R, numberOfIterations, converge_test, time_jacobi);
+        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, eigvec_jacobi, R, numberOfIterations, converge_test, time_jacobi);
 
         cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
@@ -72,8 +76,10 @@ int main(int argc, char *argv[])
         //fileJacobi.funcWriteToFile(eigval_jacobi, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
 
 //-------------------------------------------------------------
-        cout << "eigenvec arma:" << endl;
+        cout << "eigenvec:" << endl;
         eigvec_arma.print();
+        cout << "---" << endl;
+        eigvec_jacobi.print();
         cout << "eigenvaules:" << endl;
         eigval_arma.print();
         cout << "----" << endl;
