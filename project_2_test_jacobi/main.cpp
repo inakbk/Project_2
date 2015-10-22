@@ -64,14 +64,14 @@ int main(int argc, char *argv[])
         jacobisolver solveTestMatrix;
         int numberOfIterations = solveTestMatrix.solve_w_jacobi_rotation(B, n_step, maxNumberOfIterations, converge_test);
 
+        //retriving ans sorting eigenvalues:
+        vec eigval_jacobi_rot = B.diag();
+        eigval_jacobi_rot = sort(eigval_jacobi_rot);
+
         finish_jacobi = clock();
         double time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
 
         cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
-
-        //retriving ans sorting eigenvalues:
-        vec eigval_jacobi_rot = B.diag();
-        eigval_jacobi_rot = sort(eigval_jacobi_rot);
 
         //write to file is now a class...
         writetofile fileJacobi;
