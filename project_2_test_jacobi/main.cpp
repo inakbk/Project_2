@@ -34,9 +34,12 @@ int main(int argc, char *argv[])
             B(i,i) = 0;
         }
         B(n_step-2,n_step-2) = 0;
-        B(1,2) = 9;
+        //B(1,2) = 9;
         //B(2,1) = 11;
         //B.print();
+
+        //Eigenvector initiated as identity
+        mat R = eye<mat>(n_step-1, n_step-1);
 
 //-------------------------------------------------------------
         //clocking the operations:
@@ -44,14 +47,16 @@ int main(int argc, char *argv[])
         start_arma = clock();
 
         //solving equations with armadillo lib:
-        vec eigval_arma = eig_sym(B);
+        vec eigval_arma = zeros<vec>(n_step-1);
+        mat eigvec_arma = zeros<mat>(n_step-1,n_step-1);
+        eig_sym(eigval_arma, eigvec_arma, B) ;
 
         finish_arma = clock();
         double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
 
         int converge_test = 1; //this is only false if jacobi did not converge (always true for arma)
-        writetofile fileArma;
-        fileArma.funcWriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma", converge_test);
+        //writetofile fileArma;
+        //fileArma.funcWriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma", converge_test);
 
 //-------------------------------------------------------------
         vec eigval_jacobi = zeros<vec>(n_step-1);
@@ -59,14 +64,17 @@ int main(int argc, char *argv[])
         double time_jacobi = 0;
         //solving equations with jacobi rotation:
         jacobisolver solveTestMatrix(B, n_step, maxNumberOfIterations);
-        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, numberOfIterations, converge_test, time_jacobi);
+        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, R, numberOfIterations, converge_test, time_jacobi);
 
         cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
-        writetofile fileJacobi;
-        fileJacobi.funcWriteToFile(eigval_jacobi, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
+        //writetofile fileJacobi;
+        //fileJacobi.funcWriteToFile(eigval_jacobi, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
 
 //-------------------------------------------------------------
+        cout << "eigenvec arma:" << endl;
+        eigvec_arma.print();
+        cout << "eigenvaules:" << endl;
         eigval_arma.print();
         cout << "----" << endl;
         eigval_jacobi.print();

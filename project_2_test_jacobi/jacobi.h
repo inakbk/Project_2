@@ -78,7 +78,7 @@ public:
         }
     }
 
-    void jacobi_rotation(mat& B, const double c, const double s, const int k, const int l, const int n_step)
+    void jacobi_rotation(mat& B, mat& R, const double c, const double s, const int k, const int l, const int n_step)
     {
 
         double B_kk = B(k,k);
@@ -100,6 +100,11 @@ public:
                 B(i,l) = B_il*c + B_ik*s;
                 B(l,i) = B(i,l);
             }
+
+        double r_ik = R(i,k);
+        double r_il = R(i,l);
+        R(i,k) = c*r_ik - s*r_il;
+        R(i,l) = c*r_il + s*r_ik;
         }
     }
 
