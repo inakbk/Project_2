@@ -22,11 +22,20 @@ public:
     int maxNumberOfIterations;
     int converge_test;
 
-    // constructor, initiate values if not spesified?
-    //jacobisolver()
+    //double time;
+    vec eigval_jacobi;
+    int numberOfIterations;
+
+    // constructor, initiate values and sets default values if not any given
+    jacobisolver(mat firstMatrix = zeros<mat>(2,2), int numberOfStep = 2, int maxIterations=1)
+    {
+        B = firstMatrix;
+        n_step = numberOfStep;
+        maxNumberOfIterations = maxIterations;
+    }
 
     //methods:
-    int solve_w_jacobi_rotation(mat &B, const int n_step, const int maxNumberOfIterations, int& converge_test)
+    void solve_w_jacobi_rotation(vec& eigval_jacobi, int& numberOfIterations, int& converge_test)
     {
         double tolerance = 1.0e-08;
         double max_off_diagonal = 0;
@@ -38,7 +47,7 @@ public:
 
         partsOfJacobiMethod.find_max_elem_index(k, l, max_off_diagonal, B, n_step); //initial value for max_off_diagonal to enter loop
 
-        int numberOfIterations = 0;
+        numberOfIterations = 0;
         while(tolerance < max_off_diagonal)
         {
             if(++numberOfIterations > maxNumberOfIterations) {
@@ -54,12 +63,20 @@ public:
             double c = 0;
             double s = 0;
             partsOfJacobiMethod.transformation_matrix(c, s, B, k, l);
-            //transformation of B:
+            //doing one transformation:
             partsOfJacobiMethod.jacobi_rotation(B, c, s, k, l, n_step);
 
         }
-        return numberOfIterations;
+
+        retriveSortEigenvalues(eigval_jacobi, B);
     }
+
+    void retriveSortEigenvalues(vec& eigval_jacobi, mat B)
+    {
+        eigval_jacobi = B.diag();
+        eigval_jacobi = sort(eigval_jacobi);
+    }
+
 
 };
 
