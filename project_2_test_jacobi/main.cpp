@@ -50,28 +50,19 @@ int main(int argc, char *argv[])
         double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
 
         int converge_test = 1; //this is only false if jacobi did not converge (always true for arma)
-
-        //write to file is now a class..
         writetofile fileArma;
         fileArma.funcWriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma", converge_test);
 
 //-------------------------------------------------------------
-        //clocking the operations:
-        clock_t start_jacobi, finish_jacobi;
-        start_jacobi = clock();
-
+        vec eigval_jacobi = zeros<vec>(n_step-1);
+        int numberOfIterations = 0;
+        double time_jacobi = 0;
         //solving equations with jacobi rotation:
         jacobisolver solveTestMatrix(B, n_step, maxNumberOfIterations);
-        vec eigval_jacobi = zeros<vec>(n_step-1);
-        int numberOfIterations;
-        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, numberOfIterations, converge_test);
-
-        finish_jacobi = clock();
-        double time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
+        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, numberOfIterations, converge_test, time_jacobi);
 
         cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
-        //write to file is now a class...
         writetofile fileJacobi;
         fileJacobi.funcWriteToFile(eigval_jacobi, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
 

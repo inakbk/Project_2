@@ -11,22 +11,12 @@
 class jacobisolver
 {
 public:
-    //variables:
-    int k;
-    int l;
-    double c;
-    double s;
-    double max_off_diagonal;
+    //dont need to store the changes to B
     int n_step;
     mat B;
     int maxNumberOfIterations;
-    int converge_test;
 
-    //double time;
-    vec eigval_jacobi;
-    int numberOfIterations;
-
-    // constructor, initiate values and sets default values if not any given
+    // constructor, initiating input values and sets default values if not any given
     jacobisolver(mat firstMatrix = zeros<mat>(2,2), int numberOfStep = 2, int maxIterations=1)
     {
         B = firstMatrix;
@@ -35,7 +25,22 @@ public:
     }
 
     //methods:
-    void solve_w_jacobi_rotation(vec& eigval_jacobi, int& numberOfIterations, int& converge_test)
+
+    //timing the whole jacobi algorithm:
+    void solve_w_jacobi_rotation(vec& eigval_jacobi, int& numberOfIterations, int& converge_test, double time_jacobi)
+    {
+        clock_t start_jacobi, finish_jacobi;
+        start_jacobi = clock();
+
+        iterations(eigval_jacobi, numberOfIterations, converge_test);
+        retriveSortEigenvalues(eigval_jacobi, B);
+
+        finish_jacobi = clock();
+        time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
+
+    }
+
+    void iterations(vec& eigval_jacobi, int& numberOfIterations, int& converge_test)
     {
         double tolerance = 1.0e-08;
         double max_off_diagonal = 0;
@@ -67,8 +72,6 @@ public:
             partsOfJacobiMethod.jacobi_rotation(B, c, s, k, l, n_step);
 
         }
-
-        retriveSortEigenvalues(eigval_jacobi, B);
     }
 
     void retriveSortEigenvalues(vec& eigval_jacobi, mat B)
