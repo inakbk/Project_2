@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
             B(i,i) = 0;
         }
         B(n_step-2,n_step-2) = 0;
-        //B(1,2) = 9;
+        B(1,2) = 9;
         //B(2,1) = 11;
         //B.print();
 

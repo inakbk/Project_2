@@ -19,12 +19,15 @@ public:
     // constructor, initiating input values and sets default values if not any given
     jacobisolver(mat firstMatrix = zeros<mat>(2,2), int numberOfStep = 2, int maxIterations=1)
     {
+        if(maxIterations == 1)
+        {
+            cout << "Not enough arguments given to jacobisolver. Aborting." << endl;
+            exit(1);
+        }
         B = firstMatrix;
         n_step = numberOfStep;
         maxNumberOfIterations = maxIterations;
     }
-
-    //methods:
 
     //timing the whole jacobi algorithm:
     void solve_w_jacobi_rotation(vec& eigval_jacobi, int& numberOfIterations, int& converge_test, double time_jacobi)
