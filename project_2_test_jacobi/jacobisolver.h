@@ -60,7 +60,7 @@ public:
         while(tolerance < max_off_diagonal)
         {
             if(++numberOfIterations > maxNumberOfIterations) {
-                cout << "Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations for n_step= " << n_step << ". Exiting jacobi rotation solver!" << endl;
+                cout << "Warning! Jacobi algorithm did not converge after " << maxNumberOfIterations << " iterations for n_step= " << n_step << ". Exiting jacobi rotation solver!" << endl;
                 converge_test = 0;
                 B = zeros<mat>(n_step-1,n_step-1);
                 break;

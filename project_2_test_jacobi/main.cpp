@@ -38,18 +38,18 @@ int main(int argc, char *argv[])
         //solving equations with armadillo lib:
         vec eigval_arma = zeros<vec>(n_step-1);
         mat eigvec_arma = zeros<mat>(n_step-1,n_step-1);
-        eig_sym(eigval_arma, eigvec_arma, B) ;
+        eig_sym(eigval_arma, eigvec_arma, B);
 
         finish_arma = clock();
         double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
 
-        int converge_test = 1; //this is only false if jacobi did not converge (always true for arma)
-        //writetofile fileArma(eigval_arma, eigvec_arma, p_max, n_step, time_arma, "arma");
+        writetofile fileArma(eigval_arma, eigvec_arma.col(0), p_max, n_step, time_arma, "arma");
 
 //-------------------------------------------------------------
         vec eigval_jacobi = zeros<vec>(n_step-1);
         mat eigvec_jacobi = zeros<mat>(n_step-1,n_step-1);
         int numberOfIterations = 0;
+        int converge_test = 1; //initializing to true, false if jacobi did not converge
         double time_jacobi = 0;
 
         //solving equations with jacobi rotation:
@@ -58,12 +58,12 @@ int main(int argc, char *argv[])
 
         cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
-        //writetofile fileJacobi;
-        //fileJacobi.funcWriteToFile(eigval_jacobi, p_max, n_step, numberOfIterations, time_jacobi, "jacobi", converge_test);
+        writetofile fileJacobi(eigval_jacobi, eigvec_jacobi.col(0), p_max, n_step, time_jacobi, "jacobi", numberOfIterations, converge_test);
 
 //-------------------------------------------------------------
-        cout << "eigenvec:" << endl;
-        vec a = eigvec_arma - eigvec_jacobi;
+        /*cout << "diff. eigenvec:" << endl;
+        //cout << size(eigvec_arma) << size(eigvec_jacobi) << endl;
+        vec a = eigvec_arma.col(0) - eigvec_jacobi.col(0);
         a.print();
 //        eigvec_arma.print();
 //        cout << "---" << endl;
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         cout << "eigenvaules:" << endl;
         eigval_arma.print();
         cout << "----" << endl;
-        eigval_jacobi.print();
+        eigval_jacobi.print(); */
     }
 
     return 0;

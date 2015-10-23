@@ -12,17 +12,6 @@ using namespace arma;
 class writetofile
 {
 public:
-    //variables
-    /*vec eigenvalues;
-    vec eigenvector_gs;
-    int p_max;
-    int n_step;
-    int number_of_iterations;
-    double time;
-    string FileName;
-    int converge_test;*/
-
-
     //overloading constructor, one for jacobi and one for arma, this for jacobi:
     writetofile(const vec eigenvalues, const vec eigenvector_gs, const int p_max, const int n_step, const double time, string FileName, const int number_of_iterations, const int converge_test)
     {

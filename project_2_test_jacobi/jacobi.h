@@ -14,18 +14,6 @@ class jacobi
 {
 
 public:
-    //variables:
-    int k;
-    int l;
-    double c;
-    double s;
-
-    double max_off_diagonal;
-    int n_step;
-    mat B;
-    int maxNumberOfIterations;
-    int converge_test;
-
     //methods:
     void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
     {
