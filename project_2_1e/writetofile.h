@@ -30,7 +30,7 @@ public:
             {
                 myfile << "---------------------" << endl;
                 myfile << "Eigenvalues (sorted, maximum writing 10 eigenvalues to file)" << endl;
-                myfile << "---------------------" << endl;
+                //myfile << "---------------------" << endl;
                 int number_of_eigenvalues_printed = 10;
                 for (int i=0; i < number_of_eigenvalues_printed; i++)
                 {
@@ -78,7 +78,7 @@ public:
 
             myfile << "---------------------" << endl;
             myfile << "Eigenvalues (sorted, maximum writing 10 eigenvalues to file)" << endl;
-            myfile << "---------------------" << endl;
+            //myfile << "---------------------" << endl;
             int number_of_eigenvalues_printed = 10;
             for (int i=0; i < number_of_eigenvalues_printed; i++)
             {

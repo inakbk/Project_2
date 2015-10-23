@@ -1,5 +1,4 @@
-#Program to run project 2 c++ code
-
+#Program to run project 2 c++ code and plot datafiles
 
 from pylab import *
 import os as os
@@ -13,20 +12,39 @@ def read_file(filename):
     infile_ = infile.readlines()
 
     eigenvalues = []
+    eigenvectors = []
     
     for line in infile_:
-		if len(line.split()) == 2:
-			eigenvalues.append(float(line.split()[0]))
 		if line.startswith('Execution time'):
 			time = float(line.split()[2])
+		if line.startswith('Eigenvalues'):
+			eigenvalues.append(float(line))
+			if line.startswith('--'):
+				break
+		if line.startswith('Eigenvector'):
+			eigenvectors.append(float(line))
+			if line.startswith('--'):
+				break
     infile.close()
 
-    return array(eigenvalues), time
+    return array(eigenvalues), array(eigenvectors), time
 
 """
 ------------------------------------------------------------------------------------------
 """
+N = [5]#, 10, 50, 100]
+max_number_of_iterations = 10000
+p_max = 5.
 
+#Running code:
+n_step = N[0]
+os.system('g++ -o project_2_1e/main.cpp -larmadillo -llapack -lblas')
+os.system('./project_2_1e/main %s %s %s' %(n_step, max_number_of_iterations, p_max))
+
+
+
+
+"""
 N = [5]#, 10, 50, 100]
 max_number_of_iterations = 10000
 p_max = 5.
@@ -71,5 +89,5 @@ for n_step in N:
 				#print AnalyticEigval[i] - FirstEigenvalues[i]
 				#print "---"
 
-
+"""
 

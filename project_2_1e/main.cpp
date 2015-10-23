@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
 
         cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
+        cout << "Time Jacobi: " << time_jacobi << endl;
         writetofile fileJacobi(eigval_jacobi, eigvec_jacobi.col(0), p_max, n_step, time_jacobi, "jacobi", numberOfIterations, converge_test);
 
 //-------------------------------------------------------------

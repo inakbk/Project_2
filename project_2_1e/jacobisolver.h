@@ -32,7 +32,7 @@ public:
     }
 
     //solving and timing the whole jacobi algorithm:
-    void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& eigvec_jacobi, int& numberOfIterations, int& converge_test, double time_jacobi)
+    void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& eigvec_jacobi, int& numberOfIterations, int& converge_test, double& time_jacobi)
     {
         clock_t start_jacobi, finish_jacobi;
         start_jacobi = clock();
