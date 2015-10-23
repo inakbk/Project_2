@@ -61,17 +61,23 @@ int main(int argc, char *argv[])
         writetofile fileJacobi(eigval_jacobi, eigvec_jacobi.col(0), p_max, n_step, time_jacobi, "jacobi", numberOfIterations, converge_test);
 
 //-------------------------------------------------------------
-        /*cout << "diff. eigenvec:" << endl;
-        //cout << size(eigvec_arma) << size(eigvec_jacobi) << endl;
-        vec a = eigvec_arma.col(0) - eigvec_jacobi.col(0);
-        a.print();
+
 //        eigvec_arma.print();
 //        cout << "---" << endl;
 //        eigvec_jacobi.print();
-        cout << "eigenvaules:" << endl;
-        eigval_arma.print();
+//        cout << "eigenvaules:" << endl;
+//        eigval_arma.print();
+//        cout << "----" << endl;
+//        eigval_jacobi.print();
+
+        cout << "diff. eigenvec:" << endl;
+        //cout << size(eigvec_arma) << size(eigvec_jacobi) << endl;
+        vec a = eigvec_arma.col(0) - eigvec_jacobi.col(0);
+        a.print();
         cout << "----" << endl;
-        eigval_jacobi.print(); */
+        cout << "diff. eigval:" << endl;
+        vec b = eigval_arma - eigval_jacobi;
+        b.print();
     }
 
     return 0;
