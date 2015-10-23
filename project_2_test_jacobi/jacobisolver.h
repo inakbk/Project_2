@@ -11,10 +11,10 @@
 class jacobisolver
 {
 public:
-    //dont need to store the changes to B
     int n_step;
-    mat B;
     int maxNumberOfIterations;
+    mat B;
+    mat R;
 
     // constructor, initiating input values and sets default values if not any given
     jacobisolver(mat firstMatrix = zeros<mat>(2,2), int numberOfStep = 2, int maxIterations=1)
@@ -27,9 +27,11 @@ public:
         B = firstMatrix;
         n_step = numberOfStep;
         maxNumberOfIterations = maxIterations;
+        //Eigenvector initiated as identity
+        R = eye<mat>(n_step-1, n_step-1);
     }
 
-    //timing the whole jacobi algorithm:
+    //solving and timing the whole jacobi algorithm:
     void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& eigvec_jacobi, mat& R, int& numberOfIterations, int& converge_test, double time_jacobi)
     {
         clock_t start_jacobi, finish_jacobi;
@@ -76,19 +78,16 @@ public:
         }
     }
 
-    //this is only for a more tidy code..
     void retriveSortEigenValVec(vec& eigval_jacobi, mat& eigvec_jacobi, mat B, mat& R)
     {
         eigval_jacobi = B.diag();
         eigval_jacobi = sort(eigval_jacobi);
         uvec indexes_sorted_eigenval = sort_index(B.diag());
-        //indexes_sorted_eigenval.print();
         for(int i=0; i<=n_step-2; ++i)
         {
             eigvec_jacobi.col(i) = R.col(indexes_sorted_eigenval(i));
         }
         cout << "eigvec jacobi" << endl;
-        //eigvec_jacobi.print();
     }
 
 

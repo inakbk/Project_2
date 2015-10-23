@@ -27,22 +27,8 @@ int main(int argc, char *argv[])
 
 //-------------------------------------------------------------
         // Constructing test matrix B:
-
         mat B = randu<mat>(n_step-1,n_step-1);
-        B = B.t()*B;
-        /*for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
-        {
-            B(i,i) = 0;
-        }
-        B(n_step-2,n_step-2) = 0;
-        */
-
-        //B(1,2) = 9;
-        //B(2,1) = 11;
-        //B.print();
-
-        //Eigenvector initiated as identity
-        mat R = eye<mat>(n_step-1, n_step-1);
+        B = B.t()*B;  //making shure it is symetric
 
 //-------------------------------------------------------------
         //clocking the operations:
@@ -66,6 +52,7 @@ int main(int argc, char *argv[])
         mat eigvec_jacobi = zeros<mat>(n_step-1,n_step-1);
         int numberOfIterations = 0;
         double time_jacobi = 0;
+
         //solving equations with jacobi rotation:
         jacobisolver solveTestMatrix(B, n_step, maxNumberOfIterations);
         solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, eigvec_jacobi, R, numberOfIterations, converge_test, time_jacobi);
