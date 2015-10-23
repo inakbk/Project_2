@@ -44,8 +44,7 @@ int main(int argc, char *argv[])
         double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
 
         int converge_test = 1; //this is only false if jacobi did not converge (always true for arma)
-        //writetofile fileArma;
-        //fileArma.funcWriteToFile(eigval_arma, p_max, n_step, -1, time_arma, "arma", converge_test);
+        //writetofile fileArma(eigval_arma, eigvec_arma, p_max, n_step, time_arma, "arma");
 
 //-------------------------------------------------------------
         vec eigval_jacobi = zeros<vec>(n_step-1);
@@ -55,7 +54,7 @@ int main(int argc, char *argv[])
 
         //solving equations with jacobi rotation:
         jacobisolver solveTestMatrix(B, n_step, maxNumberOfIterations);
-        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, eigvec_jacobi, R, numberOfIterations, converge_test, time_jacobi);
+        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, eigvec_jacobi, numberOfIterations, converge_test, time_jacobi);
 
         cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
@@ -64,9 +63,11 @@ int main(int argc, char *argv[])
 
 //-------------------------------------------------------------
         cout << "eigenvec:" << endl;
-        eigvec_arma.print();
-        cout << "---" << endl;
-        eigvec_jacobi.print();
+        vec a = eigvec_arma - eigvec_jacobi;
+        a.print();
+//        eigvec_arma.print();
+//        cout << "---" << endl;
+//        eigvec_jacobi.print();
         cout << "eigenvaules:" << endl;
         eigval_arma.print();
         cout << "----" << endl;

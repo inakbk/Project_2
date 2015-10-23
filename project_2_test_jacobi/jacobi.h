@@ -26,9 +26,6 @@ public:
     int maxNumberOfIterations;
     int converge_test;
 
-    // constructor goes here
-    //jacobi()
-
     //methods:
     void find_max_elem_index(int& k, int& l, double& max_off_diagonal, const mat &B, const int n_step)
     {
@@ -53,7 +50,6 @@ public:
 
     void transformation_matrix(double& c, double& s, const mat &B, const int k, const int l)
     {
-
         if(B(k,l) != 0)
         {
             double t = 0;
@@ -80,12 +76,11 @@ public:
 
     void jacobi_rotation(mat& B, mat& R, const double c, const double s, const int k, const int l, const int n_step)
     {
-
         double B_kk = B(k,k);
         double B_ll = B(l,l);
         B(k,k) = B_kk*c*c - 2*B(k,l)*c*s + B_ll*s*s;
         B(l,l) = B_ll*c*c + 2*B(k,l)*c*s + B_kk*s*s;
-        B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s); //or just set to 0
+        B(k,l) = 0.0;//(B_kk - B_ll)*c*s + B(k,l)*(c*c - s*s) just set to 0 exact
         B(l,k) = B(k,l); //symetrix matrix
 
         //changing the remaining elements:
@@ -107,7 +102,6 @@ public:
         R(i,l) = c*r_il + s*r_ik;
         }
     }
-
 };
 
 #endif // JACOBI

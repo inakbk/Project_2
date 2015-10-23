@@ -32,7 +32,7 @@ public:
     }
 
     //solving and timing the whole jacobi algorithm:
-    void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& eigvec_jacobi, mat& R, int& numberOfIterations, int& converge_test, double time_jacobi)
+    void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& eigvec_jacobi, int& numberOfIterations, int& converge_test, double time_jacobi)
     {
         clock_t start_jacobi, finish_jacobi;
         start_jacobi = clock();
@@ -74,7 +74,6 @@ public:
             partsOfJacobiMethod.transformation_matrix(c, s, B, k, l);
             //doing one transformation:
             partsOfJacobiMethod.jacobi_rotation(B, R, c, s, k, l, n_step);
-
         }
     }
 
@@ -87,10 +86,7 @@ public:
         {
             eigvec_jacobi.col(i) = R.col(indexes_sorted_eigenval(i));
         }
-        cout << "eigvec jacobi" << endl;
     }
-
-
 };
 
 #endif // JACOBISOLVER
