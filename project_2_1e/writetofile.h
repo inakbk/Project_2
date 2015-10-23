@@ -43,7 +43,7 @@ public:
                 }
                 myfile << "---------------------" << endl;
                 myfile << "Eigenvector ground state" << endl;
-                for (int i=0; i < n_step-2; i++)
+                for (int i=0; i < n_step-1; i++)
                 {
                     myfile << eigenvector_gs[i] << endl;
                 }
@@ -91,7 +91,7 @@ public:
             }
             myfile << "---------------------" << endl;
             myfile << "Eigenvector ground state" << endl;
-            for (int i=0; i < n_step-2; i++)
+            for (int i=0; i < n_step-1; i++)
             {
                 myfile << eigenvector_gs[i] << endl;
             }

@@ -91,10 +91,15 @@ int main(int argc, char *argv[])
         cout << "diff. eigval:" << endl;
         vec b = eigval_arma - eigval_jacobi;
         b.print();
-        */
+
         cout << eigval_jacobi[0] << endl;
         cout << eigval_jacobi[1] << endl;
         cout << eigval_jacobi[2] << endl;
+        */
+
+        cout << n_step << endl;
+        cout << size(eigval_arma) << endl;
+        cout << size(eigvec_arma) << endl;
 
     }
 
