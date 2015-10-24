@@ -14,7 +14,7 @@ public:
     int n_step;
     int maxNumberOfIterations;
     mat B;
-    mat R;
+   
 
     // constructor, initiating input values and sets default values if not any given
     jacobisolver(mat firstMatrix = zeros<mat>(2,2), int numberOfStep = 2, int maxIterations=1)
@@ -28,23 +28,22 @@ public:
         n_step = numberOfStep;
         maxNumberOfIterations = maxIterations;
         //Eigenvector initiated as identity
-        R = eye<mat>(n_step-1, n_step-1);
     }
 
     //solving and timing the whole jacobi algorithm:
-    void solve_w_jacobi_rotation(vec& eigval_jacobi, mat& eigvec_jacobi, int& numberOfIterations, int& converge_test, double& time_jacobi)
+    void solve_w_jacobi_rotation(vec& eigval_jacobi, int& numberOfIterations, int& converge_test, double& time_jacobi)
     {
         clock_t start_jacobi, finish_jacobi;
         start_jacobi = clock();
 
-        iterations(eigval_jacobi, R, numberOfIterations, converge_test);
-        retriveSortEigenValVec(eigval_jacobi, eigvec_jacobi, B, R);
+        iterations(eigval_jacobi, numberOfIterations, converge_test);
+        retriveSortEigenValVec(eigval_jacobi, B);
 
         finish_jacobi = clock();
         time_jacobi = ( (finish_jacobi - start_jacobi)/((double)CLOCKS_PER_SEC ) );
     }
 
-    void iterations(vec& eigval_jacobi, mat& R, int& numberOfIterations, int& converge_test)
+    void iterations(vec& eigval_jacobi, int& numberOfIterations, int& converge_test)
     {
         double tolerance = 1.0e-14;
         double max_off_diagonal = 0;
@@ -73,19 +72,16 @@ public:
             double s = 0;
             partsOfJacobiMethod.transformation_matrix(c, s, B, k, l);
             //doing one transformation:
-            partsOfJacobiMethod.jacobi_rotation(B, R, c, s, k, l, n_step);
+            partsOfJacobiMethod.jacobi_rotation(B, c, s, k, l, n_step);
         }
     }
 
-    void retriveSortEigenValVec(vec& eigval_jacobi, mat& eigvec_jacobi, mat B, mat& R)
+    void retriveSortEigenValVec(vec& eigval_jacobi, mat B)
     {
         eigval_jacobi = B.diag();
         eigval_jacobi = sort(eigval_jacobi);
         uvec indexes_sorted_eigenval = sort_index(B.diag());
-        for(int i=0; i<=n_step-2; ++i)
-        {
-            eigvec_jacobi.col(i) = R.col(indexes_sorted_eigenval(i));
-        }
+        
     }
 };
 

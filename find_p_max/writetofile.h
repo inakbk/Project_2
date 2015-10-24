@@ -13,14 +13,14 @@ class writetofile
 {
 public:
     //overloading constructor, one for jacobi and one for arma, this for jacobi:
-    writetofile(const vec eigenvalues, const vec eigenvector_gs, const int p_max, const int n_step, const double time, string FileName, const int number_of_iterations, const int converge_test)
+    writetofile(const vec eigenvalues, const int index, const int n_step, const double time, string FileName, const int number_of_iterations, const int converge_test)
     {
         ofstream myfile;
-            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(p_max) + "_nStep" + to_string(n_step) + ".txt";
+            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(index) + "_nStep" + to_string(n_step) + ".txt";
             myfile.open (filename);
             myfile << "Equations solved with the " << FileName << " algorithm." << endl;
             myfile << "Dimention of matrix + 1, n_step = " << n_step << endl;
-            myfile << "Value of p_max: " << p_max << endl;
+            myfile << "Index of p_max: " << index << endl;
             myfile << "Execution time: " << time << endl;
 
             myfile << "Number of iterations for jacobi algoritm: " << number_of_iterations << endl;
@@ -41,12 +41,7 @@ public:
                     }
                     myfile << eigenvalues[i] << endl;
                 }
-                myfile << "---------------------" << endl;
-                myfile << "Eigenvector ground state" << endl;
-                for (int i=0; i < n_step-1; i++)
-                {
-                    myfile << eigenvector_gs[i] << endl;
-                }
+                
                 myfile.close();
             }
             //Writing error message to file if jacobi method did not converge.
@@ -64,7 +59,7 @@ public:
     }
 
     //this for arma
-    writetofile(const vec eigenvalues, const vec eigenvector_gs, const int p_max, const int n_step, const double time, string FileName)
+    writetofile(const vec eigenvalues, const int p_max, const int n_step, const double time, string FileName)
     {
         ofstream myfile;
             string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(p_max) + "_nStep" + to_string(n_step) + ".txt";
@@ -89,12 +84,7 @@ public:
                 }
                 myfile << eigenvalues[i] << endl;
             }
-            myfile << "---------------------" << endl;
-            myfile << "Eigenvector ground state" << endl;
-            for (int i=0; i < n_step-1; i++)
-            {
-                myfile << eigenvector_gs[i] << endl;
-            }
+            
             myfile.close();
 
             cout << "Datafile done for n_step= " << n_step << " with the " << FileName <<" solver." << endl;

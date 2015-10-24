@@ -10,6 +10,56 @@
 using namespace std;
 using namespace arma;
 
+
+void doEverything(const double p_max, const int n_step, const int maxNumberOfIterations, int index)
+{
+    //constructing matrix B:
+    const double p_min = 0;
+    const double h = (p_max - p_min)/n_step;
+    vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
+    vec V = p%p;
+
+    // Constructing matrix B:
+    double e = -1/(h*h); // all elements of the e vec is the same
+    vec d = 2/(h*h) + V;
+    mat B = zeros<mat>(n_step-1,n_step-1);
+    for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+    {
+        B(i,j) = e;
+        B(i,i) = d[i+1];
+        B(j,i) = e;
+    }
+    B(n_step-2,n_step-2) = d[n_step-1];
+//-------------------------------------------------------------
+    /*
+    //clocking the operations:
+    clock_t start_arma, finish_arma;
+    start_arma = clock();
+
+    //solving equations with armadillo lib:
+    vec eigval_arma = zeros<vec>(n_step-1);
+    eigval_arma = eig_sym(B);
+
+    finish_arma = clock();
+    double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
+
+    writetofile fileArma(eigval_arma, p_max, n_step, time_arma, "arma"); */
+
+//-------------------------------------------------------------
+    vec eigval_jacobi = zeros<vec>(n_step-1);
+    int numberOfIterations = 0;
+    int converge_test = 1; //initializing to true, false if jacobi did not converge
+    double time_jacobi = 0;
+
+    //solving equations with jacobi rotation:
+    jacobisolver solveTestMatrix(B, n_step, maxNumberOfIterations);
+    solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, numberOfIterations, converge_test, time_jacobi);
+    cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
+
+    cout << "Time Jacobi: " << time_jacobi << endl;
+    writetofile fileJacobi(eigval_jacobi, index, n_step, time_jacobi, "jacobi", numberOfIterations, converge_test);
+}
+
 int main(int argc, char *argv[])
 {
     if(argc < 4)
@@ -21,60 +71,21 @@ int main(int argc, char *argv[])
     }
     else{
         //variables from command line:
-        const int n_step = atof(argv[1]);
+        const int n_step = atof(argv[1]); //150
         int maxNumberOfIterations = atof(argv[2]);
         const double p_max = atof(argv[3]); //writing p instead of rho
 
-//-------------------------------------------------------------
-        //constructing matrix B:
-        const double p_min = 0;
-        const double h = (p_max - p_min)/n_step;
-        vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
-        vec V = p%p;
+        double p_max_start = 3;
+        double p_max_stop = 8;
 
-        // Constructing matrix B:
-        double e = -1/(h*h); // all elements of the e vec is the same
-        vec d = 2/(h*h) + V;
-        mat B = zeros<mat>(n_step-1,n_step-1);
-        for(int i=0, j=1; (i<=n_step-2) && (j<=n_step-2); ++i, ++j)
+        int index = 0;
+        for(double k=p_max_start; k <= p_max_stop; k=k+0.2)
         {
-            B(i,j) = e;
-            B(i,i) = d[i+1];
-            B(j,i) = e;
+            doEverything(k, n_step, maxNumberOfIterations, index);
+            index++;
         }
-        B(n_step-2,n_step-2) = d[n_step-1];
-//-------------------------------------------------------------
-        //clocking the operations:
-        clock_t start_arma, finish_arma;
-        start_arma = clock();
 
-        //solving equations with armadillo lib:
-        vec eigval_arma = zeros<vec>(n_step-1);
-        mat eigvec_arma = zeros<mat>(n_step-1,n_step-1);
-        eig_sym(eigval_arma, eigvec_arma, B);
 
-        finish_arma = clock();
-        double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
-
-        writetofile fileArma(eigval_arma, eigvec_arma.col(0), p_max, n_step, time_arma, "arma");
-
-//-------------------------------------------------------------
-        vec eigval_jacobi = zeros<vec>(n_step-1);
-        mat eigvec_jacobi = zeros<mat>(n_step-1,n_step-1);
-        int numberOfIterations = 0;
-        int converge_test = 1; //initializing to true, false if jacobi did not converge
-        double time_jacobi = 0;
-
-        //solving equations with jacobi rotation:
-        jacobisolver solveTestMatrix(B, n_step, maxNumberOfIterations);
-        solveTestMatrix.solve_w_jacobi_rotation(eigval_jacobi, eigvec_jacobi, numberOfIterations, converge_test, time_jacobi);
-
-        cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
-
-        cout << "Time Jacobi: " << time_jacobi << endl;
-        writetofile fileJacobi(eigval_jacobi, eigvec_jacobi.col(0), p_max, n_step, time_jacobi, "jacobi", numberOfIterations, converge_test);
-
-//-------------------------------------------------------------
 /*
 //        eigvec_arma.print();
 //        cout << "---" << endl;
@@ -96,11 +107,6 @@ int main(int argc, char *argv[])
         cout << eigval_jacobi[1] << endl;
         cout << eigval_jacobi[2] << endl;
         */
-
-        cout << n_step << endl;
-        cout << size(eigval_arma) << endl;
-        cout << size(eigvec_arma) << endl;
-
     }
 
     return 0;
