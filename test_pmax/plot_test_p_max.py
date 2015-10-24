@@ -17,8 +17,6 @@ def read_file(filename):
 			time = float(line.split()[2])
 		if line.startswith('Eigenvalues'):
 			index_eigval = i
-		if line.startswith('Eigenvector'):
-			index_eigvec = i
 		if line.startswith('Jacobi'):
 			return [], [], 0
 
@@ -26,12 +24,10 @@ def read_file(filename):
     infile.close()
 
     eigenvalues = []
-    for k in range(index_eigval+1,index_eigvec-1):
+    for k in range(index_eigval+1,len(all_lines)):
 		eigenvalues.append(float(all_lines[k]))
 
     eigenvector = []
-    for m in range(index_eigvec+1,i):
-		eigenvector.append(float(all_lines[m]))
 
     return array(eigenvalues), eigenvector, time
 
@@ -40,21 +36,25 @@ def read_file(filename):
 """
 P = 24
 p_max_list = linspace(3,8,P+1)
-print len(p_max_list)
-eigval_nr = 2
 n_step = 150
 
-diff_eigval = zeros(P)
+diff_eigval = zeros(P+1)
 analytic_eigval = [3,7,11]
-i = 0
 
-for p_max in range(P):
-	eigval_jacobi, eigvec_jacobi_gs, time_jacobi = read_file("EigenValVecSolver_jacobi_pMax%s_nStep%s.txt" %(p_max,n_step))
-	diff_eigval[i] = abs(eigval_jacobi[eigval_nr] - analytic_eigval[eigval_nr])
-	i += 1
-	print p_max
+for eigval_nr in [0,1,2]:
+	i = 0
+	for p_max in range(P+1):
+		eigval_jacobi, eigvec_jacobi_gs, time_jacobi = read_file("EigenValVecSolver_jacobi_pMax%s_nStep%s.txt" %(p_max,n_step))
+		diff_eigval[i] = abs(eigval_jacobi[eigval_nr] - analytic_eigval[eigval_nr])
+		i += 1
+	figure(1)	
+	plot(p_max_list, diff_eigval)
+	title('n_step = %s' %n_step)
+	xlabel("p_max")
+	ylabel("diff_eigval")
+	hold('on')
 
-plot(diff_eigval,p_max_list)
+legend(["eigval 1", "eigval 2", "eigval 3"])
 show()
 
 

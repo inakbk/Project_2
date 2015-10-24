@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
         const double p_max = atof(argv[3]); //writing p instead of rho
 
         double p_max_start = 3;
-        double p_max_stop = 8;
+        double p_max_stop = 6;
 
         int index = 0;
         for(double k=p_max_start; k <= p_max_stop; k=k+0.2)
