@@ -1,4 +1,4 @@
-#Program to run project 2 c++ code and plot datafiles
+#This code is for checking the choice of p_max with 4 different n_step
 
 from pylab import *
 import os as os
@@ -40,10 +40,6 @@ n_step = 100
 N = [50, 100, 150, 200]
 analytic_eigval = [3,7,11]
 
-#P = 24
-#p_max_list = linspace(3,8,P+1)
-#n_step = 150
-
 k = 0
 for n_step in N:
 	diff_eigval = zeros(P+1)
@@ -65,5 +61,9 @@ for n_step in N:
 	k += 1
 
 show()
+
+"""
+------------------------------------------------------------------------------------------
+"""
 
 

@@ -31,7 +31,7 @@ void doEverything(const double p_max, const int n_step, const int maxNumberOfIte
     }
     B(n_step-2,n_step-2) = d[n_step-1];
 //-------------------------------------------------------------
-    /*
+
     //clocking the operations:
     clock_t start_arma, finish_arma;
     start_arma = clock();
@@ -43,7 +43,7 @@ void doEverything(const double p_max, const int n_step, const int maxNumberOfIte
     finish_arma = clock();
     double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
 
-    writetofile fileArma(eigval_arma, p_max, n_step, time_arma, "arma"); */
+    writetofile fileArma(eigval_arma, index, n_step, time_arma, "arma");
 
 //-------------------------------------------------------------
     vec eigval_jacobi = zeros<vec>(n_step-1);
@@ -75,14 +75,18 @@ int main(int argc, char *argv[])
         int maxNumberOfIterations = atof(argv[2]);
         const double p_max = atof(argv[3]); //writing p instead of rho
 
-        double p_max_start = 3;
-        double p_max_stop = 6;
+        //double p_max_start = 3;
+        //double p_max_stop = 6;
+
+        int n_step_start = 10;
+        int n_step_stop = 200;
 
         int index = 0;
-        for(double k=p_max_start; k <= p_max_stop; k=k+0.2)
+        //doEverything(p_max, n_step, maxNumberOfIterations, index);
+        for(double k=n_step_start; k <= n_step_stop; k=k+10)
         {
-            doEverything(k, n_step, maxNumberOfIterations, index);
-            index++;
+            doEverything(p_max, k, maxNumberOfIterations, index);
+            //index++;
         }
 
 
