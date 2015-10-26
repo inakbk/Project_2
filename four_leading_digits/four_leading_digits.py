@@ -12,6 +12,7 @@ def read_file(filename):
     all_lines = infile.readlines()
 
     i = 0
+    number_of_iterations = 0
     for line in all_lines:
 		if line.startswith('Execution time'):
 			time = float(line.split()[2])
@@ -36,47 +37,80 @@ def read_file(filename):
 """
 ------------------------------------------------------------------------------------------
 """
-N = [50, 100, 150, 200] 
+N = linspace(10,200,20) 
 p_max = 4.7
-
 analytic_eigval = [3,7,11]
 
-k = 3
-diff_eigval = zeros(len(N))
 number_of_iterations = zeros(len(N))
-for eigval_nr in [0,1,2]:
-	i = 0
-	for n_step in N:
-		eigval_jacobi, eigvec_jacobi_gs, time_jacobi, number_of_iterations_list[i] = read_file("figures_p_max/EigenValVecSolver_jacobi_pMax0_nStep%s.txt" %(n_step))
-		diff_eigval[i] = abs(eigval_jacobi[eigval_nr] - analytic_eigval[eigval_nr])
-		i += 1
-	
-	figure(k)	
-	plot(N, diff_eigval)
-	title('p_max = %s' %p_max)
-	xlabel("n_step")
-	ylabel("diff_eigval")
-	hold('on')
-	legend(["eigval 1", "eigval 2", "eigval 3"])
-	
-	figure(eigval_nr)
-	plot(N, number_of_iterations_list)
-	title('p_max = %s' %p_max)
-	xlabel("n_step")
-	ylabel("number_of_iterations")
-	hold('on')
-	legend(["eigval 1", "eigval 2", "eigval 3"])
-	k += 1
+time_jacobi = zeros(len(N))
+time_arma = zeros(len(N))
+
+diff_eigval1_jacobi = zeros(len(N))
+#diff_eigval1_arma = zeros(len(N))
+diff_eigval2_jacobi = zeros(len(N))
+#diff_eigval2_arma = zeros(len(N))
+diff_eigval3_jacobi = zeros(len(N))
+#diff_eigval3_arma = zeros(len(N))
+
+i = 0
+for n_step in N:
+	eigval_jacobi, eigvec_jacobi_gs, time_jacobi[i], number_of_iterations[i] = read_file("files_with_jacobi_arma_n10_to_200_pmax4_7/EigenValVecSolver_jacobi_pMax0_nStep%s.txt" %(int(n_step)))
+	eigval_arma, eigvec_arma_gs, time_arma[i], tull_ball = read_file("files_with_jacobi_arma_n10_to_200_pmax4_7/EigenValVecSolver_arma_pMax0_nStep%s.txt" %(int(n_step)))	
+
+	diff_eigval1_jacobi[i] = abs(eigval_jacobi[0] - analytic_eigval[0])
+	#diff_eigval1_arma[i] = abs(eigval_arma[0] - analytic_eigval[0])
+	diff_eigval2_jacobi[i] = abs(eigval_jacobi[1] - analytic_eigval[1])
+	#diff_eigval2_arma[i] = abs(eigval_arma[1] - analytic_eigval[1])
+	diff_eigval3_jacobi[i] = abs(eigval_jacobi[2] - analytic_eigval[2])
+	#diff_eigval3_arma[i] = abs(eigval_arma[2] - analytic_eigval[2])
+	i += 1
+
+figure(1)
+plot(N, number_of_iterations, "g")
+title('Number of iterations versus n_step with p_max = %s' %p_max)
+xlabel("n_step")
+ylabel("number_of_iterations")
+
+figure(2)
+plot(N, time_jacobi, "b")
+hold('on')
+plot(N, time_arma, "r")
+title('Plot of the execution time versus n_step with p_max = %s' %p_max)
+xlabel("n_step")
+ylabel("time")
+legend(["jacobi", "arma"], loc='upper left')
+
+figure(3)	
+plot(N, diff_eigval1_jacobi, "r")
+hold("on")
+plot(N, diff_eigval2_jacobi, "k")
+plot(N, diff_eigval3_jacobi, "b")
+title('Diff eigval with p_max = %s' %p_max)
+xlabel("n_step")
+ylabel("diff_eigval")
+legend(["eigval 1", "eigval 2", "eigval 3"])
 
 show()
 
-"""
-#must do for arma to compare time
-	figure(k+3)
-	plot(N, time_jacobi)
-	title('p_max = %s' %p_max)
-	xlabel("n_step")
-	ylabel("number_of_iterations")
-	hold('on')
-	legend(["eigval 1", "eigval 2", "eigval 3"])
-"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
