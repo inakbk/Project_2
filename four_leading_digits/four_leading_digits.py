@@ -1,4 +1,4 @@
-#This code is to check how large n_step needs to be to get the 3 first eigenvalues with four leading digits
+#This code is to plot how large n_step needs to be to get the 3 first eigenvalues with four leading digits, number of transformations and the time against n_step
 
 from pylab import *
 import os as os
@@ -64,31 +64,32 @@ for n_step in N:
 	diff_eigval3_jacobi[i] = abs(eigval_jacobi[2] - analytic_eigval[2])
 	#diff_eigval3_arma[i] = abs(eigval_arma[2] - analytic_eigval[2])
 	i += 1
+#turns out diff eigval for arma/jacobi are equal(identical), weird...should have written more digits to file
 
 figure(1)
 plot(N, number_of_iterations, "g")
-title('Number of iterations versus n_step with p_max = %s' %p_max)
-xlabel("n_step")
-ylabel("number_of_iterations")
+title('Number of iterations versus n_step for the Jacobi method with p_max = %s' %p_max, fontsize=16)
+xlabel("n_step", fontsize=16)
+ylabel("number_of_iterations", fontsize=16)
 
 figure(2)
 plot(N, time_jacobi, "b")
 hold('on')
 plot(N, time_arma, "r")
-title('Plot of the execution time versus n_step with p_max = %s' %p_max)
-xlabel("n_step")
-ylabel("time")
-legend(["jacobi", "arma"], loc='upper left')
+title('Plot of the execution time versus n_step with p_max = %s' %p_max, fontsize=16)
+xlabel("n_step", fontsize=16)
+ylabel("time [s]", fontsize=16)
+legend(["jacobi", "arma"], loc='upper left', fontsize=14)
 
 figure(3)	
 plot(N, diff_eigval1_jacobi, "r")
 hold("on")
 plot(N, diff_eigval2_jacobi, "k")
 plot(N, diff_eigval3_jacobi, "b")
-title('Diff eigval with p_max = %s' %p_max)
-xlabel("n_step")
-ylabel("diff_eigval")
-legend(["eigval 1", "eigval 2", "eigval 3"])
+title('Plot of the absulute error from the analytical eigenvalues for the 3 first eigenvalues\n for the Jacobi method versus n_step with p_max = %s' %p_max, fontsize=16)
+xlabel("n_step", fontsize=16)
+ylabel("absolute error", fontsize=16)
+legend(["eigval 1", "eigval 2", "eigval 3"], fontsize=16)
 
 show()
 

@@ -1,4 +1,4 @@
-#This code is for checking the choice of p_max with 4 different n_step
+#This code is for checking the choice of p_max with 4 different n_step, plotting
 
 from pylab import *
 import os as os
@@ -51,19 +51,16 @@ for n_step in N:
 			i += 1
 		figure(k)	
 		plot(p_max_list, diff_eigval)
-		title('n_step = %s' %n_step)
-		xlabel("p_max")
-		ylabel("diff_eigval")
+		title('n_step = %s' %n_step, fontsize=16)
+		xlabel("p_max", fontsize=16)
+		ylabel("diff_eigval", fontsize=16)
 		hold('on')
 
 	plot(4.71428571,0.0005, "kx")
-	legend(["eigval 1", "eigval 2", "eigval 3", "chosen p_max"])
+	legend(["eigval 1", "eigval 2", "eigval 3", "chosen p_max"], fontsize=14)
 	k += 1
 
 show()
 
-"""
-------------------------------------------------------------------------------------------
-"""
 
 
