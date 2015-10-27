@@ -1,4 +1,4 @@
-#Program to run project 2 c++ code and plot datafiles
+#Program to plot eigenvectors
 
 from pylab import *
 import os as os
@@ -17,12 +17,8 @@ def read_file(filename):
 			time = float(line.split()[2])
 		if line.startswith('Eigenvalues'):
 			index_eigval = i
-			#eigenvalues.append(float(line))
-			#if line.startswith('--'):
 		if line.startswith('Eigenvector'):
 			index_eigvec = i
-			#eigenvectors.append(float(line))
-			#if line.startswith('--'):
 		i += 1
     infile.close()
 
@@ -39,9 +35,9 @@ def read_file(filename):
 """
 ------------------------------------------------------------------------------------------
 """
-N = [15]#, 10, 50, 100]
-max_number_of_iterations = 10000
-p_max = 5.
+N = [150]#, 10, 50, 100]
+max_number_of_iterations = 100000
+p_max = 4.7
 
 #Running code:
 n_step = N[0]
@@ -49,11 +45,11 @@ n_step = N[0]
 #os.system('g++ -o project_2_1e/main project_2_1e/main.cpp -larmadillo -llapack -lblas')
 #os.system('./project_2_1e/main %s %s %s' %(n_step, max_number_of_iterations, p_max))
 
-eigval_arma, eigvec_arma_gs, time_arma = read_file("files/EigenValVecSolver_arma_pMax5_nStep%s.txt" %n_step)
+eigval_arma, eigvec_arma_gs, time_arma = read_file("files/EigenValVecSolver_arma_pMax4_nStep%s.txt" %n_step)
 eigvec_arma_gs = array([0] + eigvec_arma_gs + [0])
 abs_sq_psi_arma = eigvec_arma_gs*eigvec_arma_gs
 
-eigval_jacobi, eigvec_jacobi_gs, time_jacobi = read_file("files/EigenValVecSolver_jacobi_pMax5_nStep%s.txt" %n_step)
+eigval_jacobi, eigvec_jacobi_gs, time_jacobi = read_file("files/EigenValVecSolver_jacobi_pMax4_nStep%s.txt" %n_step)
 eigvec_jacobi_gs = array([0] + eigvec_jacobi_gs + [0])
 abs_sq_psi_jacobi = eigvec_jacobi_gs*eigvec_jacobi_gs
 
@@ -62,8 +58,8 @@ h = (p_max - p_min)/n_step;
 p = linspace(p_min, p_max, n_step+1); #p_i = p_min + i*h
 
 plot(p,abs_sq_psi_jacobi)
-hold('on')
-plot(p,abs_sq_psi_arma)
+#hold('on')
+#plot(p,abs_sq_psi_arma)
 show()
 #they are identical???
 

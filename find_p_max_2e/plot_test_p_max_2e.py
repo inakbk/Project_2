@@ -57,8 +57,9 @@ for n_step in N:
 		ylabel("eigenvalue", fontsize=16)
 		hold('on')
 
+		legend(["n_step=%s" %N[0], "n_step=%s" %N[1], "n_step=%s" %N[2], "n_step=%s" %N[3]], fontsize=14)
+		
 	#plot(2.215,0.1, "ko")
-legend(["n_step=%s" %N[0], "n_step=%s" %N[1], "n_step=%s" %N[2], "n_step=%s" %N[3]], fontsize=14)
 
 show()
 
