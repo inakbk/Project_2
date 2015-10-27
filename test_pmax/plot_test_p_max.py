@@ -51,9 +51,9 @@ for n_step in N:
 			i += 1
 		figure(k)	
 		plot(p_max_list, diff_eigval)
-		title('n_step = %s' %n_step, fontsize=16)
+		title('Plot of the absolute error in the 3 first eigenvalues compared to the\n analytical eigenvalues for n_step = %s' %n_step, fontsize=16)
 		xlabel("p_max", fontsize=16)
-		ylabel("diff_eigval", fontsize=16)
+		ylabel("abs. error", fontsize=16)
 		hold('on')
 
 	plot(4.71428571,0.0005, "kx")
