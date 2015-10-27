@@ -17,7 +17,8 @@ void doEverything(const double p_max, const int n_step, const int maxNumberOfIte
     const double p_min = 0;
     const double h = (p_max - p_min)/n_step;
     vec p = linspace(p_min, p_max, n_step+1);
-    vec V = 1.0/p;//p%p;
+    double w_r = 1.0;
+    vec V = w_r*w_r*p%p + 1.0/p;
 
     // Constructing matrix B:
     double e = -1/(h*h); // all elements of the e vec is the same
