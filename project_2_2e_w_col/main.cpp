@@ -10,13 +10,13 @@
 using namespace std;
 using namespace arma;
 
-void doEverything(const double p_max, const int n_step, const int maxNumberOfIterations)
+void doEverything(const double p_max, const int n_step, const double w_r, const int maxNumberOfIterations)
 {
     //constructing matrix B:
     const double p_min = 0;
     const double h = (p_max - p_min)/n_step;
-    vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
-    vec V = 1.0/p; //new potential
+    vec p = linspace(p_min, p_max, n_step+1);
+    vec V = w_r*w_r*p%p + 1.0/p; //new potential
 
     // Constructing matrix B:
     double e = -1/(h*h); // all elements of the e vec is the same
@@ -42,7 +42,7 @@ void doEverything(const double p_max, const int n_step, const int maxNumberOfIte
     finish_arma = clock();
     double time_arma = ( (finish_arma - start_arma)/((double)CLOCKS_PER_SEC ) );
 
-    writetofile fileArma(eigval_arma, eigvec_arma.col(0), p_max, n_step, time_arma, "arma");
+    writetofile fileArma(eigval_arma, eigvec_arma.col(0), p_max, n_step, time_arma, w_r, "arma");
 //-------------------------------------------------------------
     vec eigval_jacobi = zeros<vec>(n_step-1);
     mat eigvec_jacobi = zeros<mat>(n_step-1,n_step-1);
@@ -57,7 +57,8 @@ void doEverything(const double p_max, const int n_step, const int maxNumberOfIte
     cout << "Total number of iterations with Jacobi rotation: " << numberOfIterations << endl;
 
     cout << "Time Jacobi: " << time_jacobi << endl;
-    writetofile fileJacobi(eigval_jacobi, eigvec_jacobi.col(0), p_max, n_step, time_jacobi, "jacobi", numberOfIterations, converge_test);
+    writetofile fileJacobi(eigval_jacobi, eigvec_jacobi.col(0), p_max, n_step, time_jacobi, w_r, "jacobi", numberOfIterations, converge_test);
+
 }
 
 int main(int argc, char *argv[])
@@ -75,7 +76,13 @@ int main(int argc, char *argv[])
         int maxNumberOfIterations = atof(argv[2]);
         const double p_max = atof(argv[3]); //writing p instead of rho
 
-        doEverything(p_max, n_step, maxNumberOfIterations);
+        vec w_r = {0.01, 0.05, 1.0, 5}; // [0.01, 0.05, 1, 5], 0 corresponds to no interaction
+
+        for(int i=0; i < size(w_r,0); i++)
+        {
+            doEverything(p_max, n_step, w_r(i), maxNumberOfIterations);
+            cout << w_r(i) << endl;
+        }
     }
     return 0;
 }

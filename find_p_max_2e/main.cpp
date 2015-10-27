@@ -10,7 +10,6 @@
 using namespace std;
 using namespace arma;
 
-
 void doEverything(const double p_max, const int n_step, const int maxNumberOfIterations, int index)
 {
     //constructing matrix B:
@@ -77,7 +76,6 @@ int main(int argc, char *argv[])
 
         double p_max_start = 9;
         double p_max_stop = 12;
-
         int n_step_start = 50;
         int n_step_stop = 200;
 
@@ -89,14 +87,9 @@ int main(int argc, char *argv[])
             for(int m=n_step_start; m <= n_step_stop; m=m+50)
             {
                 doEverything(k, m, maxNumberOfIterations, index);
-                //cout << k << endl;
-                //cout << "index: " << index << endl;
             }
-
             index++;
         }
-
-
     }
     return 0;
 }

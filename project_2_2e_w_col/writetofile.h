@@ -13,15 +13,16 @@ class writetofile
 {
 public:
     //overloading constructor, one for jacobi and one for arma, this for jacobi:
-    writetofile(const vec eigenvalues, const vec eigenvector_gs, const double p_max, const int n_step, const double time, string FileName, const int number_of_iterations, const int converge_test)
+    writetofile(const vec eigenvalues, const vec eigenvector_gs, const double p_max, const int n_step, const double time, const double w_r, string FileName, const int number_of_iterations, const int converge_test)
     {
         ofstream myfile;
-            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(int(p_max)) + "_nStep" + to_string(n_step) + ".txt";
+            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(int(p_max)) + "_nStep" + to_string(n_step) + "_wr" + to_string(int(w_r*100)) + ".txt";
             myfile.open (filename);
             myfile << "Equations solved with the " << FileName << " algorithm." << endl;
             myfile << "Dimention of matrix + 1, n_step = " << n_step << endl;
             myfile << "Value of p_max: " << p_max << endl;
             myfile << "Execution time: " << time << endl;
+            myfile << "Strength of Coulumb interaction parameter: w_r= " << w_r << endl;
 
             myfile << "Number of iterations for jacobi algoritm: " << number_of_iterations << endl;
 
@@ -64,15 +65,16 @@ public:
     }
 
     //this for arma
-    writetofile(const vec eigenvalues, const vec eigenvector_gs, const double p_max, const int n_step, const double time, string FileName)
+    writetofile(const vec eigenvalues, const vec eigenvector_gs, const double p_max, const int n_step, const double time, const double w_r, string FileName)
     {
         ofstream myfile;
-            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(int(p_max)) + "_nStep" + to_string(n_step) + ".txt";
+            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(int(p_max)) + "_nStep" + to_string(n_step) + "_wr" + to_string(int(w_r*100)) + ".txt";
             myfile.open (filename);
             myfile << "Equations solved with the " << FileName << " algorithm." << endl;
             myfile << "Dimention of matrix + 1, n_step = " << n_step << endl;
             myfile << "Value of p_max: " << p_max << endl;
             myfile << "Execution time: " << time << endl;
+            myfile << "Strength of Coulumb interaction parameter: w_r= " << w_r << endl;
 
             myfile << endl; //number of iterations for jacobi goes here
 

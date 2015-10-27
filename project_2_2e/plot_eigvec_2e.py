@@ -13,13 +13,15 @@ def read_file(filename):
 
     i = 0
     for line in all_lines:
-		if line.startswith('Execution time'):
-			time = float(line.split()[2])
-		if line.startswith('Eigenvalues'):
-			index_eigval = i
-		if line.startswith('Eigenvector'):
-			index_eigvec = i
-		i += 1
+        if line.startswith('Execution time'):
+            time = float(line.split()[2])
+        if line.startswith('Value'):
+            p_max = float(line.split()[3])        
+        if line.startswith('Eigenvalues'):
+            index_eigval = i
+        if line.startswith('Eigenvector'):
+            index_eigvec = i
+        i += 1
     infile.close()
 
     eigenvalues = []
@@ -30,22 +32,20 @@ def read_file(filename):
     for m in range(index_eigvec+1,i):
 		eigenvector.append(float(all_lines[m]))
 
-    return array(eigenvalues), eigenvector, time
+    return array(eigenvalues), eigenvector, time, p_max
 
 """
 ------------------------------------------------------------------------------------------
 """
 N = [150]#, 10, 50, 100]
-#max_number_of_iterations = 100000
-p_max = 4.7
 
 n_step = N[0]
 
-eigval_arma, eigvec_arma_gs, time_arma = read_file("files/EigenValVecSolver_arma_pMax4_nStep%s.txt" %n_step)
+eigval_arma, eigvec_arma_gs, time_arma, p_max = read_file("files/EigenValVecSolver_arma_pMax9_nStep%s.txt" %n_step)
 eigvec_arma_gs = array([0] + eigvec_arma_gs + [0])
 abs_sq_psi_arma = eigvec_arma_gs*eigvec_arma_gs
 
-eigval_jacobi, eigvec_jacobi_gs, time_jacobi = read_file("files/EigenValVecSolver_jacobi_pMax4_nStep%s.txt" %n_step)
+eigval_jacobi, eigvec_jacobi_gs, time_jacobi, p_max = read_file("files/EigenValVecSolver_jacobi_pMax9_nStep%s.txt" %n_step)
 eigvec_jacobi_gs = array([0] + eigvec_jacobi_gs + [0])
 abs_sq_psi_jacobi = eigvec_jacobi_gs*eigvec_jacobi_gs
 
@@ -55,9 +55,10 @@ p = linspace(p_min, p_max, n_step+1)
 
 plot(p,abs_sq_psi_jacobi)
 #hold('on')
-#plot(p,abs_sq_psi_arma)
+#plot(p,abs_sq_psi_arma) #they are identical??? (arma and jacobi)
 show()
-#they are identical??? (arma and jacobi)
+
+
 
 
 

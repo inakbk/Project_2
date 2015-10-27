@@ -13,10 +13,10 @@ class writetofile
 {
 public:
     //overloading constructor, one for jacobi and one for arma, this for jacobi:
-    writetofile(const vec eigenvalues, const vec eigenvector_gs, const int p_max, const int n_step, const double time, string FileName, const int number_of_iterations, const int converge_test)
+    writetofile(const vec eigenvalues, const vec eigenvector_gs, const double p_max, const int n_step, const double time, string FileName, const int number_of_iterations, const int converge_test)
     {
         ofstream myfile;
-            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(p_max) + "_nStep" + to_string(n_step) + ".txt";
+            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(int(p_max)) + "_nStep" + to_string(n_step) + ".txt";
             myfile.open (filename);
             myfile << "Equations solved with the " << FileName << " algorithm." << endl;
             myfile << "Dimention of matrix + 1, n_step = " << n_step << endl;
@@ -64,10 +64,10 @@ public:
     }
 
     //this for arma
-    writetofile(const vec eigenvalues, const vec eigenvector_gs, const int p_max, const int n_step, const double time, string FileName)
+    writetofile(const vec eigenvalues, const vec eigenvector_gs, const double p_max, const int n_step, const double time, string FileName)
     {
         ofstream myfile;
-            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(p_max) + "_nStep" + to_string(n_step) + ".txt";
+            string filename = "EigenValVecSolver_" + FileName + "_pMax" + to_string(int(p_max)) + "_nStep" + to_string(n_step) + ".txt";
             myfile.open (filename);
             myfile << "Equations solved with the " << FileName << " algorithm." << endl;
             myfile << "Dimention of matrix + 1, n_step = " << n_step << endl;

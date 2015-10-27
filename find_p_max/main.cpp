@@ -89,29 +89,6 @@ int main(int argc, char *argv[])
             doEverything(p_max, k, maxNumberOfIterations, index);
             //index++;
         }
-
-
-/*
-//        eigvec_arma.print();
-//        cout << "---" << endl;
-//        eigvec_jacobi.print();
-        cout << "eigenvaules:" << endl;
-//        eigval_arma.print();
-        cout << "----" << endl;
-        eigval_jacobi.print();
-        cout << "diff. eigenvec:" << endl;
-        //cout << size(eigvec_arma) << size(eigvec_jacobi) << endl;
-        vec a = eigvec_arma.col(0) - eigvec_jacobi.col(0);
-        a.print();
-        cout << "----" << endl;
-        cout << "diff. eigval:" << endl;
-        vec b = eigval_arma - eigval_jacobi;
-        b.print();
-
-        cout << eigval_jacobi[0] << endl;
-        cout << eigval_jacobi[1] << endl;
-        cout << eigval_jacobi[2] << endl;
-        */
     }
 
     return 0;
