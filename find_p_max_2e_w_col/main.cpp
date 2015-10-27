@@ -76,25 +76,23 @@ int main(int argc, char *argv[])
         int maxNumberOfIterations = atof(argv[2]);
         const double p_max = atof(argv[3]); //writing p instead of rho
 
-        double p_max_start = 2;
-        double p_max_stop = 5;
+        double p_max_start = 3;
+        double p_max_stop = 6;
 
-        //int n_step_start = 10;
-        //int n_step_stop = 200;
+        int n_step_start = 50;
+        int n_step_stop = 200;
 
         int index = 0;
         //to run for different p_max:
         for(double k=p_max_start; k<=p_max_stop; k=k+0.2)
         {
-            doEverything(k, n_step, maxNumberOfIterations, index);
+            //to run for different n_step:
+            for(double m=n_step_start; m <= n_step_stop; m=m+50)
+            {
+                doEverything(k, m, maxNumberOfIterations, index);
+            }
             index++;
         }
-        //to run for different n_step:
-        /*for(double k=n_step_start; k <= n_step_stop; k=k+10)
-        {
-            doEverything(p_max, k, maxNumberOfIterations, index);
-            //index++;
-        }*/
     }
     return 0;
 }
