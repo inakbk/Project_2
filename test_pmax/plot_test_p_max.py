@@ -56,7 +56,7 @@ for n_step in N:
 		ylabel("abs. error", fontsize=16)
 		hold('on')
 
-	plot(4.71428571,0.0005, "kx")
+	plot(4.71428571,0.0005, "ko")
 	legend(["eigval 1", "eigval 2", "eigval 3", "chosen p_max"], fontsize=14)
 	k += 1
 
