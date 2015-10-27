@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
     }
     else{
         //variables from command line:
-        const int n_step = atof(argv[1]);
-        int maxNumberOfIterations = atof(argv[2]);
+        const int n_step = atoi(argv[1]);
+        int maxNumberOfIterations = atoi(argv[2]);
         const double p_max = atof(argv[3]); //writing p instead of rho
 
         vec w_r = {0.01, 0.05, 1.0, 5}; // [0.01, 0.05, 1, 5], 0 corresponds to no interaction
