@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
         const double p_min = 0;
         const double h = (p_max - p_min)/n_step;
         vec p = linspace(p_min, p_max, n_step+1); //p_i = p_min + i*h
-        vec V = p%p;
+        double w_r = 0;
+        vec V = w_r*w_r*p%p + 1.0/p; //new potential
 
         // Constructing matrix B:
         double e = -1/(h*h); // all elements of the e vec is the same
@@ -75,32 +76,6 @@ int main(int argc, char *argv[])
         writetofile fileJacobi(eigval_jacobi, eigvec_jacobi.col(0), p_max, n_step, time_jacobi, "jacobi", numberOfIterations, converge_test);
 
 //-------------------------------------------------------------
-/*
-//        eigvec_arma.print();
-//        cout << "---" << endl;
-//        eigvec_jacobi.print();
-        cout << "eigenvaules:" << endl;
-//        eigval_arma.print();
-        cout << "----" << endl;
-        eigval_jacobi.print();
-        cout << "diff. eigenvec:" << endl;
-        //cout << size(eigvec_arma) << size(eigvec_jacobi) << endl;
-        vec a = eigvec_arma.col(0) - eigvec_jacobi.col(0);
-        a.print();
-        cout << "----" << endl;
-        cout << "diff. eigval:" << endl;
-        vec b = eigval_arma - eigval_jacobi;
-        b.print();
-
-        cout << eigval_jacobi[0] << endl;
-        cout << eigval_jacobi[1] << endl;
-        cout << eigval_jacobi[2] << endl;
-        */
-
-        cout << n_step << endl;
-        cout << size(eigval_arma) << endl;
-        cout << size(eigvec_arma) << endl;
-
     }
 
     return 0;
