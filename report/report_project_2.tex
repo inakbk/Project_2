@@ -59,6 +59,10 @@ To solve the Schr\"odinger's equation for one electron(and two??) we will have t
 
 Together with linear equations and least squares, the third major problem in matrix com- putations deals with the algebraic eigenvalue problem. Here we limit our attention to the symmetric case. We focus in particular similarity transformations, --> Jacobi \footnote{sitert fra lectures2015 p. 225}
 
+
+
+\part{Theory}
+
 \section{Numerical method}
 \subsection{Solving eigenvalueproblems using similarity transformations}
 %en av de over??
@@ -119,7 +123,7 @@ The Jacobi's method introduces the ($n\times n$) unitary orthogonal transformati
              \end{array} \right) 
       \label{eq:sematrix}
 \end{equation}
-that performs a plane rotation around an angle $\theta$ in the Euclidean $n$-dimentional space. For simpler notation we define the quantities $\tan\theta = t= s/c$, with $s=\sin\theta$ and $c=\cos\theta$. The elements of the matrix $\bf S$ that differ from zero is given by the indexes $k,l$:
+that performs a plane rotation around an angle $\theta$ in the Euclidean $n$-dimensional space. For simpler notation we define the quantities $\tan\theta = t= s/c$, with $s=\sin\theta$ and $c=\cos\theta$. The elements of the matrix $\bf S$ that differ from zero is given by the indexes $k,l$:
 \[
 s_{kk} = s_{ll} = c, \;\;\;\;  s_{kl} = -s_{lk} = -s,\;\; \;\;  s_{ii} = 1
 \]
@@ -205,18 +209,23 @@ The eigenvectors are normalized.
 Wil also compare with (?)
 Finally, the armadillo function {\em eig\_sys} can be used to find eigenvalues and eigenvectors.
 
-\subsection{Implementation and testing of the Jacobi algorithm}
+\subsection{Implementation and testing of the Jacobi algorithm} \label{sec: test_jacobi}
 The Jacobi rotation algorithm is structured into separate files which can be run from \texttt{main.cpp}. All files refered to in this section can be found in the folder \texttt{project\_2\_test\_jacobi} at: \\
 \texttt{https://github.com/inakbk/Project\_2/tree/master/project\_2\_test\_jacobi}
 
 The \texttt{jacobi.h} file contains all the routines for one rotation. The code finds the maximum element of the matrix, obtains the transformation matrix and does one rotation. The \texttt{jacobisolver.h} file does all the rotations for a given matrix $\bf B$ by calling the \texttt{jacobi.h} code and returns the eigenvalues and the first eigenvector. The parameter \texttt{tolerance} sets the limit of how small all the off diagonal elements in the matrix $\bf B$ needs to be before the rotations stop and the eigenvalues and the first eigenvector are returned. If the number of rotations (\texttt{numberOfIterations}) exceeds the maximum number of rotations (\texttt{maxNumberOfIterations}) before the off diagonal elements are smaller than the tolerance, the opreations are aborted with a warning message that the routine did not converge. The code also computes the execution time of all iterations for one matrix. 
 
-We then see that the code in \texttt{jacobisolver.h} does the whole job of solving the eigenvalue problem with the Jacobi method and need only be given the matrix $\bf B$ with its dimention and the maximum number of iterations. Then the \texttt{main.cpp} program only needs to constructs the matrix $\bf B$ and call the \texttt{jacobisolver.h} code and with the help of \texttt{writetofile.h} write all parameters and the eigenvalues and eigenvectors to a file. These datafiles will then later be read by a python script that will plot the data. 
+We then see that the code in \texttt{jacobisolver.h} does the whole job of solving the eigenvalue problem with the Jacobi method and need only be given the matrix $\bf B$ with its dimension and the maximum number of iterations. Then the \texttt{main.cpp} program only needs to constructs the matrix $\bf B$ and call the \texttt{jacobisolver.h} code. With the help of \texttt{writetofile.h} the main program will write all parameters and the eigenvalues and eigenvectors to a file with filenames that distinguish the parameters that where run. These datafiles will then later be read by a python script and plot the data. 
 
+To test the implementation of the Jacobi algorithm the matrix $\bf B$ is initialized to a random symetric matrix. This is done by taking the matrix $\bf C$ as a random matrix and let $\bf B = \bf{CC^T}$. Then $\bf B$ is a symetric matrix:
+\[
+\bf { B^T = (CC^T)^T = (C^T)^TC^T = CC^T = B}
+\]
+using that $\bf{ (ab)^T = b^Ta}$\footnote{\texttt{https://en.wikipedia.org/wiki/Transpose} (I dont have the mat1120 book here so wikipedia refrences it is then..)}.
 
+To check that the implementation of the Jacobi rotation algorithm is correct the solution of the symetric matrix $\bf B$ is compared to the solutions with the \texttt{eig\_sym} function in the armadillo library.   
 
-
-\section{Physics 1: One electron in a three-dimensional harmonic oscillator potential.}
+\section{A simple system: One electron in a three-dimensional harmonic oscillator potential.}
 here we will look eqiation (?)
 
 A system with known solutions, good for testing
@@ -280,7 +289,7 @@ Finally equation \ref{eq:schr_1} can be written as
 \end{equation}
 which is the equation we want to solve numerically. We know\footnote{This is given in the assignment text for Project 2, FYS3150..} that this equation has the eigenvalues $\lambda_0=3,\lambda_1=7,\lambda_2=11,\dots .$ for $l=0$. These analytical values will be used to test the precition of the numerical method.
 
-\subsection{Discretizing the Schr\"odingers equation to solve numerically.} \label{sec: descrete}
+\subsection{Discretizing the Schr\"odingers equation and solving the equation numerically.} \label{sec: descrete}
 We will now rewrite the Schr\"odingers equation on a discretized form to be able to solve it as an matrix eigenvalue problem.
 
 We use the expression for the second derivative of the function $u(\rho)$
@@ -293,7 +302,7 @@ $\rho_{\mathrm{min}}=0$  and $\rho_{\mathrm{max}}$ so that:
 \[
   h=\frac{\rho_{\mathrm{max}}-\rho_{\mathrm{min}} }{n_{\mathrm{step}}}.
 \]
-where $n_{\mathrm{step}}$ is a given number of steps. Since $\rho \propto r$ and $r\in [0,\infty)$ the maximum value of $\rho$ should be $\rho_{\mathrm{max}}=\infty$. But we cannot set a infinite value when computing the solution numerically. We will therefore have to choose a significally large enough $\rho$ that give stable results for different $n_{\mathrm{step}}$ (test noe noe ??)
+where $n_{\mathrm{step}}$ is a given number of steps. Since $\rho \propto r$ and $r\in [0,\infty)$ the maximum value of $\rho$ should be $\rho_{\mathrm{max}}=\infty$. But we cannot set a infinite value when computing the solution numerically. We will therefore have to choose a significally large enough $\rho$.
 
 We can then define an arbitrary value of $\rho$ as 
 \[
@@ -344,9 +353,25 @@ where $u_i$ is unknown. This can be written as a matrix eigenvalue problem
       \label{eq:sematrix}
 \end{equation} 
 
-The solutions are known via the boundary conditions at $i=n_{\mathrm{step}}$ and at the other end point, for  $\rho_0$, which is zero in both cases. The goal is to use Jacobi's algoritm to solve equation \ref{eq: sch_1d_descrete}.
+We will use the analytical eigenvalues to test the implementation of the problem for this one electron system, but we are also interested in the eigenvector of the ground state so that we can plot the probability distrubution.
 
-This we want to plot (?)
+\subsubsection{Using the Jacobi method and finding reasonable values for $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$}
+We can solve equation \ref{eq:sematrix} numerically using the Jacobi rotation algorithm as described in section \ref{sec: test_jacobi} by using the files \texttt{jacobisolver.h} and \texttt{jacobi.h} and \texttt{writetofile.h} to save the results. But in \texttt{main.cpp} the matrix would have to be initialized to the matrix in equation \ref{eq:sematrix}:
+\[
+\bf B = \left( \begin{array}{ccccccc} d_1 & e & 0   & 0    & \dots  &0     & 0 \\
+                                e & d_2 & e & 0    & \dots  &0     &0 \\
+                                0   & e & d_3 & e  &0       &\dots & 0\\
+                                \dots  & \dots & \dots & \dots  &\dots      &\dots & \dots\\
+                                0   & \dots & \dots & \dots  &\dots       &d_{n_{\mathrm{step}}-2} & e\\
+                                0   & \dots & \dots & \dots  &\dots       &e & d_{n_{\mathrm{step}}-1}
+
+             \end{array} \right)
+\]
+This matrix is dependent on the elements $d_i$ and $e$ which is only dependent on $p_i$, or $p_{\mathrm{max}}$, and the dimension of the matrix $n_{\mathrm{step}}$. So we need to test the algorithm so that we know which  $p_{\mathrm{max}}$ that gives stable results and which values of $n_{\mathrm{step}}$ it is reasonable to use. 
+
+Results? Eller annen seksjon?
+
+
 
 \noindent\rule{\textwidth}{1pt}
 How many points $n_{\mathrm{step}}$
@@ -369,7 +394,7 @@ both algorithms for a given dimensionality of the matrix).
 
 \noindent\rule{\textwidth}{1pt}
 
-\section{Physics 2: Two electrons in a three-dimensional harmonic oscillator potential.}
+\section{A complex system: Two electrons in a three-dimensional harmonic oscillator potential with Coulomb interaction.}
 We will now study two electrons in a harmonic oscillator well which also interact via a repulsive Coulomb interaction.
 
 

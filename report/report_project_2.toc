@@ -1,11 +1,13 @@
 \contentsline {section}{\numberline {1}Motivation and purpose}{2}{section.1}
-\contentsline {section}{\numberline {2}Numerical method}{2}{section.2}
-\contentsline {subsection}{\numberline {2.1}Solving eigenvalueproblems using similarity transformations}{2}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Jacobi's rotation algorithm}{3}{subsection.2.2}
+\contentsline {part}{I\hspace {1em}Theory}{2}{part.1}
+\contentsline {section}{\numberline {2}Numerical method}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Solving eigenvalueproblems using similarity transformations}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Jacobi's rotation algorithm}{4}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}Implementation and testing of the Jacobi algorithm}{6}{subsection.2.3}
-\contentsline {section}{\numberline {3}Physics 1: One electron in a three-dimensional harmonic oscillator potential.}{6}{section.3}
-\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimensionless form}{6}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Discretizing the Schr\"odingers equation to solve numerically.}{8}{subsection.3.2}
-\contentsline {section}{\numberline {4}Physics 2: Two electrons in a three-dimensional harmonic oscillator potential.}{9}{section.4}
-\contentsline {subsection}{\numberline {4.1}Without Coulomb interaction}{9}{subsection.4.1}
+\contentsline {section}{\numberline {3}A simple system: One electron in a three-dimensional harmonic oscillator potential.}{7}{section.3}
+\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimensionless form}{7}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Discretizing the Schr\"odingers equation and solving the equation numerically.}{8}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Using the Jacobi method and finding reasonable values for $p_{\mathrm {max}}$ and $n_{\mathrm {step}}$}{9}{subsubsection.3.2.1}
+\contentsline {section}{\numberline {4}A complex system: Two electrons in a three-dimensional harmonic oscillator potential with Coulomb interaction.}{10}{section.4}
+\contentsline {subsection}{\numberline {4.1}Without Coulomb interaction}{10}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}With Coulomb interaction}{10}{subsection.4.2}
