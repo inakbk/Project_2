@@ -34,7 +34,9 @@
 \begin{document}
 \maketitle
 
-{\scriptsize \noindent All source codes can be found at: \texttt{https://github.com/inakbk/Project\_1.git} in the folders \texttt{exercise\_b} and \texttt{exercise\_d}. }
+\begin{center}
+{ \scriptsize \noindent All source codes can be found at: \texttt{https://github.com/inakbk/Project\_2}. }
+\end{center}
 
 \tableofcontents
 \newpage
@@ -193,7 +195,7 @@ The Jacobi algorithm can then be described as follows:
 
 We see that all information needed to perform a Jacobi rotation is given by the indexes $k, l$ of the maximum elements of $\bf A$.
 
-\subsection{Retriving the eigenvectors}
+\subsubsection*{Retriving the eigenvectors}
 In this particular problem we also want to find the eigenvectors $\bf x^{(v)}$ of the matrix $\bf A$. The Jacobi's rotation method described in section \ref{sec:jacobi} does not return the eigenvectors. For every similarity transformation in the Jacobi's method the eigenvector is changed from $\bf x$ to $\bf{S^Tx}$. So it is possible to add a routine to the Jacobi's algorithm which ceeps track of the changes to the eigenvectors so that the eigenvectors can be returned when the iterations stop. This is a bit tricy and the eigenvectors also need to be normalized.
 
 We will use the existing {\em tqli} function found at(??). Here the eigenvectors are obtained from the matrix $z[i][j]$, where the index $j$ refers to eigenvalue $j$. The index $i$ points to the value of the wave function in position $\rho_j$. That is,  $u^{(\lambda_j)}(\rho_i)=z[i][j]$.   
@@ -203,9 +205,21 @@ The eigenvectors are normalized.
 Wil also compare with (?)
 Finally, the armadillo function {\em eig\_sys} can be used to find eigenvalues and eigenvectors.
 
+\subsection{Implementation and testing of the Jacobi algorithm}
+The Jacobi rotation algorithm is structured into separate files which can be run from \texttt{main.cpp}. All files refered to in this section can be found in the folder \texttt{project\_2\_test\_jacobi} at: \\
+\texttt{https://github.com/inakbk/Project\_2/tree/master/project\_2\_test\_jacobi}
+
+The \texttt{jacobi.h} file contains all the routines for one rotation. The code finds the maximum element of the matrix, obtains the transformation matrix and does one rotation. The \texttt{jacobisolver.h} file does all the rotations for a given matrix $\bf B$ by calling the \texttt{jacobi.h} code and returns the eigenvalues and the first eigenvector. The parameter \texttt{tolerance} sets the limit of how small all the off diagonal elements in the matrix $\bf B$ needs to be before the rotations stop and the eigenvalues and the first eigenvector are returned. If the number of rotations (\texttt{numberOfIterations}) exceeds the maximum number of rotations (\texttt{maxNumberOfIterations}) before the off diagonal elements are smaller than the tolerance, the opreations are aborted with a warning message that the routine did not converge. The code also computes the execution time of all iterations for one matrix. 
+
+We then see that the code in \texttt{jacobisolver.h} does the whole job of solving the eigenvalue problem with the Jacobi method and need only be given the matrix $\bf B$ with its dimention and the maximum number of iterations. Then the \texttt{main.cpp} program only needs to constructs the matrix $\bf B$ and call the \texttt{jacobisolver.h} code and with the help of \texttt{writetofile.h} write all parameters and the eigenvalues and eigenvectors to a file. These datafiles will then later be read by a python script that will plot the data. 
+
+
+
 
 \section{Physics 1: One electron in a three-dimensional harmonic oscillator potential.}
 here we will look eqiation (?)
+
+A system with known solutions, good for testing
 \subsection{Rewriting the Schr\"odinger's equation to a dimensionless form} \label{sec:rewrite_sch}
 We look at the Sch\"odinger's equation for one electron at a radius $r\in [0,\infty)$ in a harmonic oscillator potential given by: 
 \[
@@ -442,7 +456,13 @@ By following the same approach as in section \ref{sec: descrete} equation \ref{e
 
 We can use equation \ref{eq: sch_discrete_first} if we change the potential from $\rho^2$ to $V_i = \omega_r^2\rho^2+1/\rho$. 
 
-This we want to plot (?)
+(write solve=plot prob?)
+
+
+
+
+
+
 
 
 
