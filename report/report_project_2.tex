@@ -13,6 +13,8 @@
 \usepackage{hyperref}
 
 \usepackage{subcaption}
+%\setlength\parindent{0pt} % for å unngå indents
+%\usepackage{parskip} %also to avoid indent, but with space
 
 \setcounter{tocdepth}{2}
 
@@ -29,53 +31,97 @@
 \lstset{showtabs=false}
 \lstset{breaklines}
 
-\title{{\Huge {\bf Cool Title}}\linebreak \small{Project 2, FYS-3150}}
-\author{Ina K. B. Kullmann}
-\date{\today}
+%\title{{\Huge {\bf Solving Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator potential with a repulsive Coulomb interaction by using the Jacobi rotation algorithm}}\linebreak \small{Project 2, FYS-3150}}
+%\author{Ina K. B. Kullmann}
+%\date{\today}
 
-\begin{document}
-\maketitle
+
+%lager heftig forside:
+\newcommand*{\titleAT}{\begingroup % Create the command for including the title page in the document
+\newlength{\drop} % Command for generating a specific amount of whitespace
+\drop=0.1\textheight % Define the command as 10% of the total text height
+
+\rule{\textwidth}{1pt}\par % Thick horizontal line
+\vspace{2pt}\vspace{-\baselineskip} % Whitespace between lines
+\rule{\textwidth}{0.4pt}\par % Thin horizontal line
+
+\vspace{0.5\drop} % Whitespace between the top lines and title
+\centering % Center all text
+\textcolor{black}{ % Red font color
+{\Huge Solving Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator potential with a repulsive Coulomb interaction by using the Jacobi rotation algorithm}\\[0.75\baselineskip] % Title line 1
+%{\Large Tema:}\\[0.75\baselineskip] % Title line 2
+%{\Huge Lydmåling og hørselstesting} % Title line 3
+} 
+
+\vspace{0.25\drop} % Whitespace between the title and short horizontal line
+\rule{0.3\textwidth}{0.4pt}\par % Short horizontal line under the title
+\vspace{0.25\drop} % Whitespace between the thin horizontal line and the author name
+
+{\Large \textsc{Project 2, FYS-3150\\[0.75\baselineskip] \normalsize{Ina K. B. Kullmann}
+}}\par % Author name
+
+%\vfill % Whitespace between the author name and publisher text
+
+\vspace{0.25\drop} % Whitespace between the title and short horizontal line
+\rule{0.3\textwidth}{0.4pt}\par % Short horizontal line under the title
+\vspace{0.25\drop} % Whitespace between the thin horizontal line and the author name
+
+\begin{abstract}
+The aim of this project is to numerically solve Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator with a repulsive Coulomb interaction by using the Jacobi rotation algorithm. 
+
+Before solving the problem for two electrons we will look at a simpler system, one electron in a three-dimensional harmonic oscillator potential. Then we will move on to the two electrons in a three-dimensional harmonic oscillator, but first without the Coulomb interaction. For each case we will reformulate the Schr\"odingers equation for this system to a dimentionless form and then to a descrete eigenvalue equation. This eigenvalue problem will we solve numerically with the Jacobi rotation algorithm and compare with the Armadillo library functions for the one electron system. 
+
+The Jacobi rotation algorithm will be implemented numerically on a general form so that it can be applied to any eigenvalue problem with a symetrix matix. We will test the implementation of the Jacobi method on an arbitrary symetric matrix before moving on to solve the physical problems. 
+
+When the procedure used on the two simplest cases are tested and understood we will apply the metods on the two electron system with a Coulomb interaction and plot the probability distrubution for different strengths of the interaction. 
+\end{abstract}
+\vspace*{0.25\drop} % Whitespace under the publisher text
 
 \begin{center}
 { \scriptsize \noindent All source codes can be found at: \texttt{https://github.com/inakbk/Project\_2}. }
 \end{center}
 
+\rule{\textwidth}{0.4pt}\par % Thin horizontal line
+\vspace{2pt}\vspace{-\baselineskip} % Whitespace between lines
+\rule{\textwidth}{1pt}\par % Thick horizontal line
+
+\endgroup}
+%kode slutt for heftig forside
+
+
+\begin{document}
+%\maketitle
+\titleAT % This command includes the title page
+
+
+
+
+
+\newpage
 \tableofcontents
 \newpage
 
-\begin{abstract}
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla blav bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla blav bla bla bla bla blav bla bla bla bla bla
-
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla blav bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla blav bla bla bla bla blav bla bla bla bla bla
-\end{abstract}
-
-
 \section{Motivation and purpose}
-The aim of this project is to solve Schr\"odinger's equation for two electrons in a three-dimensional harmonic oscillator well with and without a repulsive Coulomb interaction.  Your task is to solve this equation by reformulating it in a discretized form as an eigenvalue equation to be solved with Jacobi's method. -->code which implements Jacobi's method. --> plot the wave function for two electrons. first look at one electron, then two without coul and then with coul.
+Together with linear equations and least squares, the third major problem in matrix computations deals with the algebraic eigenvalue problem.\footnote{cite from \texttt{lectures2015} p. 225} It is therefore of great help to be able to solve eigenvalue problems numerically when we are dealing with large matices and complex systems. Such complex systems without any analytical solution occur often in physics.
 
-Electrons confined in small areas in semiconductors, so-called quantum dots, form a hot research area in modern solid-state physics, with applications spanning from such diverse fields as quantum nano-medicine to the contruction of quantum gates. You can read about quantum dots at \url{http://en.wikipedia.org/wiki/Quantum_dot}, which also contains links to several scientific articles. A recent article of interest is the review by Semonin {\em et al} in Materials Today, volume 15, page 508 (2012).
-
-In this article we will let two electrons move in a three-dimensional harmonic oscillator potential that repel each other via the Coulomb interaction.  Throughout this paper we will assume spherically symmetry and let the angular momentum be $l=0$. Before solving the problem for two electrons we will look at one electron in a harmonic oscillator potential. 
-
-To solve the Schr\"odinger's equation for one electron(and two??) we will have to transformed the equations into a matrix eigenvalue problem. When we have rewritten the problem we will use Jacobi's rotation algorithm to find the solutions. % (see Lecture notes chapter 7)   .
-
-Together with linear equations and least squares, the third major problem in matrix com- putations deals with the algebraic eigenvalue problem. Here we limit our attention to the symmetric case. We focus in particular similarity transformations, --> Jacobi \footnote{sitert fra lectures2015 p. 225}
+Electrons confined in small areas in semiconductors, so-called quantum dots, form a hot research area in modern solid-state physics, with applications spanning from such diverse fields as quantum nano-medicine to the contruction of quantum gates. \footnote{cite from \texttt{lectures2015} p. 225} In this article we will study two electrons moving in a three-dimensional harmonic oscillator potential that repel each other via the Coulomb interaction. Throughout this paper we will assume spherically symmetry and let the angular momentum be $l=0$ (study the ground state only). 
+  
+For the numerical methods we have chosen to limit our attention to solving eigenvalue problems with symmetric matrices as meny problems can be written on this form. In particulary we focus on similarity transformations and the Jacobi rotation algorithm where we want to obtain both the eigenvalues and the eigenvectors for the systems. 
 
 
 \newpage
 \part{Theory}
-
 \section{Numerical method}
-\subsection{Solving eigenvalueproblems using similarity transformations}
-%en av de over??
-%(noe noe innledning)?? by using similarity transformations
+
+First we will describe how similarity tansformations in general can be used to solve eigenvalue problems and then in detail how the Jacobi rotation algorithm solves this problem.
 
 Let us assume that we have the eigenvalue problem 
 \[
 \bf A \bf x^{(v)} = \lambda \bf x^{(v)}
 \]
-where $\lambda^{(v)}$ are the eigenvalues and $\bf x^{(v)}$ the corresponding eigenvectors.\footnote{The introduction to this section is based on the lecturenotes"lectures2015.pdf"} Assuming that the matrix $\bf A$ is real and symetric we can use the Jacobi rotation algoritm to solve the eigenvalue problem. First we will describe the use of similarity tansformations in general and then the Jacobi rotation algorithm in detail.
+where $\lambda^{(v)}$ are the eigenvalues and $\bf x^{(v)}$ the corresponding eigenvectors.\footnote{The introduction to this section is based on the lecturenotes"lectures2015.pdf"} Assuming that the matrix $\bf A$ is real and symetric we can use the Jacobi rotation algoritm to solve the eigenvalue problem. 
 
+\subsection{Solving eigenvalueproblems using similarity transformations}
 Let $\bf D$ be the diagonal matrix with the eigenvalues of $\bf A$ on the diagonal:
 
 \begin{equation}
@@ -94,7 +140,7 @@ We say that a matrix $\bf B$ is a similarity transform of $\bf A$ if
 \[
 \bf B = \bf {S^T AS}
 \]
-Where $\bf S$ is a unitary matrix so $\bf{S^TS} = \bf{S^{-1}S} = \bf I$. The point of this is that the matrix $\bf B$ has the same eigenvalues as $\bf A$. Since $\bf A$ is real and symetric there exists a real orthonogal matrix $\bf S'$ such that: %skjekk unitary i mat1120 boka?
+Where $\bf S$ is a unitary matrix so $\bf{S^TS} = \bf{S^{-1}S} = \bf I$\footnote{\texttt{http://mathworld.wolfram.com/UnitaryMatrix.html}}. The point of this is that the matrix $\bf B$ has the same eigenvalues as $\bf A$. Since $\bf A$ is real and symetric there exists a real orthonogal matrix $\bf S'$ such that: 
 \[
 \bf {S'^T AS'} = \bf D
 \]
@@ -202,18 +248,11 @@ The Jacobi algorithm can then be described as follows:
 We see that all information needed to perform a Jacobi rotation is given by the indexes $k, l$ of the maximum elements of $\bf A$.
 
 \subsubsection*{Retriving the eigenvectors}
-In this particular problem we also want to find the eigenvectors $\bf x^{(v)}$ of the matrix $\bf A$. The Jacobi's rotation method described in section \ref{sec:jacobi} does not return the eigenvectors. For every similarity transformation in the Jacobi's method the eigenvector is changed from $\bf x$ to $\bf{S^Tx}$. So it is possible to add a routine to the Jacobi's algorithm which ceeps track of the changes to the eigenvectors so that the eigenvectors can be returned when the iterations stop. This is a bit tricy and the eigenvectors also need to be normalized.
+In this particular problem we also want to find the eigenvectors $\bf x^{(v)}$ of the matrix $\bf A$. The Jacobi's rotation method described in section \ref{sec:jacobi} does not return the eigenvectors. For every similarity transformation in the Jacobi's method the eigenvector is changed from $\bf x$ to $\bf{S^Tx}$. So it is possible to add a routine to the Jacobi's algorithm which ceeps track of the changes to the eigenvectors so that the eigenvectors can be returned when the iterations stop. The changes to the eigenvectors can be saved in a $n\times n$ matrix that is changed for every rotation. The matrix are initialized to the identity matrix and returns the eigenvectors on the columns when all the rotations are done. The returned eigenvectors are normalized. 
 
-We will use the existing {\em tqli} function found at(??). Here the eigenvectors are obtained from the matrix $z[i][j]$, where the index $j$ refers to eigenvalue $j$. The index $i$ points to the value of the wave function in position $\rho_j$. That is,  $u^{(\lambda_j)}(\rho_i)=z[i][j]$.   
+\section{One electron in a three-dimensional harmonic oscillator potential.}
+We will first look at a simple system with known analytical solutions and later apply the methods obtained on a more complex system. First we need to write the Schr\"odinger's equation on a dimensionless form and then discretize the equation to solve it numerically. % to understand how to 
 
-The eigenvectors are normalized. 
-
-(change this one!)
-
-\section{A simple system: One electron in a three-dimensional harmonic oscillator potential.}
-here we will look eqiation (?)
-
-A system with known solutions, good for testing
 \subsection{Rewriting the Schr\"odinger's equation to a dimensionless form} \label{sec:rewrite_sch}
 We look at the Sch\"odinger's equation for one electron at a radius $r\in [0,\infty)$ in a harmonic oscillator potential given by: 
 \[
@@ -310,7 +349,7 @@ and the non-diagonal matrix element:
 \[
    e_i=-\frac{1}{h^2}.
 \]
-We observe that in this case all the non-diagonal matrix element is given by a constant, so we can denote them all as $e=-\frac{1}{h^2}$ instead. (insert e og ikke ei hele veien??)
+We observe that in this case all the non-diagonal matrix element is given by a constant, so we can denote them all as $e=-\frac{1}{h^2}$ instead. 
  
 With these definitions the Schr\"odinger equation (\ref{eq: sch_1D_final}) takes the following form
 \begin{equation}
@@ -339,20 +378,15 @@ where $u_i$ is unknown. This can be written as a matrix eigenvalue problem
 \end{equation} 
 This is the final equation that we will solve numerically. We will test the implementation of the problem by comparing with the analytical eigenvalues, but we are also interested in the eigenvector of the ground state so that we can plot the probability distrubution.
 
-\section{A complex system: Two electrons in a three-dimensional harmonic oscillator potential with Coulomb interaction.}
+\section{Two electrons in a three-dimensional harmonic oscillator potential with Coulomb interaction.}
 We will now study two electrons in a harmonic oscillator well which also interact via a repulsive Coulomb interaction.
 
-
-We will now rewrite the single-electron equation as
+We now rewrite the single-electron equation as
 \[
   -\frac{\hbar^2}{2 m} \frac{d^2}{dr^2} u(r) 
        + \frac{1}{2}k r^2u(r)  = E^{(1)} u(r),
 \]
-where $E^{(1)}$ stands for the energy with one electron only.
-
-look at with and without Coulom
-again we only interested in the ground state with $l=0$. 
-
+where $E^{(1)}$ stands for the energy with one electron only. We then want to obtain a equation for the two electron system that is written on the same form as the one electron equation that we can solve numerically. First we look at the two electron syste without Coulomb interaction and we then add the interaction. Again we are only interested in the ground state with $l=0$. 
 
 \subsection{The two electron system without Coulomb interaction}
 The Schr\"odingers equation for two electrons in a harmonic oscillator potential with no Coulomb interaction can be written as
@@ -431,7 +465,6 @@ For specific oscillator frequencies, the above equation has answers in an analyt
 
 
 
-
 \newpage
 \part{Implementation, testing and finding the solutions of the Schr\"odinger equations}
 
@@ -472,104 +505,115 @@ We can solve equation \ref{eq:sematrix} numerically using the Jacobi rotation al
 \]
 This is done in the folders \texttt{project\_2\_1e}, \texttt{project\_2\_2e} and \texttt{project\_2\_2e\_w\_col}\footnote{The reason the folders are separated are to not mix up the result files and be shure to be able to reproduce the results and look back if something is strange at a later point.} for respectively the one electron system and the two electron system without Coulomb interaction and with Coulumb interaction. The only difference between the folders are the potentials, or the matrix $\bf B$, the \texttt{.h} files are identical. The only exception is that the parameter $w_r$ is included in the last two electron case. 
 
-But before the Schr\"odinger equations can be solved numerically the value of $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$ that we will use needs to be decided.  
+But before the Schr\"odinger equations can be solved numerically the value of $\rho_{\mathrm{max}}$ and $n_{\mathrm{step}}$ that we will use needs to be decided.  
 
-\subsection{Finding reasonable values for $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$}
+\subsection{Finding reasonable values for $\rho_{\mathrm{max}}$ and $n_{\mathrm{step}}$}
 
-The matrix $\bf B$ is only dependent on the elements $d_i$ and $e$ which is only dependent on $p_{\mathrm{max}}$ and the dimension of the matrix $n_{\mathrm{step}}$. So which values of $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$ should we choose? We need to test the algorithm so that we know which $p_{\mathrm{max}}$ that gives stable results and which values of $n_{\mathrm{step}}$ it is reasonable to use. 
+The matrix $\bf B$ is only dependent on the elements $d_i$ and $e$ which is only dependent on $\rho_{\mathrm{max}}$ and the dimension of the matrix $n_{\mathrm{step}}$. So which values of $\rho_{\mathrm{max}}$ and $n_{\mathrm{step}}$ should we choose? We need to test the algorithm so that we know which $\rho_{\mathrm{max}}$ that gives stable results and which values of $n_{\mathrm{step}}$ it is reasonable to use. 
 
-First we have to decide which $p_{\mathrm{max}}$ to choose as this might affect the choice of $n_{\mathrm{step}}$. This can be done by looking at the first eigenvalues and choose the $p_{\mathrm{max}}$ which gives the smallest error when comparing to the analytical values. For the two electron case there are no analytical values to compare with so it is reasonable to choose a value which gives the most stable eigenvalues as a finction of  $n_{\mathrm{step}}$. We will therefore plot the eigenvalues as a function of $p_{\mathrm{max}}$.
+First we have to decide which $\rho_{\mathrm{max}}$ to choose as this might affect the choice of $n_{\mathrm{step}}$. This can be done by looking at the first eigenvalues and choose the $\rho_{\mathrm{max}}$ which gives the smallest error when comparing to the analytical values. For the two electron case there are no analytical values to compare with so it is reasonable to choose a value which gives the most stable eigenvalues as a finction of  $n_{\mathrm{step}}$. We will therefore plot the eigenvalues as a function of $\rho_{\mathrm{max}}$.
 
 Then we have to decide which precition of the eigenvalues we want to set a limit on how large $n_{\mathrm{step}}$ needs to be. This can be done by choosing a value of $n_{\mathrm{step}}$ that gives a small enough absolute error in the first three eigenvalues and that also have a reasonable execution time. We will plot the absolute error in the eigenvalues as a function of $n_{\mathrm{step}}$ to investigate this.
 
 The execution time and precition is also related to how close to zero we force the off diagonal elements of $\bf B$ to be before reading off the eigenvalues. If the tolerance is too low we end up doing a lot of extra rotations that are very time consuming. We therefore should choose a tolerance that is low enough, but not too small. The number of transformations and the execution time will also be plotted as a function of $n_{\mathrm{step}}$.
 
-When we are done deciding on the values of $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$ the the Schr\"odinger equations can be solved numerically as described in the beginning of this section. 
+When we are done deciding on the values of $\rho_{\mathrm{max}}$ and $n_{\mathrm{step}}$ the the Schr\"odinger equations can be solved numerically as described in the beginning of this section. 
 
 
 
 \newpage
 \part{Results and discussion}
-%\subsection*{Choice of $p_{\mathrm{max}}$ }
+\subsection*{The one electron system }
+First the relative error between the three first numerical eigenvalues and the analytical eigenvalues where plotted as a function of $\rho_{\mathrm{max}} \in [3,6]$. This plot was generated for four different values of $n_{\mathrm{step}} \in [50, 100, 150, 200]$. 
 
-All this is for 1e:
+In figure \ref{fig: p_max_big} we see that the absolute error decreases drastically as  $\rho_{\mathrm{max}}$ increases, here for $n_{\mathrm{step}}=100$, and does only increase sligtly after a minimum, for some of the eigenvalues. This was the case for all the plots for the different $n_{\mathrm{step}}$.
 
-Figure \ref{fig: p_max_big} example normal, goes to zero
+In figure \ref{fig: p_max_zoom} we see the plots with the four different $n_{\mathrm{step}}$ values zoomed in on the minimum for the error in the eigenvalues. We see that the minimum for the relative error reads different values of $\rho_{\mathrm{max}}$ for the eigenvalues and for different choice of $n_{\mathrm{step}}$. We see that for $n_{\mathrm{step}}=50$ the error in the eigenvalues are  large, $~0.01$ for the second eigenvalue. For $n_{\mathrm{step}}=100$ the error decreases to the half, given the same range of $\rho_{\mathrm{max}}$. 
+
+The task is then to choose the value of $\rho_{\mathrm{max}}$ which gives the smallest error in all three eigenvalues combined. In every plot in figure \ref{fig: p_max_zoom} the point $(4.7, 0.0005)$ is marked. This is the point which gives the smallest absolute error in all of the eigenvalues for $n_{\mathrm{step}}=150$ and is the choice for $\rho_{\mathrm{max}}$ used in the numerical calculations. 
 
 \begin{figure} [ht]
 \centering
 \includegraphics[width=0.7\textwidth]{plots_1e/p_max_n100_big.png}
-\caption{noe langt}
+\caption{This should be a very long caption text, but I am too lazy to write anything right now so I would please ask you to read the text that refers to this figure.}
 \label{fig: p_max_big}
 \end{figure}
 
-Figure \ref{fig: p_max_zoom} see 4 diff n and choice
-\begin{figure} [t!]
+\begin{figure} [htp]
 \centering
-	\begin{subfigure}[t]{0.7\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{plots_1e/p_max_n50_z.png}
-		\includegraphics[width=1\textwidth]{plots_1e/p_max_n100_z.png}
-		%\caption{noe langt om langt}
-	\end{subfigure}
-	~
-	\begin{subfigure}[t]{0.7\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{plots_1e/p_max_n150_z.png}
-		\includegraphics[width=1\textwidth]{plots_1e/p_max_n200_z.png}
-		%\caption{noe langt om langt2}
-	\end{subfigure}
-\caption{noenoe langt}
+		\includegraphics[width=0.6\textwidth]{plots_1e/p_max_n50_z.png}
+		\includegraphics[width=0.6\textwidth]{plots_1e/p_max_n100_z.png}
+		\includegraphics[width=0.6\textwidth]{plots_1e/p_max_n150_z.png}
+		\includegraphics[width=0.6\textwidth]{plots_1e/p_max_n200_z.png}
+\caption{This should be a very long caption text, but I am too lazy to write anything right now so I would please ask you to read the text that refers to these figures.}
 \label{fig: p_max_zoom}
 \end{figure}
 
-in fig \ref{fig: abs.err_n} see error plotted against n
-\begin{figure} [ht]
+To see if $n_{\mathrm{step}}=150$ is a wise choice we look at figure \ref{fig: abs.err_n} where the absolute error is plotted as a function of $n_{\mathrm{step}}$. In the top plot we see that the error decreases drastically as a function of $n_{\mathrm{step}}$ and is relatively small even for $n_{\mathrm{step}}=50$, but not for the three first eigenvalues at the same time. In the bottom plot we see that for $n_{\mathrm{step}}=150$ the error is maximum $~0.02$ and the effect of increasing $n_{\mathrm{step}}$ to 200 is small, the maximum error only decreases to $~0.01$.
+
+\begin{figure} [htp]
 \centering
-\includegraphics[width=0.7\textwidth]{plots_1e/abs_error.png}
-\includegraphics[width=0.7\textwidth]{plots_1e/abs_error_zoom.png}
-\caption{noe langt}
+\includegraphics[width=0.8\textwidth]{plots_1e/abs_error.png}
+\includegraphics[width=0.8\textwidth]{plots_1e/abs_error_zoom.png}
+\caption{This should be a very long caption text, but I am too lazy to write anything right now so I would please ask you to read the text that refers to this figure.}
 \label{fig: abs.err_n}
 \end{figure}
 
-in fig \ref{fig: nr_iter} see nr iter vs n
-\begin{figure} [ht]
-\centering
-\includegraphics[width=0.7\textwidth]{plots_1e/nr_iterations.png}
-\caption{noe langt}
-\label{fig: nr_iter}
-\end{figure}
+In figure \ref{fig: time} we see how the dimention of the matrix effects the execution time for the Jacobi method compared to the Armadillo library. We see that the execution time increases drastically as $n_{\mathrm{step}}$ is increased from 150 to 200. For the Jacobi method, while the Armadillo library apeares to use the same time for all values of  $n_{\mathrm{step}}$. The choice og $n_{\mathrm{step}}=150$ seems therefore reasonable. In figure \ref{fig: nr_iter} we see the number of iterations as a function of $n_{\mathrm{step}}$. We see that the number of iterations is more evenly increasing as a function of $n_{\mathrm{step}}$ than the execution time. 
 
-in fig \ref{fig: nr_iter} see time vs n
-
-\begin{figure} [ht]
+\begin{figure} [htp]
 \centering
 \includegraphics[width=0.7\textwidth]{plots_1e/time.png}
-\caption{noe langt}
+\caption{This should be a very long caption text, but I am too lazy to write anything right now so I would please ask you to read the text that refers to this figure.}
+\label{fig: time}
+\end{figure}
+
+\begin{figure} [htp]
+\centering
+\includegraphics[width=0.7\textwidth]{plots_1e/nr_iterations.png}
+\caption{This should be a very long caption text, but I am too lazy to write anything right now so I would please ask you to read the text that refers to this figure.}
 \label{fig: nr_iter}
 \end{figure}
 
-\noindent\rule{\textwidth}{1pt}
-With no repulsive Coulomb interaction 
-you should get a result which corresponds to 
-the relative energy of a non-interacting system.   
-Make sure your results are 
-stable as functions of $\rho_{\mathrm{max}}$ and the number of steps.
-\noindent\rule{\textwidth}{1pt}
+Finally in figure \ref{fig: prob_1e} we see the probability distribution, the eigenvector for the ground state squared plotted as a function of the dimensionless position $\rho$.
 
-\noindent\rule{\textwidth}{1pt}
-Comment the results for the lowest state (ground state) as function of
-varying strengths of $\omega_r$. 
-\noindent\rule{\textwidth}{1pt}
+\begin{figure} [h!]
+\centering
+\includegraphics[width=\textwidth]{plots_prob/prob_1e.png}
+\caption{noe langt}
+\label{fig: prob_1e}
+\end{figure}
 
+\section*{The two electron system}
+In figure \ref{fig: prob_2e_w_col} we see the value of the first, second and the third eigenvalue plotted as a function of $\rho_{\mathrm{max}}$ where each line in the plot corresponds to a value of $n_{\mathrm{step}}$. We wish to choose a value for $\rho_{\mathrm{max}}$ so that the results for the eigenvalues are stable as a function of $n_{\mathrm{step}}$. If we discard $n_{\mathrm{step}}=50$ we see that as long as we choose a value of $\rho_{\mathrm{max}}$ larger than $~5$ the values of the first, second and third eigenvalue are independent on the choice of $n_{\mathrm{step}}$. Therefore $n_{\mathrm{step}}=150$ and $\rho_{\mathrm{max}}=6$ seems like a reasonable choice.
 
+\begin{figure} [ht]
+\centering
+\includegraphics[width=0.6\textwidth]{plots_p_max_2e/1eigval.png}
+\includegraphics[width=0.6\textwidth]{plots_p_max_2e/2eigval.png}
+\includegraphics[width=0.6\textwidth]{plots_p_max_2e/3eigval.png}
+\caption{This should be a very long caption text, but I am too lazy to write anything right now so I would please ask you to read the text that refers to this figure.}
+\label{fig: p_max_2e_w_col}
+\end{figure}
 
+The final desired result, the probability distribution for the interaction two electron system is plotted in figure \ref{fig: prob_1e}. The eigenvector for the ground state squared plotted as a function of the dimensionless position $\rho$ for different values of the strength of the Coulumb interaction $w_r$. We see that the shape of the distribution changes for the different values of $w_r$. 
 
-\noindent\rule{\textwidth}{1pt} 
-Here you are asked to implement unit tests in your C++ program. For C++ users, please follow the guidelines on how to install unit tests with c++ on the webpage. These issues will be discussed in more detail at the lab and lectures during week 38. 
+\begin{figure} [ht]
+\centering
+\includegraphics[width=\textwidth]{plots_prob/prob_2e_w_col.png}
+\caption{This should be a very long caption text, but I am too lazy to write anything right now so I would please ask you to read the text that refers to this figure.}
+\label{fig: prob_2e_w_col}
+\end{figure}
 
+\section*{Discussion and Experiences}
 
+This problem has been both fun and frustrating to work with. It was very hard to get a owerview of the problem and a lot of time was spent on details that was not even useful for the problem. It was frustrating to 'blindfoldedly' looking for the values of $n_{\mathrm{step}}$ and $\rho_{\mathrm{max}}$ as i did not know what to expect. 
 
+The results generated for the one electron system was as expected, the solutions are already known analytically. But it was quite unexpected to see that the execution time for the Jacobi method incrased so rapidly and that the execution time for the  Armadillo library did not. Later realizing that this is because the tolerance was once set to a very low value for testing, but forgotten to reajust again. So the value of the tolerance was set to $10^-14$ instead of $10^-8$ and this have affected the results. It would have been interesting to rerun and see if the execution time and number of iterations for the Jacobi method did change, but there was no time to do this. The Armadillo code must also have a very fast algorithm, or something have gone wrong in my routines when obtaining the execution time. 
+
+It was very satisfying to finally obtain the plot of the probability distribution for the interacting two electron system! But very frustrating to have nothing to compare with, only a insecure gut feeling that the results seems reasonable and physical. 
+
+I have also used to much time on this project, but I have learned a lot that will be useful for the next projects!
 
 \end{document}
 

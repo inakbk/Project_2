@@ -56,6 +56,9 @@ p = linspace(p_min, p_max, n_step+1)
 plot(p,abs_sq_psi_jacobi)
 #hold('on')
 #plot(p,abs_sq_psi_arma) #they are identical??? (arma and jacobi)
+title('The probability distrubution 2e, n_step = %s' %n_step, fontsize=16)
+xlabel("rho", fontsize=16)
+ylabel("probability", fontsize=16)
 show()
 
 

@@ -55,8 +55,8 @@ for w_r in w_r_list:
     plot(p,abs_sq_psi_jacobi)
     hold('on')
 
-title('Plot of the probability distribution against p_max for different strength \n of the coulomb interaction', fontsize=16)
-xlabel("p_max", fontsize=16)
+title('Plot of the probability distribution for different strength \n of the coulomb interaction', fontsize=16)
+xlabel("rho", fontsize=16)
 ylabel("probability", fontsize=16)
 
 legend(["w_r=%s" %w_r_list[0], "w_r=%s" %w_r_list[1], "w_r=%s" %w_r_list[2], "w_r=%s" %w_r_list[3]], fontsize=14)

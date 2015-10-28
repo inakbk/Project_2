@@ -13,7 +13,7 @@ def read_file(filename):
 
     i = 0
     for line in all_lines:
-		if line.startswith('Execution time'):
+		if line.startswith( 'Execution time'):
 			time = float(line.split()[2])
 		if line.startswith('Eigenvalues'):
 			index_eigval = i
@@ -52,7 +52,7 @@ for n_step in N:
 			i += 1	
 		figure(eigval_nr)
 		plot(p_max_list, eigval_jacobi_list)
-		title('Plot of the %s eigenvalue against p_max for different n_step' %(eigval_nr+1), fontsize=16)
+		title('Plot of the %s. eigenvalue against p_max for different n_step' %(eigval_nr+1), fontsize=16)
 		xlabel("p_max", fontsize=16)
 		ylabel("eigenvalue", fontsize=16)
 		hold('on')
