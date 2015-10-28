@@ -1,13 +1,16 @@
 \contentsline {section}{\numberline {1}Motivation and purpose}{2}{section.1}
-\contentsline {part}{I\hspace {1em}Theory}{2}{part.1}
+\contentsline {part}{I\hspace {1em}Theory}{3}{part.1}
 \contentsline {section}{\numberline {2}Numerical method}{3}{section.2}
 \contentsline {subsection}{\numberline {2.1}Solving eigenvalueproblems using similarity transformations}{3}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Jacobi's rotation algorithm}{4}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Implementation and testing of the Jacobi algorithm}{6}{subsection.2.3}
-\contentsline {section}{\numberline {3}A simple system: One electron in a three-dimensional harmonic oscillator potential.}{7}{section.3}
-\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimensionless form}{7}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Discretizing the Schr\"odingers equation and solving the equation numerically.}{8}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Using the Jacobi method and finding reasonable values for $p_{\mathrm {max}}$ and $n_{\mathrm {step}}$}{9}{subsubsection.3.2.1}
-\contentsline {section}{\numberline {4}A complex system: Two electrons in a three-dimensional harmonic oscillator potential with Coulomb interaction.}{10}{section.4}
-\contentsline {subsection}{\numberline {4.1}Without Coulomb interaction}{10}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}With Coulomb interaction}{10}{subsection.4.2}
+\contentsline {section}{\numberline {3}A simple system: One electron in a three-dimensional harmonic oscillator potential.}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Rewriting the Schr\"odinger's equation to a dimensionless form}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Discretizing the Schr\"odingers equation to solve the equation numerically.}{7}{subsection.3.2}
+\contentsline {section}{\numberline {4}A complex system: Two electrons in a three-dimensional harmonic oscillator potential with Coulomb interaction.}{8}{section.4}
+\contentsline {subsection}{\numberline {4.1}The two electron system without Coulomb interaction}{9}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}The two electron system with Coulomb interaction}{9}{subsection.4.2}
+\contentsline {part}{II\hspace {1em}Implementation, testing and finding the solutions of the Schr\"odinger equations}{11}{part.2}
+\contentsline {section}{\numberline {5}Implementation and testing of the Jacobi algorithm}{11}{section.5}
+\contentsline {section}{\numberline {6}Using the Jacobi rotation algorithm to solve the Schr\"odinger equations}{12}{section.6}
+\contentsline {subsection}{\numberline {6.1}Finding reasonable values for $p_{\mathrm {max}}$ and $n_{\mathrm {step}}$}{12}{subsection.6.1}
+\contentsline {part}{III\hspace {1em}Results and discussion}{14}{part.3}

@@ -12,6 +12,8 @@
 \usepackage{shadow}
 \usepackage{hyperref}
 
+\usepackage{subcaption}
+
 \setcounter{tocdepth}{2}
 
 \lstset{language=c++}
@@ -60,7 +62,7 @@ To solve the Schr\"odinger's equation for one electron(and two??) we will have t
 Together with linear equations and least squares, the third major problem in matrix com- putations deals with the algebraic eigenvalue problem. Here we limit our attention to the symmetric case. We focus in particular similarity transformations, --> Jacobi \footnote{sitert fra lectures2015 p. 225}
 
 
-
+\newpage
 \part{Theory}
 
 \section{Numerical method}
@@ -206,24 +208,7 @@ We will use the existing {\em tqli} function found at(??). Here the eigenvectors
 
 The eigenvectors are normalized. 
 
-Wil also compare with (?)
-Finally, the armadillo function {\em eig\_sys} can be used to find eigenvalues and eigenvectors.
-
-\subsection{Implementation and testing of the Jacobi algorithm} \label{sec: test_jacobi}
-The Jacobi rotation algorithm is structured into separate files which can be run from \texttt{main.cpp}. All files refered to in this section can be found in the folder \texttt{project\_2\_test\_jacobi} at: \\
-\texttt{https://github.com/inakbk/Project\_2/tree/master/project\_2\_test\_jacobi}
-
-The \texttt{jacobi.h} file contains all the routines for one rotation. The code finds the maximum element of the matrix, obtains the transformation matrix and does one rotation. The \texttt{jacobisolver.h} file does all the rotations for a given matrix $\bf B$ by calling the \texttt{jacobi.h} code and returns the eigenvalues and the first eigenvector. The parameter \texttt{tolerance} sets the limit of how small all the off diagonal elements in the matrix $\bf B$ needs to be before the rotations stop and the eigenvalues and the first eigenvector are returned. If the number of rotations (\texttt{numberOfIterations}) exceeds the maximum number of rotations (\texttt{maxNumberOfIterations}) before the off diagonal elements are smaller than the tolerance, the opreations are aborted with a warning message that the routine did not converge. The code also computes the execution time of all iterations for one matrix. 
-
-We then see that the code in \texttt{jacobisolver.h} does the whole job of solving the eigenvalue problem with the Jacobi method and need only be given the matrix $\bf B$ with its dimension and the maximum number of iterations. Then the \texttt{main.cpp} program only needs to constructs the matrix $\bf B$ and call the \texttt{jacobisolver.h} code. With the help of \texttt{writetofile.h} the main program will write all parameters and the eigenvalues and eigenvectors to a file with filenames that distinguish the parameters that where run. These datafiles will then later be read by a python script and plot the data. 
-
-To test the implementation of the Jacobi algorithm the matrix $\bf B$ is initialized to a random symetric matrix. This is done by taking the matrix $\bf C$ as a random matrix and let $\bf B = \bf{CC^T}$. Then $\bf B$ is a symetric matrix:
-\[
-\bf { B^T = (CC^T)^T = (C^T)^TC^T = CC^T = B}
-\]
-using that $\bf{ (ab)^T = b^Ta}$\footnote{\texttt{https://en.wikipedia.org/wiki/Transpose} (I dont have the mat1120 book here so wikipedia refrences it is then..)}.
-
-To check that the implementation of the Jacobi rotation algorithm is correct the solution of the symetric matrix $\bf B$ is compared to the solutions with the \texttt{eig\_sym} function in the armadillo library.   
+(change this one!)
 
 \section{A simple system: One electron in a three-dimensional harmonic oscillator potential.}
 here we will look eqiation (?)
@@ -287,9 +272,9 @@ Finally equation \ref{eq:schr_1} can be written as
   -\frac{d^2}{d\rho^2} u(\rho) + \rho^2u(\rho)  = \lambda u(\rho) .
   \label{eq: sch_1D_final}
 \end{equation}
-which is the equation we want to solve numerically. We know\footnote{This is given in the assignment text for Project 2, FYS3150..} that this equation has the eigenvalues $\lambda_0=3,\lambda_1=7,\lambda_2=11,\dots .$ for $l=0$. These analytical values will be used to test the precition of the numerical method.
+which is the equation we want to solve numerically. We know\footnote{This is given in the assignment text for Project 2, FYS3150..} that this equation has the eigenvalues $\lambda_0=3,\lambda_1=7,\lambda_2=11,\dots .$ for $l=0$. These analytical values will be used compare with the numerical solution in this one electron system.
 
-\subsection{Discretizing the Schr\"odingers equation and solving the equation numerically.} \label{sec: descrete}
+\subsection{Discretizing the Schr\"odingers equation to solve the equation numerically.} \label{sec: descrete}
 We will now rewrite the Schr\"odingers equation on a discretized form to be able to solve it as an matrix eigenvalue problem.
 
 We use the expression for the second derivative of the function $u(\rho)$
@@ -352,47 +337,7 @@ where $u_i$ is unknown. This can be written as a matrix eigenvalue problem
              \end{array} \right) 
       \label{eq:sematrix}
 \end{equation} 
-
-We will use the analytical eigenvalues to test the implementation of the problem for this one electron system, but we are also interested in the eigenvector of the ground state so that we can plot the probability distrubution.
-
-\subsubsection{Using the Jacobi method and finding reasonable values for $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$}
-We can solve equation \ref{eq:sematrix} numerically using the Jacobi rotation algorithm as described in section \ref{sec: test_jacobi} by using the files \texttt{jacobisolver.h} and \texttt{jacobi.h} and \texttt{writetofile.h} to save the results. But in \texttt{main.cpp} the matrix would have to be initialized to the matrix in equation \ref{eq:sematrix}:
-\[
-\bf B = \left( \begin{array}{ccccccc} d_1 & e & 0   & 0    & \dots  &0     & 0 \\
-                                e & d_2 & e & 0    & \dots  &0     &0 \\
-                                0   & e & d_3 & e  &0       &\dots & 0\\
-                                \dots  & \dots & \dots & \dots  &\dots      &\dots & \dots\\
-                                0   & \dots & \dots & \dots  &\dots       &d_{n_{\mathrm{step}}-2} & e\\
-                                0   & \dots & \dots & \dots  &\dots       &e & d_{n_{\mathrm{step}}-1}
-
-             \end{array} \right)
-\]
-This matrix is dependent on the elements $d_i$ and $e$ which is only dependent on $p_i$, or $p_{\mathrm{max}}$, and the dimension of the matrix $n_{\mathrm{step}}$. So we need to test the algorithm so that we know which  $p_{\mathrm{max}}$ that gives stable results and which values of $n_{\mathrm{step}}$ it is reasonable to use. 
-
-Results? Eller annen seksjon?
-
-
-
-\noindent\rule{\textwidth}{1pt}
-How many points $n_{\mathrm{step}}$
-do you need in order to get the lowest three eigenvalues 
-with four leading digits?  
-Remember to check the eigenvalues for 
-the dependency on the choice of $\rho_{\mathrm{max}}$.
-
-How many similarity transformations are needed before you reach a 
-result where all non-diagonal matrix elements are essentially zero?
-Try to estimate the number of transformations and extract a behavior as function
-of the dimensionality of the matrix.
-
-You can check your results against the code based
-on Householder's algorithm, {\em tqli} in the file lib.cpp. Alternatively, you can use the Armadillo function for solving 
-eigenvalue problems. 
-
-Comment your results (here you could for example compute the time needed for 
-both algorithms for a given dimensionality of the matrix).  
-
-\noindent\rule{\textwidth}{1pt}
+This is the final equation that we will solve numerically. We will test the implementation of the problem by comparing with the analytical eigenvalues, but we are also interested in the eigenvector of the ground state so that we can plot the probability distrubution.
 
 \section{A complex system: Two electrons in a three-dimensional harmonic oscillator potential with Coulomb interaction.}
 We will now study two electrons in a harmonic oscillator well which also interact via a repulsive Coulomb interaction.
@@ -409,7 +354,7 @@ look at with and without Coulom
 again we only interested in the ground state with $l=0$. 
 
 
-\subsection{Without Coulomb interaction}
+\subsection{The two electron system without Coulomb interaction}
 The Schr\"odingers equation for two electrons in a harmonic oscillator potential with no Coulomb interaction can be written as
 \begin{equation}
 \left(  -\frac{\hbar^2}{2 m} \frac{d^2}{dr_1^2} -\frac{\hbar^2}{2 m} \frac{d^2}{dr_2^2}+ \frac{1}{2}k r_1^2+ \frac{1}{2}k r_2^2\right)u(r_1,r_2)  = E^{(2)} u(r_1,r_2) 
@@ -417,27 +362,30 @@ The Schr\"odingers equation for two electrons in a harmonic oscillator potential
 \end{equation}
 with a two-electron wave function $u(r_1,r_2)$ and the two-electron energy $E^{(2)}$.
 
-When there is no electron interaction the equation \ref{eq: sch_2d_uC} can be written as the product of two single-electron wave functions, the equation is separabel. We introduce the relative coordinate ${\bf r} = {\bf r}_1-{\bf r}_2$ and the center-of-mass coordinate ${\bf R} = 1/2({\bf r}_1+{\bf r}_2)$. With these new coordinates, the equation \ref{eq: sch_2d_uC} reads
+Since there is no electron interaction equation \ref{eq: sch_2d_uC} is separabel, it can be written as the product of two single-electron wave functions. We introduce the relative coordinate ${\bf r} = {\bf r}_1-{\bf r}_2$ and the center-of-mass coordinate ${\bf R} = 1/2({\bf r}_1+{\bf r}_2)$. With these new coordinates,  equation \ref{eq: sch_2d_uC} reads
 \[
 \left(  -\frac{\hbar^2}{m} \frac{d^2}{dr^2} -\frac{\hbar^2}{4 m} \frac{d^2}{dR^2}+ \frac{1}{4} k r^2+  kR^2\right)u(r,R)  = E^{(2)} u(r,R).
 \]
 
-The equations for $r$ and $R$ can be separated as the wave function $u(r,R) = \psi(r)\phi(R)$ and the energy is given by the sum of the relative energy $E_r$ and the center-of-mass energy $E_R$, that is
+We can separate this equation into equations for $r$ and $R$ since the wave function $u(r,R) = \psi(r)\phi(R)$ is a product. The energy is given by the sum of the relative energy $E_r$ and the center-of-mass energy $E_R$, that is
 \[
 E^{(2)}=E_r+E_R.
 \]
+For this article we will omit the center-of-mass energy in the calculations. Then the equation of interest becomes:
+\[
+\left(  -\frac{\hbar^2}{m} \frac{d^2}{dr^2}+ \frac{1}{4}k r^2\right)\psi(r)  = E_r \psi(r).
+\]
+By following the same approach as in section \ref{sec: descrete} equation \ref{eq: sch_2e_wCol} can written on a dimensionless form as:
+\[
+\left(  - \frac{d^2}{d\rho^2}+ \frac{1}{\rho}\right)\psi(\rho)  = \lambda\psi(\rho).
+\]
+We can then use equation \ref{eq:sematrix} to solve the problem numerically if the potential is replaced:
+\[
+V_i = \rho^2 \rightarrow V_i = \frac{1}{\rho}
+\]
+We will plot the probability distrubution to see if the results are reasonable before implementing the Coulumb interaction.
 
-For this article we will omit the center-of-mass energy in the calculations.
-
-\noindent\rule{\textwidth}{1pt}
-With no repulsive Coulomb interaction 
-you should get a result which corresponds to 
-the relative energy of a non-interacting system.   
-Make sure your results are 
-stable as functions of $\rho_{\mathrm{max}}$ and the number of steps.
-\noindent\rule{\textwidth}{1pt}
-
-\subsection{With Coulomb interaction}
+\subsection{The two electron system with Coulomb interaction}
 We will now include the repulsive Coulomb interaction between two electrons. Introducing the term
 \[
 V(r_1,r_2) = \frac{\beta e^2}{|{\bf r}_1-{\bf r}_2|}=\frac{\beta e^2}{r},
@@ -474,22 +422,140 @@ so we finally can write the Schr\"odinger's equation as
   -\frac{d^2}{d\rho^2} \psi(\rho) + \omega_r^2\rho^2\psi(\rho) +\frac{1}{\rho} = \lambda \psi(\rho).
   \label{eq: sch_2e_wCol}
 \end{equation}
+We can again use equation \ref{eq:sematrix} to solve the problem numerically if the potential is replaced:
+\[
+V_i = \rho^2 \rightarrow V_i = w_r^2\rho^2 + \frac{1}{\rho}
+\]
 
-For specific oscillator frequencies, the above equation has answers in an analytical form found by M.~Taut\footnote{M.~Taut, Phys. Rev. A 48, 3561 - 3566 (1993).The article can be retrieved from the following web address \url{http://prola.aps.org/abstract/PRA/v48/i5/p3561_1}}. We will study the cases $\omega_r = 0.01$, $\omega_r = 0.5$, $\omega_r =1$, and $\omega_r = 5$ for the ground state only ($l=0$).
-
-By following the same approach as in section \ref{sec: descrete} equation \ref{eq: sch_2e_wCol} can written on a discrete form which can be used to solve the problem numerically. (write explixitly?)
-
-We can use equation \ref{eq: sch_discrete_first} if we change the potential from $\rho^2$ to $V_i = \omega_r^2\rho^2+1/\rho$. 
-
-(write solve=plot prob?)
+For specific oscillator frequencies, the above equation has answers in an analytical form found by M.~Taut\footnote{M.~Taut, Phys. Rev. A 48, 3561 - 3566 (1993).The article can be retrieved from the following web address \url{http://prola.aps.org/abstract/PRA/v48/i5/p3561_1}}. We will plot the probability distrubution for the cases $\omega_r = 0.01$, $\omega_r = 0.5$, $\omega_r =1$, and $\omega_r = 5$ for the ground state only ($l=0$).
 
 
 
 
+\newpage
+\part{Implementation, testing and finding the solutions of the Schr\"odinger equations}
+
+\section{Implementation and testing of the Jacobi algorithm} \label{sec: test_jacobi}
+\subsubsection*{Implementation}
+The Jacobi rotation algorithm is structured into separate files which can be run once from \texttt{main.cpp} to solve one eigenvalueproblem. All files refered to in this section can be found in the folder \texttt{project\_2\_test\_jacobi} at: \\
+\texttt{https://github.com/inakbk/Project\_2/tree/master/project\_2\_test\_jacobi}
+
+The \texttt{jacobi.h} file contains all the routines for one rotation. The code finds the maximum element of the matrix, obtains the transformation matrix and does one rotation. The \texttt{jacobisolver.h} file does all the rotations for a given matrix $\bf B$ by calling the \texttt{jacobi.h} code and returns the eigenvalues and the first eigenvector. The parameter \texttt{tolerance} sets the limit of how small all the off diagonal elements in the matrix $\bf B$ needs to be before the rotations stop and the eigenvalues and the first eigenvector are returned. If the number of rotations (\texttt{numberOfIterations}) exceeds the maximum number of rotations (\texttt{maxNumberOfIterations}) before the off diagonal elements are smaller than the tolerance, the opreations are aborted with a warning message that the routine did not converge. The code also computes the execution time of all iterations for one matrix. 
+
+We then see that the code in \texttt{jacobisolver.h} does the whole job of solving the eigenvalue problem with the Jacobi method and need only be given the matrix $\bf B$ with its dimension and the maximum number of iterations. Then the \texttt{main.cpp} program only needs to constructs the matrix $\bf B$ and call the \texttt{jacobisolver.h} code. With the help of \texttt{writetofile.h} the main program will write all parameters and the eigenvalues and eigenvectors to a file with filenames that distinguish the parameters that where run. These datafiles will then later be read by a python script and plot the data. 
+
+\subsubsection*{Testing of the code}
+Before using the Jacobi algorithm solve the physical problems the code was tested to make sure it worked properly. The purpose of the files in the folder \texttt{project\_2\_test\_jacobi} is to test the implementation of the Jacobi algorithm.
+
+To do this the matrix $\bf B$ is initialized to a random symetric matrix. Then the solution is compared to the solutions generated by the \texttt{eig\_sym} function in the armadillo library.
+
+To initialize $\bf B$ as a symetrix matrix we let $\bf C$ be a random matrix and set $\bf B = \bf{CC^T}$. Then $\bf B$ is a symetric matrix:
+\[
+\bf { B^T = (CC^T)^T = (C^T)^TC^T = CC^T = B}
+\]
+using that $\bf{ (ab)^T = b^Ta}$\footnote{\texttt{https://en.wikipedia.org/wiki/Transpose} (I dont have the mat1120 book here so wikipedia refrences it is then..)}. 
+
+\section{Using the Jacobi rotation algorithm to solve the Schr\"odinger equations}
+
+Equation \ref{eq:sematrix} is the matrix equation that we can use to solve both the one and two electron systems. The only difference between the systems are the potential $V_i$ and hence the matrix $\bf B$.
+
+We can solve equation \ref{eq:sematrix} numerically using the Jacobi rotation algorithm as described in section \ref{sec: test_jacobi} by using the files \texttt{jacobisolver.h} and \texttt{jacobi.h} and \texttt{writetofile.h} to save the results. But in \texttt{main.cpp} the matrix would have to be initialized to the matrix in equation \ref{eq:sematrix}:
+\[
+\bf B = \left( \begin{array}{ccccccc} d_1 & e & 0   & 0    & \dots  &0     & 0 \\
+                                e & d_2 & e & 0    & \dots  &0     &0 \\
+                                0   & e & d_3 & e  &0       &\dots & 0\\
+                                \dots  & \dots & \dots & \dots  &\dots      &\dots & \dots\\
+                                0   & \dots & \dots & \dots  &\dots       &d_{n_{\mathrm{step}}-2} & e\\
+                                0   & \dots & \dots & \dots  &\dots       &e & d_{n_{\mathrm{step}}-1}
+
+             \end{array} \right)
+\]
+This is done in the folders \texttt{project\_2\_1e}, \texttt{project\_2\_2e} and \texttt{project\_2\_2e\_w\_col}\footnote{The reason the folders are separated are to not mix up the result files and be shure to be able to reproduce the results and look back if something is strange at a later point.} for respectively the one electron system and the two electron system without Coulomb interaction and with Coulumb interaction. The only difference between the folders are the potentials, or the matrix $\bf B$, the \texttt{.h} files are identical. The only exception is that the parameter $w_r$ is included in the last two electron case. 
+
+But before the Schr\"odinger equations can be solved numerically the value of $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$ that we will use needs to be decided.  
+
+\subsection{Finding reasonable values for $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$}
+
+The matrix $\bf B$ is only dependent on the elements $d_i$ and $e$ which is only dependent on $p_{\mathrm{max}}$ and the dimension of the matrix $n_{\mathrm{step}}$. So which values of $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$ should we choose? We need to test the algorithm so that we know which $p_{\mathrm{max}}$ that gives stable results and which values of $n_{\mathrm{step}}$ it is reasonable to use. 
+
+First we have to decide which $p_{\mathrm{max}}$ to choose as this might affect the choice of $n_{\mathrm{step}}$. This can be done by looking at the first eigenvalues and choose the $p_{\mathrm{max}}$ which gives the smallest error when comparing to the analytical values. For the two electron case there are no analytical values to compare with so it is reasonable to choose a value which gives the most stable eigenvalues as a finction of  $n_{\mathrm{step}}$. We will therefore plot the eigenvalues as a function of $p_{\mathrm{max}}$.
+
+Then we have to decide which precition of the eigenvalues we want to set a limit on how large $n_{\mathrm{step}}$ needs to be. This can be done by choosing a value of $n_{\mathrm{step}}$ that gives a small enough absolute error in the first three eigenvalues and that also have a reasonable execution time. We will plot the absolute error in the eigenvalues as a function of $n_{\mathrm{step}}$ to investigate this.
+
+The execution time and precition is also related to how close to zero we force the off diagonal elements of $\bf B$ to be before reading off the eigenvalues. If the tolerance is too low we end up doing a lot of extra rotations that are very time consuming. We therefore should choose a tolerance that is low enough, but not too small. The number of transformations and the execution time will also be plotted as a function of $n_{\mathrm{step}}$.
+
+When we are done deciding on the values of $p_{\mathrm{max}}$ and $n_{\mathrm{step}}$ the the Schr\"odinger equations can be solved numerically as described in the beginning of this section. 
 
 
 
+\newpage
+\part{Results and discussion}
+%\subsection*{Choice of $p_{\mathrm{max}}$ }
 
+All this is for 1e:
+
+Figure \ref{fig: p_max_big} example normal, goes to zero
+
+\begin{figure} [ht]
+\centering
+\includegraphics[width=0.7\textwidth]{plots_1e/p_max_n100_big.png}
+\caption{noe langt}
+\label{fig: p_max_big}
+\end{figure}
+
+Figure \ref{fig: p_max_zoom} see 4 diff n and choice
+\begin{figure} [t!]
+\centering
+	\begin{subfigure}[t]{0.7\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{plots_1e/p_max_n50_z.png}
+		\includegraphics[width=1\textwidth]{plots_1e/p_max_n100_z.png}
+		%\caption{noe langt om langt}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.7\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{plots_1e/p_max_n150_z.png}
+		\includegraphics[width=1\textwidth]{plots_1e/p_max_n200_z.png}
+		%\caption{noe langt om langt2}
+	\end{subfigure}
+\caption{noenoe langt}
+\label{fig: p_max_zoom}
+\end{figure}
+
+in fig \ref{fig: abs.err_n} see error plotted against n
+\begin{figure} [ht]
+\centering
+\includegraphics[width=0.7\textwidth]{plots_1e/abs_error.png}
+\includegraphics[width=0.7\textwidth]{plots_1e/abs_error_zoom.png}
+\caption{noe langt}
+\label{fig: abs.err_n}
+\end{figure}
+
+in fig \ref{fig: nr_iter} see nr iter vs n
+\begin{figure} [ht]
+\centering
+\includegraphics[width=0.7\textwidth]{plots_1e/nr_iterations.png}
+\caption{noe langt}
+\label{fig: nr_iter}
+\end{figure}
+
+in fig \ref{fig: nr_iter} see time vs n
+
+\begin{figure} [ht]
+\centering
+\includegraphics[width=0.7\textwidth]{plots_1e/time.png}
+\caption{noe langt}
+\label{fig: nr_iter}
+\end{figure}
+
+\noindent\rule{\textwidth}{1pt}
+With no repulsive Coulomb interaction 
+you should get a result which corresponds to 
+the relative energy of a non-interacting system.   
+Make sure your results are 
+stable as functions of $\rho_{\mathrm{max}}$ and the number of steps.
+\noindent\rule{\textwidth}{1pt}
 
 \noindent\rule{\textwidth}{1pt}
 Comment the results for the lowest state (ground state) as function of
@@ -497,23 +563,12 @@ varying strengths of $\omega_r$.
 \noindent\rule{\textwidth}{1pt}
 
 
-\noindent\rule{\textwidth}{1pt}
-\begin{enumerate}
 
-\item[d)] 
-In this exercise we want to plot the wave function for two electrons as functions of the relative coordinate $r$ and different values of $\omega_r$.  With no Coulomb interaction you should have a result which corresponds to the non-interacting case. 
-Plot either the function itself or the probability distribution (the function squared) with and without the repulsion between the two electrons.
-Varying $\omega_r$, the shape of the wave function
-will change.  
 
-We are only interested in the wave function for the ground state with $l=0$ and the two first excited states with the same symmetry and
-omit again the center-of-mass motion.
-
-\item[e)]  
+\noindent\rule{\textwidth}{1pt} 
 Here you are asked to implement unit tests in your C++ program. For C++ users, please follow the guidelines on how to install unit tests with c++ on the webpage. These issues will be discussed in more detail at the lab and lectures during week 38. 
 
 
-\end{enumerate}
 
 
 \end{document}
